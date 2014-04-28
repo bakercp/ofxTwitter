@@ -71,6 +71,7 @@ public:
             tweet = _tweets.front();
             _tweets.erase(_tweets.begin());
         }
+        
         return tweet;
     }
 
