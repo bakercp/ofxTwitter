@@ -1,6 +1,12 @@
 ofxGeo
+ofxHTTP
+ofxIO
 ofxJSON
+ofxMediaType
 ofxOAuth
+ofxSpatialHash
+ofxSSLManager
+ofxTaskQueue
 ofxTime
 ofxTwitterTools
 ofxXmlSettings

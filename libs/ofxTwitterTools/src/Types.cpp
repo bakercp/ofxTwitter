@@ -23,61 +23,65 @@
 // =============================================================================
 
 
-#pragma once
-
-
-#include <stdint.h>
-#include <string>
-#include <map>
-#include <set>
-#include <vector>
+#include "ofx/Twitter/Types.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-class BaseUser
+BaseUser::BaseUser(): _ID(-1), _screenName("")
 {
-public:
-    BaseUser();
-    BaseUser(int64_t ID, const std::string& screenName);
-
-    virtual ~BaseUser();
-
-    int64_t getID() const;
-    const std::string& getScreenName() const;
-
-private:
-    int64_t _ID;
-    std::string _screenName;
-
-    friend class Deserializer;
-};
+}
 
 
-class BaseNamedUser: public BaseUser
+BaseUser::BaseUser(int64_t ID, const std::string& screenName):
+    _ID(ID),
+    _screenName(screenName)
 {
-public:
-    BaseNamedUser();
-
-    BaseNamedUser(int64_t ID,
-                  const std::string& screenName,
-                  const std::string& name);
-
-    virtual ~BaseNamedUser();
-
-    const std::string& getName() const;
-
-private:
-    std::string _name;
-    friend class Deserializer;
-};
+}
 
 
-typedef std::set<std::string> Contries;
-typedef std::map<std::string, std::string> Annotations;
-typedef std::vector<BaseNamedUser> Contributors;
+BaseUser::~BaseUser()
+{
+}
 
 
+int64_t BaseUser::getID() const
+{
+    return _ID;
+}
+
+
+const std::string& BaseUser::getScreenName() const
+{
+    return _screenName;
+}
+
+
+BaseNamedUser::BaseNamedUser(): BaseUser(), _name("")
+{
+}
+
+
+BaseNamedUser::BaseNamedUser(int64_t ID,
+                             const std::string& screenName,
+                             const std::string& name):
+    BaseUser(ID, screenName),
+    _name(name)
+{
+}
+
+
+BaseNamedUser::~BaseNamedUser()
+{
+}
+
+
+const std::string& BaseNamedUser::getName() const
+{
+    return _name;
+}
+
+    
 } } // namespace ofx::Twitter

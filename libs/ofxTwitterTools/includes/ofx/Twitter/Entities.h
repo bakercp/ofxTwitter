@@ -36,66 +36,35 @@ namespace ofx {
 namespace Twitter {
 
 
-class AbstractIndexedEntity
+class BaseIndexedEntity
 {
 public:
-    AbstractIndexedEntity(std::size_t startIndex, std::size_t endIndex):
-        _startIndex(startIndex),
-        _endIndex(endIndex)
-    {
-    }
+    BaseIndexedEntity(std::size_t startIndex, std::size_t endIndex);
+    virtual ~BaseIndexedEntity();
 
+    std::size_t getStartIndex() const;
+    std::size_t getEndIndex() const;
 
-    virtual ~AbstractIndexedEntity()
-    {
-    }
-
-
-    std::size_t getStartIndex() const
-    {
-        return _startIndex;
-    }
-
-
-    std::size_t getEndIndex() const
-    {
-        return _endIndex;
-    }
-
-
-    virtual std::string getIndexedText() const = 0;
+    virtual const std::string& getIndexedText() const = 0;
 
 private:
     std::size_t _startIndex;
     std::size_t _endIndex;
-
+    
 };
 
 
-class HashTagEntity: public AbstractIndexedEntity
+class HashTagEntity: public BaseIndexedEntity
 {
 public:
     HashTagEntity(const std::string& hashTag,
                   std::size_t startIndex,
-                  std::size_t endIndex):
-        AbstractIndexedEntity(startIndex, endIndex),
-        _hashTag(hashTag)
-    {
-    }
+                  std::size_t endIndex);
 
-    virtual ~HashTagEntity()
-    {
-    }
+    virtual ~HashTagEntity();
 
-    std::string getHashTag() const
-    {
-        return _hashTag;
-    }
-
-    std::string getIndexedText() const
-    {
-        return _hashTag;
-    }
+    const std::string& getHashTag() const;
+    const std::string& getIndexedText() const;
 
 private:
     std::string _hashTag;
@@ -103,44 +72,21 @@ private:
 };
 
 
-class URLEntity: public AbstractIndexedEntity
+class URLEntity: public BaseIndexedEntity
 {
 public:
     URLEntity(const std::string& URL,
               const std::string& URLDisplay,
               const std::string& URLExpanded,
               std::size_t startIndex,
-              std::size_t endIndex):
-        _URL(URL),
-        _URLDisplay(URLDisplay),
-        _URLExpanded(URLExpanded),
-        AbstractIndexedEntity(startIndex, endIndex)
-    {
-    }
+              std::size_t endIndex);
 
-    virtual ~URLEntity()
-    {
-    }
+    virtual ~URLEntity();
 
-    std::string getURL() const
-    {
-        return _URL;
-    }
-
-    std::string getDisplayURL() const
-    {
-        return _URLDisplay;
-    }
-
-    std::string getExpandedURL() const
-    {
-        return _URLExpanded;
-    }
-
-    std::string getIndexedText() const
-    {
-      return _URL;
-    }
+    const std::string& getURL() const;
+    const std::string& getDisplayURL() const;
+    const std::string& getExpandedURL() const;
+    const std::string& getIndexedText() const;
 
 private:
     std::string _URL;
@@ -170,43 +116,14 @@ public:
     MediaEntitySize(Type type,
                     Resize resize,
                     std::size_t width,
-                    std::size_t height):
-        _type(type),
-        _resize(resize),
-        _width(width),
-        _height(height)
-    {
-    }
+                    std::size_t height);
 
+    virtual ~MediaEntitySize();
 
-    virtual ~MediaEntitySize()
-    {
-    }
-
-
-    Type getType() const
-    {
-        return _type;
-    }
-
-
-    Resize getResize() const
-    {
-        return _resize;
-    }
-
-
-    std::size_t getWidth() const
-    {
-        return _width;
-    }
-
-
-    std::size_t getHeight() const
-    {
-        return _height;
-    }
-
+    Type getType() const;
+    Resize getResize() const;
+    std::size_t getWidth() const;
+    std::size_t getHeight() const;
 
 private:
     Type _type;
@@ -237,50 +154,16 @@ public:
                 Sizes sizes,
                 int64_t sourceStatusID,
                 std::size_t startIndex,
-                std::size_t endIndex):
-        URLEntity(URL, URLDisplay, URLExpanded, startIndex, endIndex),
-        _URLMedia(URLMedia),
-        _URLMediaHTTPS(URLMediaHTTPS),
-        _mediaID(mediaID),
-        _type(type),
-        _sizes(sizes),
-        _sourceStatusID(sourceStatusID)
-    {
-    }
+                std::size_t endIndex);
 
-    virtual ~MediaEntity()
-    {
-    }
+    virtual ~MediaEntity();
 
-    std::string getMediaURL() const
-    {
-        return _URLMedia;
-    }
-
-    std::string getSecureMediaURL() const
-    {
-        return _URLMediaHTTPS;
-    }
-
-    int64_t getMediaID() const
-    {
-        return _mediaID;
-    }
-
-    Sizes GetSizes() const
-    {
-        return _sizes;
-    }
-
-    Type getType() const
-    {
-        return _type;
-    }
-
-    int64_t getSourceStatusID() const
-    {
-        return _sourceStatusID;
-    }
+    const std::string& getMediaURL() const;
+    const std::string& getSecureMediaURL() const;
+    int64_t getMediaID() const;
+    Sizes getSizes() const;
+    Type getType() const;
+    int64_t getSourceStatusID() const;
 
 private:
     std::string _URLMedia;
@@ -290,36 +173,22 @@ private:
     Type _type;
     int64_t _sourceStatusID;
 
-
 };
 
 
-class UserMentionEntity:
-    public BaseNamedUser,
-    public AbstractIndexedEntity
+class UserMentionEntity: public BaseNamedUser, public BaseIndexedEntity
 {
 public:
     UserMentionEntity(int64_t ID,
                       const std::string& screenName,
                       const std::string& name,
                       std::size_t startIndex,
-                      std::size_t endIndex):
-        BaseNamedUser(ID, screenName, name),
-        AbstractIndexedEntity(startIndex, endIndex)
-    {
-    }
+                      std::size_t endIndex);
 
-    virtual ~UserMentionEntity()
-    {
-    }
-
-    virtual std::string getIndexedText() const
-    {
-        return getScreenName();
-    }
+    virtual ~UserMentionEntity();
+    virtual const std::string& getIndexedText() const;
 
 };
-
 
 
 class Entities
@@ -330,45 +199,19 @@ public:
     typedef std::vector<URLEntity> URLEntities;
     typedef std::vector<UserMentionEntity> UserMentionEntities;
 
-
-    Entities()
-    {
-    }
+    Entities();
 
     Entities(const HashTagEntities& hashTagEntities,
              const MediaEntities& mediaEntities,
              const URLEntities& URLEntities,
-             const UserMentionEntities& userMentionEntities):
-        _hashTagEntities(hashTagEntities),
-        _mediaEntities(mediaEntities),
-        _URLEntities(URLEntities),
-        _userMentionEntities(userMentionEntities)
-    {
-    }
+             const UserMentionEntities& userMentionEntities);
 
-    ~Entities()
-    {
-    }
+    virtual ~Entities();
 
-    HashTagEntities getHasTagEntities() const
-    {
-        return _hashTagEntities;
-    }
-
-    MediaEntities getMediaEntities() const
-    {
-        return _mediaEntities;
-    }
-
-    URLEntities getURLEntities() const
-    {
-        return _URLEntities;
-    }
-
-    UserMentionEntities getUserMentionEntities() const
-    {
-        return _userMentionEntities;
-    }
+    const HashTagEntities& getHasTagEntities() const;
+    const MediaEntities& getMediaEntities() const;
+    const URLEntities& getURLEntities() const;
+    const UserMentionEntities& getUserMentionEntities() const;
 
 private:
     HashTagEntities _hashTagEntities;
