@@ -35,17 +35,17 @@ const std::string Deserializer::TWITTER_DATE_FORMAT = "%w %b %f %H:%M:%S %Z %Y";
 
 bool Deserializer::deserialize(const Json::Value& json, User& user)
 {
-    if(json.isMember("id"))
+    if (json.isMember("id"))
     {
         user._ID = json["id"].asInt64();
     }
 
-    if(json.isMember("screen_name"))
+    if (json.isMember("screen_name"))
     {
         user._screenName = json["screen_name"].asString();
     }
 
-    if(json.isMember("name"))
+    if (json.isMember("name"))
     {
         user._name = json["name"].asString();
     }
@@ -57,16 +57,17 @@ bool Deserializer::deserialize(const Json::Value& json, User& user)
 
 bool Deserializer::deserialize(const Json::Value& json, BaseNamedUser& user)
 {
-    if(json.isMember("id"))
+    if (json.isMember("id"))
     {
         user._ID = json["id"].asInt64();
     }
 
-    if(json.isMember("screen_name"))
+    if (json.isMember("screen_name"))
     {
         user._screenName = json["screen_name"].asString();
     }
-    if(json.isMember("name"))
+
+    if (json.isMember("name"))
     {
         user._name = json["name"].asString();
     }
@@ -76,12 +77,12 @@ bool Deserializer::deserialize(const Json::Value& json, BaseNamedUser& user)
 
 bool Deserializer::deserialize(const Json::Value& json, BaseUser& user)
 {
-    if(json.isMember("id"))
+    if (json.isMember("id"))
     {
         user._ID = json["id"].asInt64();
     }
 
-    if(json.isMember("screen_name"))
+    if (json.isMember("screen_name"))
     {
         user._screenName = json["screen_name"].asString();
     }
