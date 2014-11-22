@@ -48,13 +48,13 @@ void ofApp::draw()
 
     std::stringstream ss;
 
-    ss << Time::Utils::format(tweet.getCreatedAt()) << std::endl;
+    ss << ofx::Time::Utils::format(tweet.getCreatedAt()) << std::endl;
 
     if (!tweet.getUser().isNull())
     {
-        const Twitter::User& user = tweet.getUser().value();
+        const ofx::Twitter::User& user = tweet.getUser().value();
         ss << user.getName() << std::endl;
-        ss << Time::Utils::format(tweet.getCreatedAt()) << std::endl;
+        ss << ofx::Time::Utils::format(tweet.getCreatedAt()) << std::endl;
     }
 
     ss << tweet.getText() << std::endl;

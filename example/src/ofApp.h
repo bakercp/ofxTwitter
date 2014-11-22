@@ -30,9 +30,6 @@
 #include "ofxTwitterTools.h"
 
 
-using namespace ofx;
-
-
 class ofApp: public ofBaseApp
 {
 public:
@@ -42,8 +39,8 @@ public:
 
     void keyPressed(int key);
 
-    Twitter::Client client;
+    ofx::Twitter::Client client;
 
-    Twitter::Tweet tweet;
+    ofx::Twitter::Tweet tweet;
 
 };
