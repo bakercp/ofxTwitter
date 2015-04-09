@@ -362,7 +362,7 @@
 		FDA9F2391A200D6300339D8F /* Period.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Period.cpp; sourceTree = "<group>"; };
 		FDA9F23A1A200D6300339D8F /* Utils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Utils.cpp; sourceTree = "<group>"; };
 		FDA9F2401A200DB000339D8F /* ofxTwitterTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxTwitterTools.h; sourceTree = "<group>"; };
-		FDA9F2461A200DB000339D8F /* Client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
+		FDA9F2461A200DB000339D8F /* RESTClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RESTClient.h; sourceTree = "<group>"; };
 		FDA9F2471A200DB000339D8F /* Deserializer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Deserializer.h; sourceTree = "<group>"; };
 		FDA9F2481A200DB000339D8F /* Entities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Entities.h; sourceTree = "<group>"; };
 		FDA9F2491A200DB000339D8F /* Places.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Places.h; sourceTree = "<group>"; };
@@ -1259,7 +1259,7 @@
 		FDA9F2451A200DB000339D8F /* Twitter */ = {
 			isa = PBXGroup;
 			children = (
-				FDA9F2461A200DB000339D8F /* Client.h */,
+				FDA9F2461A200DB000339D8F /* RESTClient.h */,
 				FDA9F2471A200DB000339D8F /* Deserializer.h */,
 				FDA9F2481A200DB000339D8F /* Entities.h */,
 				FDA9F2491A200DB000339D8F /* Places.h */,

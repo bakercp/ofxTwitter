@@ -1,6 +1,6 @@
 // =============================================================================
 //
-// Copyright (c) 2009-2013 Christopher Baker <http://christopherbaker.net>
+// Copyright (c) 2009-2015 Christopher Baker <http://christopherbaker.net>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -61,31 +61,31 @@ public:
     virtual ~User();
 
     bool areContributorsEnabled() const;
-    Poco::DateTime getCreatedAt() const;
+    const Poco::DateTime& getCreatedAt() const;
     bool hasDefaultProfile() const;
     bool hasDefaultProfileImage() const;
-    Poco::Nullable<std::string> getDescription() const;
-    Entities getEntities() const;
+    const Poco::Nullable<std::string>& getDescription() const;
+    const Entities& getEntities() const;
     int getFavouritesCount() const;
-    Poco::Nullable<bool> wasFollowRequestSent() const;
+    const Poco::Nullable<bool>& wasFollowRequestSent() const;
     int getFollowersCount() const;
     int getFriendsCount() const;
     bool isGeoEnabled() const;
     bool isTranslator() const;
-    std::string getLanguage() const;
+    const std::string& getLanguage() const;
     int getListedCount() const;
-    Poco::Nullable<std::string> getLocation() const;
-    Profile getProfile() const;
+    const Poco::Nullable<std::string>& getLocation() const;
+    const Profile& getProfile() const;
     bool isProtected() const;
     bool showsAllInlineMedia();
 //    Poco::Nullable<Tweet> getStatus() const;
     int getStatusesCount() const;
-    Poco::Nullable<std::string> getTimeZone() const;
-    Poco::Nullable<std::string> getURL() const;
-    Poco::Nullable<int> getUtcOffet() const;
+    const Poco::Nullable<std::string>& getTimeZone() const;
+    const Poco::Nullable<std::string>& getURL() const;
+    const Poco::Nullable<int>& getUTCOffset() const;
     bool isVerified() const;
-    Contries getWithheldInCountries() const;
-    WithheldScope getWithheldScope() const;
+    const Contries& getWithheldInCountries() const;
+    const WithheldScope& getWithheldScope() const;
 
 private:
     bool _contributorsEnabled;
@@ -116,7 +116,7 @@ private:
 
     Poco::Nullable<std::string> _timeZone;
     Poco::Nullable<std::string> _url;
-    Poco::Nullable<int> _utcOffset; // < 0 unset
+    Poco::Nullable<int> _UTCOffset; // < 0 unset
 
     bool _isVerified;
 

@@ -26,46 +26,53 @@
 #pragma once
 
 
-#include <set>
 #include <string>
+#include <json/json.h>
 
 
 namespace ofx {
 namespace Twitter {
 
 
-//    "place":
-//    {
-//        "attributes":{},
-//        "bounding_box":
-//        {
-//            "coordinates":
-//            [[
-//              [-77.119759,38.791645],
-//              [-76.909393,38.791645],
-//              [-76.909393,38.995548],
-//              [-77.119759,38.995548]
-//              ]],
-//            "type":"Polygon"
-//        },
-//        "country":"United States",
-//        "country_code":"US",
-//        "full_name":"Washington, DC",
-//        "id":"01fbe706f872cb32",
-//        "name":"Washington",
-//        "place_type":"city",
-//        "url": "http://api.twitter.com/1/geo/id/01fbe706f872cb32.json"
-//    }
-
-class Places
+class Credentials
 {
 public:
-    Places();
-    virtual ~Places();
+    Credentials();
+
+    Credentials(const std::string& consumerKey,
+                const std::string& consumerSecret);
+
+    Credentials(const std::string& consumerKey,
+                const std::string& consumerSecret,
+                const std::string& accessToken,
+                const std::string& accessTokentSecret);
+
+    /// \brief Destroy the Credentials.
+    virtual ~Credentials();
+
+    const std::string& getConsumerKey() const;
+
+    const std::string& getConsumerSecret() const;
+
+    const std::string& getAccessToken() const;
+
+    const std::string& getAccessTokenSecret() const;
+
+    static Credentials fromJSON(const Json::Value& value);
+
+    static Json::Value toJSON(const Credentials& credentials);
+
+    static Credentials fromFile(const std::string& credentialsFile);
+
+    static bool toFile(const Credentials& credentials,
+                       const std::string& credentialsFile);
 
 private:
-
-    friend class Deserializer;
+    /// \brief The consumer key.
+    std::string _consumerKey;
+    std::string _consumerSecret;
+    std::string _accessToken;
+    std::string _accessTokenSecret;
 
 };
 

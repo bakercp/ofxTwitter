@@ -26,46 +26,59 @@
 #pragma once
 
 
-#include <set>
-#include <string>
+#include <stdint.h>
+#include "ofx/HTTP/AbstractClientTypes.h"
+#include "ofx/HTTP/BaseClient.h"
+#include "ofx/HTTP/Context.h"
+#include "ofx/HTTP/CredentialStore.h"
+#include "ofx/HTTP/DefaultClientHeaders.h"
+#include "ofx/HTTP/DefaultProxyProcessor.h"
+#include "ofx/HTTP/DefaultRedirectProcessor.h"
+#include "ofx/HTTP/DefaultResponseStreamFilter.h"
+#include "ofx/HTTP/DefaultSessionProvider.h"
+#include "ofx/Twitter/Credentials.h"
+#include "ofx/Twitter/SearchQuery.h"
+#include "ofx/Twitter/SearchResult.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-//    "place":
-//    {
-//        "attributes":{},
-//        "bounding_box":
-//        {
-//            "coordinates":
-//            [[
-//              [-77.119759,38.791645],
-//              [-76.909393,38.791645],
-//              [-76.909393,38.995548],
-//              [-77.119759,38.995548]
-//              ]],
-//            "type":"Polygon"
-//        },
-//        "country":"United States",
-//        "country_code":"US",
-//        "full_name":"Washington, DC",
-//        "id":"01fbe706f872cb32",
-//        "name":"Washington",
-//        "place_type":"city",
-//        "url": "http://api.twitter.com/1/geo/id/01fbe706f872cb32.json"
-//    }
-
-class Places
+class RESTClient: public HTTP::BaseClient
 {
 public:
-    Places();
-    virtual ~Places();
+    RESTClient();
+    
+    RESTClient(const Credentials& credentials);
+
+    virtual ~RESTClient();
+
+    void setCredentials(const Credentials& credentials);
+
+    const Credentials& getCredentials() const;
+
+
+    // throws exceptions
+    SearchResult search(const SearchQuery& query);
+
+    // throws exceptions
+    void execute(HTTP::BaseRequest& request,
+                 HTTP::BaseResponse& response,
+                 Json::Value& results);
 
 private:
+    void _init();
 
-    friend class Deserializer;
+    Credentials _credentials;
+
+    HTTP::Context _context;
+
+    HTTP::DefaultSessionProvider _defaultSessionProvider;
+    HTTP::DefaultClientHeaders _defaultClientHeaders;
+    HTTP::DefaultProxyProcessor _defaultProxyProcessor;
+    HTTP::DefaultRedirectProcessor _defaultRedirectProcessor;
+    HTTP::DefaultResponseStreamFilter _responseStreamFilter;
 
 };
 

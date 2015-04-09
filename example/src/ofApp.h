@@ -27,7 +27,7 @@
 
 
 #include "ofMain.h"
-#include "ofxTwitterTools.h"
+#include "ofxTwitter.h"
 
 
 class ofApp: public ofBaseApp

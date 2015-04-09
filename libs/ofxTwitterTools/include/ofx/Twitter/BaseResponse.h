@@ -26,47 +26,46 @@
 #pragma once
 
 
-#include <set>
-#include <string>
+#include <vector>
+#include <json/json.h>
+#include "ofx/Twitter/Error.h"
+#include "Poco/Net/HTTPResponse.h"
+#include "Poco/Exception.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-//    "place":
-//    {
-//        "attributes":{},
-//        "bounding_box":
-//        {
-//            "coordinates":
-//            [[
-//              [-77.119759,38.791645],
-//              [-76.909393,38.791645],
-//              [-76.909393,38.995548],
-//              [-77.119759,38.995548]
-//              ]],
-//            "type":"Polygon"
-//        },
-//        "country":"United States",
-//        "country_code":"US",
-//        "full_name":"Washington, DC",
-//        "id":"01fbe706f872cb32",
-//        "name":"Washington",
-//        "place_type":"city",
-//        "url": "http://api.twitter.com/1/geo/id/01fbe706f872cb32.json"
-//    }
-
-class Places
+class BaseResponse
 {
 public:
-    Places();
-    virtual ~Places();
+    BaseResponse(Poco::Net::HTTPResponse::HTTPStatus status);
 
-private:
+    virtual ~BaseResponse();
 
-    friend class Deserializer;
+    const std::vector<Error>& errors() const;
 
+    Poco::Net::HTTPResponse::HTTPStatus status() const;
+
+    /// \brief Get the reason for the HTTP Response.
+    ///
+    /// Sub-classes can override this method to provide Twitter-specific
+    /// reasons.
+    ///
+    /// \returns A string describing the reasons for the HTTP status.
+    virtual std::string reasonForStatus() const;
+
+    const Json::Value& json() const;
+
+protected:
+    Json::Value _json;
+
+    Poco::Net::HTTPResponse::HTTPStatus _status;
+
+    std::vector<Error> _errors;
+
+    friend class Deserilizer;
 };
 
 

@@ -1,6 +1,6 @@
 // =============================================================================
 //
-// Copyright (c) 2009-2015 Christopher Baker <http://christopherbaker.net>
+// Copyright (c) 2009-2013 Christopher Baker <http://christopherbaker.net>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,48 +26,19 @@
 #pragma once
 
 
-#include <set>
-#include <string>
-
-
-namespace ofx {
-namespace Twitter {
-
-
-//    "place":
-//    {
-//        "attributes":{},
-//        "bounding_box":
-//        {
-//            "coordinates":
-//            [[
-//              [-77.119759,38.791645],
-//              [-76.909393,38.791645],
-//              [-76.909393,38.995548],
-//              [-77.119759,38.995548]
-//              ]],
-//            "type":"Polygon"
-//        },
-//        "country":"United States",
-//        "country_code":"US",
-//        "full_name":"Washington, DC",
-//        "id":"01fbe706f872cb32",
-//        "name":"Washington",
-//        "place_type":"city",
-//        "url": "http://api.twitter.com/1/geo/id/01fbe706f872cb32.json"
-//    }
-
-class Places
-{
-public:
-    Places();
-    virtual ~Places();
-
-private:
-
-    friend class Deserializer;
-
-};
-
-
-} } // namespace ofx::Twitter
+#include "ofxGeo.h"
+#include "ofxHTTP.h"
+#include "ofxJSON.h"
+#include "ofx/Twitter/Credentials.h"
+#include "ofx/Twitter/RESTClient.h"
+#include "ofx/Twitter/StreamingClient.h"
+#include "ofx/Twitter/Deserializer.h"
+#include "ofx/Twitter/Entities.h"
+#include "ofx/Twitter/Places.h"
+#include "ofx/Twitter/Profile.h"
+#include "ofx/Twitter/Tweet.h"
+#include "ofx/Twitter/Types.h"
+#include "ofx/Twitter/User.h"
+#include "ofx/Twitter/SearchQuery.h"
+#include "ofx/Twitter/Update.h"
+#include "ofx/Twitter/Upload.h"

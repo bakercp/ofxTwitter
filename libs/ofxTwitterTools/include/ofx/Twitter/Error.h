@@ -26,7 +26,6 @@
 #pragma once
 
 
-#include <set>
 #include <string>
 
 
@@ -34,39 +33,25 @@ namespace ofx {
 namespace Twitter {
 
 
-//    "place":
-//    {
-//        "attributes":{},
-//        "bounding_box":
-//        {
-//            "coordinates":
-//            [[
-//              [-77.119759,38.791645],
-//              [-76.909393,38.791645],
-//              [-76.909393,38.995548],
-//              [-77.119759,38.995548]
-//              ]],
-//            "type":"Polygon"
-//        },
-//        "country":"United States",
-//        "country_code":"US",
-//        "full_name":"Washington, DC",
-//        "id":"01fbe706f872cb32",
-//        "name":"Washington",
-//        "place_type":"city",
-//        "url": "http://api.twitter.com/1/geo/id/01fbe706f872cb32.json"
-//    }
-
-class Places
+/// \sa https://dev.twitter.com/overview/api/response-codes
+class Error
 {
 public:
-    Places();
-    virtual ~Places();
+    Error();
+
+    Error(int code, const std::string& message);
+
+    virtual ~Error();
+
+    int code() const;
+
+    const std::string& message() const;
 
 private:
+    int _code;
+    std::string _message;
 
     friend class Deserializer;
-
 };
 
 

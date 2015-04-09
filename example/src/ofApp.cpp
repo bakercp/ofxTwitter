@@ -28,8 +28,9 @@
 
 void ofApp::setup()
 {
-    client.setup("VM1qtjvGu7aov1f6cZVhhA",
-                 "goo46tWh1hkDRs8IlP01m1ZNWbVhRKRYNS5Nbs5EFE8",
+
+    client.setup("T5Ll4TNkiBtnJSeXOJWL2SB5B",
+                 "QqZYNZDJ45yg41gCw7hpXdRapI6EOlXbkMqZTXPmYKWyfIH2Vq",
                  "love",
                  0);
 

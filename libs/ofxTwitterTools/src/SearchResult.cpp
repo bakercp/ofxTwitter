@@ -1,6 +1,6 @@
 // =============================================================================
 //
-// Copyright (c) 2009-2013 Christopher Baker <http://christopherbaker.net>
+// Copyright (c) 2009-2015 Christopher Baker <http://christopherbaker.net>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,78 @@
 // =============================================================================
 
 
-#pragma once
+#include "ofx/Twitter/SearchResult.h"
+#include <sstream>
 
-#include "ofxTime.h"
-#include "ofxGeo.h"
-#include "ofx/Twitter/Client.h"
-#include "ofx/Twitter/Deserializer.h"
-#include "ofx/Twitter/Entities.h"
-#include "ofx/Twitter/Places.h"
-#include "ofx/Twitter/Profile.h"
-#include "ofx/Twitter/Tweet.h"
-#include "ofx/Twitter/Types.h"
-#include "ofx/Twitter/User.h"
+
+namespace ofx {
+namespace Twitter {
+
+
+SearchResult::SearchResult(): BaseResponse(Poco::Net::HTTPResponse::HTTP_OK)
+{
+}
+
+
+SearchResult::SearchResult(Poco::Net::HTTPResponse::HTTPStatus status):
+    BaseResponse(status)
+{
+}
+
+
+SearchResult::~SearchResult()
+{
+}
+
+    
+const std::vector<Tweet>& SearchResult::tweets() const
+{
+    return _tweets;
+}
+    
+
+std::size_t SearchResult::count() const
+{
+    return _tweets.size();
+}
+
+
+const std::string& SearchResult::query() const
+{
+    return _query;
+}
+
+
+int64_t SearchResult::maxId() const
+{
+    return _maxId;
+}
+
+
+int64_t SearchResult::sinceId() const
+{
+    return _sinceId;
+}
+
+
+float SearchResult::completedIn() const
+{
+    return _completedIn;
+}
+
+
+Poco::Nullable<SearchQuery> SearchResult::nextResult() const
+{
+    SearchQuery query;
+    return query;
+}
+
+
+Poco::Nullable<SearchQuery> SearchResult::refreshResults() const
+{
+    SearchQuery query;
+    return query;
+}
+
+
+} } // namespace ofx::Twitter

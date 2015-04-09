@@ -1,6 +1,6 @@
 // =============================================================================
 //
-// Copyright (c) 2009-2013 Christopher Baker <http://christopherbaker.net>
+// Copyright (c) 2009-2015 Christopher Baker <http://christopherbaker.net>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +37,9 @@
 #include "ofx/Twitter/User.h"
 #include "ofx/Twitter/Types.h"
 #include "ofx/Twitter/Tweet.h"
+#include "ofx/Twitter/SearchQuery.h"
+#include "ofx/Twitter/SearchResult.h"
+#include "ofx/Twitter/Error.h"
 
 
 namespace ofx {
@@ -46,11 +49,16 @@ namespace Twitter {
 class Deserializer
 {
 public:
+    static bool deserialize(const Json::Value& json, Error& error);
+    static bool deserialize(const Json::Value& json, std::vector<Error>& errors);
+
+    static bool deserialize(const Json::Value& json, SearchResult& data);
+
     static bool deserialize(const Json::Value& json, User& user);
     static bool deserialize(const Json::Value& json, BaseNamedUser& user);
     static bool deserialize(const Json::Value& json, BaseUser& user);
 
-    static bool deserialize(const std::string& rawJson, std::vector<Tweet>& tweets);
+    static bool deserialize(const Json::Value& json, std::vector<Tweet>& tweets);
 
     static bool parse(const std::string& jsonString, Json::Value& json);
     static bool parse(const std::string& dateString, Poco::DateTime& date);

@@ -1,6 +1,6 @@
 // =============================================================================
 //
-// Copyright (c) 2009-2013 Christopher Baker <http://christopherbaker.net>
+// Copyright (c) 2009-2015 Christopher Baker <http://christopherbaker.net>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,73 +23,33 @@
 // =============================================================================
 
 
-#pragma once
-
-
-#include <stdint.h>
-#include "ofxOAuth.h"
-#include "ofx/Twitter/Tweet.h"
-#include "ofx/Twitter/Deserializer.h"
+#include "ofx/Twitter/StreamingClient.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-class Client: public ofxOAuth
-{
-public:
-    Client();
-    virtual ~Client();
+//StreamingClient::StreamingClient(int maxTasks, Poco::ThreadPool& threadPool):
+//    TaskQueue_<Poco::UUID>(maxTasks, threadPool)
+//{
+//}
+//
+//
+//StreamingClient::~StreamingClient()
+//{
+//}
+//
+//
+//void StreamingClient::setup(const std::string& consumerKey,
+//                            const std::string& consumerSecret,
+//                            const std::string& token,
+//                            const std::string& tokenSecret)
+//{
+//    _authenticator.setup(consumerKey, consumerSecret, token, tokenSecret);
+//}
+//
+//
 
-    virtual void setup(const std::string& consumerKey,
-                       const std::string& consumerSecret,
-                       const std::string& query,
-                       int64_t lastId);
-
-    bool search();
-
-    std::string getQuery() const
-    {
-        ofScopedLock lock(_mutex);
-        return _query;
-    }
-
-    uint64_t getLastId() const
-    {
-        ofScopedLock lock(_mutex);
-        return _lastID;
-    }
-
-    Tweet nextTweet()
-    {
-        ofScopedLock lock(_mutex);
-        Tweet tweet;
-
-        if(!_tweets.empty())
-        {
-            tweet = _tweets.front();
-            _tweets.erase(_tweets.begin());
-        }
-        
-        return tweet;
-    }
-
-    std::size_t size() const
-    {
-        ofScopedLock lock(_mutex);
-        return _tweets.size();
-    }
-
-private:
-    std::string _query;
-    int64_t _lastID;
-
-    std::vector<Tweet> _tweets;
-
-    mutable ofMutex _mutex;
-
-};
-
-
+    
 } } // namespace ofx::Twitter

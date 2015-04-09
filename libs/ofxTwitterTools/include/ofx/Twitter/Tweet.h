@@ -1,6 +1,6 @@
 // =============================================================================
 //
-// Copyright (c) 2009-2013 Christopher Baker <http://christopherbaker.net>
+// Copyright (c) 2009-2015 Christopher Baker <http://christopherbaker.net>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -47,29 +47,22 @@ class Tweet
 {
 public:
     Tweet();
+    
     virtual ~Tweet();
 
-    Annotations getAnnotations() const;
-    Poco::Nullable<Contributors> getContributors() const;
+    const Annotations& annotations() const;
 
-    Poco::Nullable<Geo::Coordinate> getCoordinate() const;
+    Poco::Nullable<Contributors> contributors() const;
 
-    int64_t getID() const
-    {
-        return _ID;
-    }
+    Poco::Nullable<Geo::Coordinate> coordinates() const;
 
-    Poco::DateTime getCreatedAt() const;
+    int64_t id() const;
 
-    Poco::Nullable<User> getUser() const
-    {
-        return _user;
-    }
+    Poco::DateTime createdAt() const;
 
-    std::string getText() const
-    {
-        return _text;
-    }
+    Poco::Nullable<User> user() const;
+
+    const std::string& text() const;
 
 private:
 
@@ -93,11 +86,11 @@ private:
 
     std::string _filterLevel;
 
-    int64_t _ID;
+    int64_t _id;
 
     Poco::Nullable<std::string> _inReplyToScreenName;
-    Poco::Nullable<int64_t> _inReplyToStatusID;
-    Poco::Nullable<int64_t> _inReplyToUserID;
+    Poco::Nullable<int64_t> _inReplyToStatusId;
+    Poco::Nullable<int64_t> _inReplyToUserId;
     Poco::Nullable<std::string> _lang;
     Poco::Nullable<bool> _possiblySensitive;
     // Scopes _scopes;

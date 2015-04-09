@@ -26,46 +26,60 @@
 #pragma once
 
 
-#include <set>
 #include <string>
+#include "Poco/Net/NameValueCollection.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-//    "place":
-//    {
-//        "attributes":{},
-//        "bounding_box":
-//        {
-//            "coordinates":
-//            [[
-//              [-77.119759,38.791645],
-//              [-76.909393,38.791645],
-//              [-76.909393,38.995548],
-//              [-77.119759,38.995548]
-//              ]],
-//            "type":"Polygon"
-//        },
-//        "country":"United States",
-//        "country_code":"US",
-//        "full_name":"Washington, DC",
-//        "id":"01fbe706f872cb32",
-//        "name":"Washington",
-//        "place_type":"city",
-//        "url": "http://api.twitter.com/1/geo/id/01fbe706f872cb32.json"
-//    }
-
-class Places
+/// \brief A Twitter Search Request.
+///
+/// \sa https://dev.twitter.com/rest/reference/get/search/tweets
+class SearchQuery: public Poco::Net::NameValueCollection
 {
 public:
-    Places();
-    virtual ~Places();
+    enum ResultType
+    {
+        RESULT_TYPE_MIXED,
+        RESULT_TYPE_RECENT,
+        RESULT_TYPE_POPULAR
+    };
 
-private:
+    SearchQuery();
 
-    friend class Deserializer;
+    SearchQuery(const std::string& query);
+
+    // required
+    void setQuery(const std::string& query);
+
+    // optional
+    void setGeoCode(double latitude,
+                    double longitude,
+                    double radius,
+                    const std::string& units);
+
+    // 2 letter language code.
+    // https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+    void setLanguage(const std::string& language);
+
+    void setLocale(const std::string& locale);
+
+    void setResultType(ResultType resultType);
+
+    void setCount(int count);
+
+    void setUntil(int year, int month, int day);
+
+    void setSinceId(int64_t id);
+
+    void setMaxId(int64_t id);
+
+    void setIncludeEntities(bool includeEntities);
+
+    static const std::string UNITS_MILES;
+    static const std::string UNITS_KILOMETERS;
 
 };
 

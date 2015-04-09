@@ -26,47 +26,61 @@
 #pragma once
 
 
-#include <set>
 #include <string>
+#include "Poco/Net/NameValueCollection.h"
+#include "ofx/Twitter/BaseResponse.h"
+#include "ofx/Twitter/Tweet.h"
+#include "ofx/Twitter/SearchQuery.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-//    "place":
-//    {
-//        "attributes":{},
-//        "bounding_box":
-//        {
-//            "coordinates":
-//            [[
-//              [-77.119759,38.791645],
-//              [-76.909393,38.791645],
-//              [-76.909393,38.995548],
-//              [-77.119759,38.995548]
-//              ]],
-//            "type":"Polygon"
-//        },
-//        "country":"United States",
-//        "country_code":"US",
-//        "full_name":"Washington, DC",
-//        "id":"01fbe706f872cb32",
-//        "name":"Washington",
-//        "place_type":"city",
-//        "url": "http://api.twitter.com/1/geo/id/01fbe706f872cb32.json"
-//    }
-
-class Places
+/// \brief A Twitter Search Request.
+///
+/// \sa https://dev.twitter.com/rest/reference/get/search/tweets
+class SearchResult: public BaseResponse
 {
 public:
-    Places();
-    virtual ~Places();
+    SearchResult();
 
-private:
+    SearchResult(Poco::Net::HTTPResponse::HTTPStatus status);
+
+    virtual ~SearchResult();
+
+    const std::vector<Tweet>& tweets() const;
+
+    std::size_t count() const;
+
+    const std::string& query() const;
+
+    int64_t maxId() const;
+
+    int64_t sinceId() const;
+
+    float completedIn() const;
+
+    Poco::Nullable<SearchQuery> nextResult() const;
+
+    Poco::Nullable<SearchQuery> refreshResults() const;
+
+protected:
+    std::vector<Tweet> _tweets;
+
+    float _completedIn;
+
+    int64_t _maxId;
+
+    int64_t _sinceId;
+
+    std::string _query;
+
+    Poco::Nullable<SearchQuery> _nextResult;
+
+    Poco::Nullable<SearchQuery> _refreshResult;
 
     friend class Deserializer;
-
 };
 
 

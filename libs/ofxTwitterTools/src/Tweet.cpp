@@ -1,6 +1,6 @@
 // =============================================================================
 //
-// Copyright (c) 2009-2013 Christopher Baker <http://christopherbaker.net>
+// Copyright (c) 2009-2015 Christopher Baker <http://christopherbaker.net>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -41,27 +41,45 @@ Tweet::~Tweet()
 }
 
 
-Annotations Tweet::getAnnotations() const
+const Annotations& Tweet::annotations() const
 {
     return _annotations;
 }
 
 
-Poco::Nullable<Contributors> Tweet::getContributors() const
+Poco::Nullable<Contributors> Tweet::contributors() const
 {
     return _contributors;
 }
 
 
-Poco::Nullable<Geo::Coordinate> Tweet::getCoordinate() const
+Poco::Nullable<Geo::Coordinate> Tweet::coordinates() const
 {
     return _coordinates;
 }
 
 
-Poco::DateTime Tweet::getCreatedAt() const
+int64_t Tweet::id() const
+{
+    return _id;
+}
+
+
+Poco::DateTime Tweet::createdAt() const
 {
     return _createdAt;
+}
+
+
+Poco::Nullable<User> Tweet::user() const
+{
+    return _user;
+}
+
+
+const std::string& Tweet::text() const
+{
+    return _text;
 }
 
 
