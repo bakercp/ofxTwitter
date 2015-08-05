@@ -32,10 +32,10 @@
 #include "ofx/HTTP/Context.h"
 #include "ofx/HTTP/CredentialStore.h"
 #include "ofx/HTTP/DefaultClientHeaders.h"
+#include "ofx/HTTP/DefaultClientSessionProvider.h"
 #include "ofx/HTTP/DefaultProxyProcessor.h"
 #include "ofx/HTTP/DefaultRedirectProcessor.h"
 #include "ofx/HTTP/DefaultResponseStreamFilter.h"
-#include "ofx/HTTP/DefaultSessionProvider.h"
 #include "ofx/Twitter/Credentials.h"
 #include "ofx/Twitter/SearchQuery.h"
 #include "ofx/Twitter/SearchResult.h"
@@ -58,7 +58,6 @@ public:
 
     const Credentials& getCredentials() const;
 
-
     // throws exceptions
     SearchResult search(const SearchQuery& query);
 
@@ -74,7 +73,7 @@ private:
 
     HTTP::Context _context;
 
-    HTTP::DefaultSessionProvider _defaultSessionProvider;
+    HTTP::DefaultClientSessionProvider _defaultClientSessionProvider;
     HTTP::DefaultClientHeaders _defaultClientHeaders;
     HTTP::DefaultProxyProcessor _defaultProxyProcessor;
     HTTP::DefaultRedirectProcessor _defaultRedirectProcessor;

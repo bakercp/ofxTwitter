@@ -54,7 +54,7 @@ RESTClient::~RESTClient()
 
 void RESTClient::_init()
 {
-    addRequestFilter(&_defaultSessionProvider);
+    addRequestFilter(&_defaultClientSessionProvider);
     addRequestFilter(&_defaultProxyProcessor);
     addRequestFilter(&_defaultRedirectProcessor);
     addRequestFilter(&_defaultClientHeaders);
@@ -87,6 +87,7 @@ SearchResult RESTClient::search(const SearchQuery& query)
     request.addFormFields(query);
 
     HTTP::BaseResponse response;
+
     Json::Value json;
 
     execute(request, response, json);
