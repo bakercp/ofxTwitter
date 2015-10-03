@@ -23,43 +23,43 @@
 // =============================================================================
 
 
-#include "ofx/Twitter/BaseResponse.h"
+#include "ofx/Twitter/BaseTwitterResponse.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-BaseResponse::BaseResponse(Poco::Net::HTTPResponse::HTTPStatus status):
+BaseTwitterResponse::BaseTwitterResponse(Poco::Net::HTTPResponse::HTTPStatus status):
     _status(status)
 {
 }
 
 
-BaseResponse::~BaseResponse()
+BaseTwitterResponse::~BaseTwitterResponse()
 {
 }
 
 
-const std::vector<Error>& BaseResponse::errors() const
+const std::vector<Error>& BaseTwitterResponse::errors() const
 {
     return _errors;
 }
 
 
-Poco::Net::HTTPResponse::HTTPStatus BaseResponse::status() const
+Poco::Net::HTTPResponse::HTTPStatus BaseTwitterResponse::status() const
 {
     return _status;
 }
 
 
-std::string BaseResponse::reasonForStatus() const
+std::string BaseTwitterResponse::reasonForStatus() const
 {
     return Poco::Net::HTTPResponse::getReasonForStatus(_status);
 }
 
 
-const Json::Value& BaseResponse::json() const
+const Json::Value& BaseTwitterResponse::json() const
 {
     return _json;
 }

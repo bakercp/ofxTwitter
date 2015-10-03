@@ -26,17 +26,7 @@
 #pragma once
 
 
-#include <stdint.h>
-#include "ofx/HTTP/AbstractClientTypes.h"
-#include "ofx/HTTP/BaseClient.h"
-#include "ofx/HTTP/Context.h"
-#include "ofx/HTTP/CredentialStore.h"
-#include "ofx/HTTP/DefaultClientHeaders.h"
-#include "ofx/HTTP/DefaultClientSessionProvider.h"
-#include "ofx/HTTP/DefaultProxyProcessor.h"
-#include "ofx/HTTP/DefaultRedirectProcessor.h"
-#include "ofx/HTTP/DefaultResponseStreamFilter.h"
-#include "ofx/Twitter/Credentials.h"
+#include "ofx/Twitter/BaseTwitterClient.h"
 #include "ofx/Twitter/SearchQuery.h"
 #include "ofx/Twitter/SearchResult.h"
 
@@ -45,39 +35,38 @@ namespace ofx {
 namespace Twitter {
 
 
-class RESTClient: public HTTP::BaseClient
+/// \brief A RESTClient for the Twitter API.
+/// \sa
+class RESTClient: public BaseTwitterClient
 {
 public:
+    /// \brief Create a default RESTClient.
+    ///
+    /// The user must set the appropriate credentials using the setCredentials()
+    /// method before the client will connnect to the Twitter API.
     RESTClient();
-    
+
+    /// \brief Create a RESTClient with the given Credentials.
+    /// \param credentials The Twitter Credentials.
     RESTClient(const Credentials& credentials);
 
+    /// \brief Destroys the REST client.
     virtual ~RESTClient();
 
-    void setCredentials(const Credentials& credentials);
-
-    const Credentials& getCredentials() const;
-
-    // throws exceptions
+    /// \brief Execute a Twitter Search query.
+    /// \param query The query parameters to send.
+    /// \throws Various HTTP exceptions and Poco::SyntaxException.
+    /// \returns The SearchResult, including errors if any.
     SearchResult search(const SearchQuery& query);
 
-    // throws exceptions
+    /// \brief Execute an arbitrary OAuth 1.0 authenticated HTTP request.
+    /// \param request The HTTP Request to send.
+    /// \param response The HTTP Response to receive.
+    /// \param results The JSON (if any to parse) from the executed response.
+    /// \throws Various HTTP exceptions and Poco::SyntaxException.
     void execute(HTTP::BaseRequest& request,
                  HTTP::BaseResponse& response,
                  Json::Value& results);
-
-private:
-    void _init();
-
-    Credentials _credentials;
-
-    HTTP::Context _context;
-
-    HTTP::DefaultClientSessionProvider _defaultClientSessionProvider;
-    HTTP::DefaultClientHeaders _defaultClientHeaders;
-    HTTP::DefaultProxyProcessor _defaultProxyProcessor;
-    HTTP::DefaultRedirectProcessor _defaultRedirectProcessor;
-    HTTP::DefaultResponseStreamFilter _responseStreamFilter;
 
 };
 

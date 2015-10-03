@@ -1,6 +1,6 @@
 // =============================================================================
 //
-// Copyright (c) 2009-2013 Christopher Baker <http://christopherbaker.net>
+// Copyright (c) 2009-2015 Christopher Baker <http://christopherbaker.net>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,21 +26,38 @@
 #pragma once
 
 
-#include "ofMain.h"
-#include "ofxTwitter.h"
+#include <stdint.h>
+#include "ofx/HTTP/DefaultClient.h"
+#include "ofx/HTTP/OAuth10RequestFilter.h"
+#include "ofx/Twitter/Credentials.h"
 
 
-class ofApp: public ofBaseApp
+namespace ofx {
+namespace Twitter {
+
+
+class BaseTwitterClient: public HTTP::DefaultClient
 {
 public:
-    void setup();
-    void update();
-    void draw();
+    BaseTwitterClient();
+    
+    BaseTwitterClient(const Credentials& credentials);
 
-    void keyPressed(int key);
+    virtual ~BaseTwitterClient();
 
-    ofx::Twitter::Client client;
+    void setCredentials(const Credentials& credentials);
 
-    ofx::Twitter::Tweet tweet;
+    const Credentials& getCredentials() const;
 
+protected:
+    HTTP::Context _context;
+
+private:
+    Credentials _credentials;
+
+    HTTP::OAuth10RequestFilter _oAuth10RequestFilter;
+    
 };
+
+
+} } // namespace ofx::Twitter

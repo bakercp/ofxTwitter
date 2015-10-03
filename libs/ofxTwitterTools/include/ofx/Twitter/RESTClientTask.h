@@ -23,78 +23,33 @@
 // =============================================================================
 
 
+#pragma once
+
+
+#include "ofx/Twitter/BaseTwitterClient.h"
+#include "ofx/Twitter/SearchQuery.h"
 #include "ofx/Twitter/SearchResult.h"
-#include <sstream>
 
 
 namespace ofx {
 namespace Twitter {
 
 
-SearchResult::SearchResult(): BaseTwitterResponse(Poco::Net::HTTPResponse::HTTP_OK)
+///
+class RESTClientTask: public HTTP::DefaultClientTask
 {
-}
+public:
+    RESTClientTask(BaseRequest* request,
+                   BaseResponse* response,
+                   Context* context);
 
+    virtual ~RESTClientTask();
 
-SearchResult::SearchResult(Poco::Net::HTTPResponse::HTTPStatus status):
-    BaseTwitterResponse(status)
-{
-}
-
-
-SearchResult::~SearchResult()
-{
-}
-
-    
-const std::vector<Tweet>& SearchResult::tweets() const
-{
-    return _tweets;
-}
+protected:
+    virtual void handleBufferEvent(const HTTP::ClientResponseBufferEventArgs& buffer);
     
 
-std::size_t SearchResult::count() const
-{
-    return _tweets.size();
-}
-
-
-const std::string& SearchResult::query() const
-{
-    return _query;
-}
-
-
-int64_t SearchResult::maxId() const
-{
-    return _maxId;
-}
-
-
-int64_t SearchResult::sinceId() const
-{
-    return _sinceId;
-}
-
-
-float SearchResult::completedIn() const
-{
-    return _completedIn;
-}
-
-
-Poco::Nullable<SearchQuery> SearchResult::nextResult() const
-{
-    SearchQuery query;
-    return query;
-}
-
-
-Poco::Nullable<SearchQuery> SearchResult::refreshResults() const
-{
-    SearchQuery query;
-    return query;
-}
+};
 
 
 } } // namespace ofx::Twitter

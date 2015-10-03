@@ -37,12 +37,12 @@ namespace ofx {
 namespace Twitter {
 
 
-class BaseResponse
+class BaseTwitterResponse
 {
 public:
-    BaseResponse(Poco::Net::HTTPResponse::HTTPStatus status);
+    BaseTwitterResponse(Poco::Net::HTTPResponse::HTTPStatus status);
 
-    virtual ~BaseResponse();
+    virtual ~BaseTwitterResponse();
 
     const std::vector<Error>& errors() const;
 
@@ -66,6 +66,7 @@ protected:
     std::vector<Error> _errors;
 
     friend class Deserilizer;
+    
 };
 
 

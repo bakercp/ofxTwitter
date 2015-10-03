@@ -28,7 +28,7 @@
 
 #include <string>
 #include "Poco/Net/NameValueCollection.h"
-#include "ofx/Twitter/BaseResponse.h"
+#include "ofx/Twitter/BaseTwitterResponse.h"
 #include "ofx/Twitter/Tweet.h"
 #include "ofx/Twitter/SearchQuery.h"
 
@@ -40,7 +40,7 @@ namespace Twitter {
 /// \brief A Twitter Search Request.
 ///
 /// \sa https://dev.twitter.com/rest/reference/get/search/tweets
-class SearchResult: public BaseResponse
+class SearchResult: public BaseTwitterResponse
 {
 public:
     SearchResult();

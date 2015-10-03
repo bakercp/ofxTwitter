@@ -23,71 +23,47 @@
 // =============================================================================
 
 
-#include "ofx/Twitter/RESTClient.h"
+#include "ofx/Twitter/BaseTwitterClient.h"
 #include "ofx/Twitter/Deserializer.h"
+#include "ofx/HTTP/PostRequest.h"
 #include "ofx/HTTP/GetRequest.h"
+#include "ofx/HTTP/OAuth10Credentials.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-RESTClient::RESTClient()
+BaseTwitterClient::BaseTwitterClient(): BaseTwitterClient(Credentials())
 {
 }
 
 
-RESTClient::RESTClient(const Credentials& credentials):
-    BaseTwitterClient(credentials)
+BaseTwitterClient::BaseTwitterClient(const Credentials& credentials)
+{
+    setCredentials(credentials);
+    addRequestFilter(&_oAuth10RequestFilter);
+}
+
+
+BaseTwitterClient::~BaseTwitterClient()
 {
 }
 
 
-RESTClient::~RESTClient()
+void BaseTwitterClient::setCredentials(const Credentials& credentials)
 {
+    _credentials = credentials;
+    _oAuth10RequestFilter.credentials().setConsumerKey(credentials.getConsumerKey());
+    _oAuth10RequestFilter.credentials().setConsumerSecret(credentials.getConsumerSecret());
+    _oAuth10RequestFilter.credentials().setToken(credentials.getAccessToken());
+    _oAuth10RequestFilter.credentials().setTokenSecret(credentials.getAccessTokenSecret());
 }
 
 
-SearchResult RESTClient::search(const SearchQuery& query)
+const Credentials& BaseTwitterClient::getCredentials() const
 {
-    HTTP::GetRequest request("https://api.twitter.com/1.1/search/tweets.json",
-                             Poco::Net::HTTPRequest::HTTP_1_1);
-
-    request.addFormFields(query);
-
-    HTTP::BaseResponse response;
-
-    Json::Value json;
-
-    execute(request, response, json);
-
-    SearchResult searchResult(response.getStatus());
-
-    Deserializer::deserialize(json, searchResult);
-
-    return searchResult;
-}
-
-
-void RESTClient::execute(HTTP::BaseRequest& request,
-                         HTTP::BaseResponse& response,
-                         Json::Value& results)
-{
-    // Execute the request.
-    std::istream& responseStream = BaseClient::execute(request,
-                                                       response,
-                                                       _context);
-
-    std::string buffer;
-
-    Json::Reader reader;
-
-    Poco::StreamCopier::copyToString(responseStream, buffer);
-
-    if (!reader.parse(buffer, results))
-    {
-        throw Poco::SyntaxException(reader.getFormattedErrorMessages());
-    }
+    return _credentials;
 }
 
 

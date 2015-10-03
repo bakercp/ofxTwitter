@@ -1,6 +1,6 @@
 // =============================================================================
 //
-// Copyright (c) 2009-2013 Christopher Baker <http://christopherbaker.net>
+// Copyright (c) 2013-2015 Christopher Baker <http://christopherbaker.net>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,48 +23,19 @@
 // =============================================================================
 
 
-#include "ofApp.h"
+#pragma once
 
 
-void ofApp::setup()
+#include "ofMain.h"
+#include "ofxTwitter.h"
+
+
+class ofApp: public ofBaseApp
 {
+public:
+    void setup();
+    void draw();
 
-    client.setup("T5Ll4TNkiBtnJSeXOJWL2SB5B",
-                 "QqZYNZDJ45yg41gCw7hpXdRapI6EOlXbkMqZTXPmYKWyfIH2Vq",
-                 "love",
-                 0);
+    ofx::Twitter::RESTClient client;
 
-    client.search();
-}
-
-
-void ofApp::update()
-{
-}
-
-
-void ofApp::draw()
-{
-    ofBackground(0);
-
-    std::stringstream ss;
-
-    ss << ofx::Time::Utils::format(tweet.getCreatedAt()) << std::endl;
-
-    if (!tweet.getUser().isNull())
-    {
-        const ofx::Twitter::User& user = tweet.getUser().value();
-        ss << user.getName() << std::endl;
-        ss << ofx::Time::Utils::format(tweet.getCreatedAt()) << std::endl;
-    }
-
-    ss << tweet.getText() << std::endl;
-
-    ofDrawBitmapString(ss.str(), ofVec2f(14, 14));
-}
-
-
-void ofApp::keyPressed(int key)
-{
-    tweet = client.nextTweet();
-}
+};

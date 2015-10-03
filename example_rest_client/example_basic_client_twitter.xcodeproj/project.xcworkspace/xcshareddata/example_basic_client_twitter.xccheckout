@@ -5,9 +5,9 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>FE7A80B3-3761-4FD6-A492-93F02FAB1A68</string>
+	<string>4D627078-CFA1-4862-8D0B-6E405A14BCF1</string>
 	<key>IDESourceControlProjectName</key>
-	<string>example</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>2DE9C8846D9375EAACFABA8963120E8E7719BAF5</key>
@@ -20,8 +20,6 @@
 		<string>github.com:bakercp/ofxSSLManager.git</string>
 		<key>6DBA07F83F7AF99DB5F116332E6446603283BF4C</key>
 		<string>github.com:bakercp/ofxHTTP.git</string>
-		<key>6DFDEEAED5C97364A7A859C0B354E13F95C94005</key>
-		<string>github.com:bakercp/ofxTime.git</string>
 		<key>7D215289D38CC73E3FF95087CBCD4B89F3859F53</key>
 		<string>github.com:SAIC/ofxTwitterTools.git</string>
 		<key>7ED0D15754D9EE08B829B967643A20055B98F6F4</key>
@@ -34,15 +32,13 @@
 		<string>github.com:bakercp/ofxMediaType.git</string>
 		<key>CE427DFEAC7CF46E0343E32288BC15C14F0689BB</key>
 		<string>github.com:SAIC/ofxTaskQueue.git</string>
-		<key>F25669FEDC8B3DC81FF8A8FBA5A345D6ADCAB1D0</key>
-		<string>github.com:bakercp/ofxOAuth.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>example/example.xcodeproj</string>
+	<string>example_rest_client/example_basic_client_twitter.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>2DE9C8846D9375EAACFABA8963120E8E7719BAF5</key>
-		<string>../../../..</string>
+		<string>../../../../..</string>
 		<key>4401B78D6A43C47BEBBD941DAE88FAC3E6BE9980</key>
 		<string>../../../../ofxNetworkUtils</string>
 		<key>5DB7C332A3A89035E93556A2A38BF414005BA671</key>
@@ -51,8 +47,6 @@
 		<string>../../../../ofxSSLManager</string>
 		<key>6DBA07F83F7AF99DB5F116332E6446603283BF4C</key>
 		<string>../../../../ofxHTTP</string>
-		<key>6DFDEEAED5C97364A7A859C0B354E13F95C94005</key>
-		<string>../../../../ofxTime</string>
 		<key>7D215289D38CC73E3FF95087CBCD4B89F3859F53</key>
 		<string>../../..</string>
 		<key>7ED0D15754D9EE08B829B967643A20055B98F6F4</key>
@@ -65,8 +59,6 @@
 		<string>../../../../ofxMediaType</string>
 		<key>CE427DFEAC7CF46E0343E32288BC15C14F0689BB</key>
 		<string>../../../../ofxTaskQueue</string>
-		<key>F25669FEDC8B3DC81FF8A8FBA5A345D6ADCAB1D0</key>
-		<string>../../../../ofxOAuth</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>github.com:SAIC/ofxTwitterTools.git</string>
@@ -82,7 +74,7 @@
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>2DE9C8846D9375EAACFABA8963120E8E7719BAF5</string>
 			<key>IDESourceControlWCCName</key>
-			<string></string>
+			<string>..</string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
@@ -136,14 +128,6 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>F25669FEDC8B3DC81FF8A8FBA5A345D6ADCAB1D0</string>
-			<key>IDESourceControlWCCName</key>
-			<string>ofxOAuth</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>92CBB09FB1FEF12B475B64CE56E8995C1DE44643</string>
 			<key>IDESourceControlWCCName</key>
 			<string>ofxSpatialHash</string>
@@ -163,14 +147,6 @@
 			<string>CE427DFEAC7CF46E0343E32288BC15C14F0689BB</string>
 			<key>IDESourceControlWCCName</key>
 			<string>ofxTaskQueue</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>6DFDEEAED5C97364A7A859C0B354E13F95C94005</string>
-			<key>IDESourceControlWCCName</key>
-			<string>ofxTime</string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
