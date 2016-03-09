@@ -1,7 +1,10 @@
+ofxGeo
 ofxHTTP
 ofxIO
 ofxJSON
 ofxMediaType
-ofxTaskQueue
+ofxNetworkUtils
 ofxSSLManager
-addons
+ofxSpatialHash
+ofxTaskQueue
+ofxTwitterTools
