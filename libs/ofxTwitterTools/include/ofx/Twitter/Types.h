@@ -41,15 +41,21 @@ class BaseUser
 {
 public:
     BaseUser();
-    BaseUser(int64_t ID, const std::string& screenName);
+    BaseUser(int64_t is, const std::string& screenName);
 
     virtual ~BaseUser();
 
-    int64_t getID() const;
-    const std::string& getScreenName() const;
+    /// \returns the user id.
+    int64_t id() const;
+
+    /// \returns the user screen name.
+    std::string screenName() const;
 
 private:
-    int64_t _ID;
+    /// \brief The user id.
+    int64_t _id = -1;
+
+    /// \brief The user screen name.
     std::string _screenName;
 
     friend class Deserializer;
@@ -67,10 +73,11 @@ public:
 
     virtual ~BaseNamedUser();
 
-    const std::string& getName() const;
+    std::string name() const;
 
 private:
     std::string _name;
+
     friend class Deserializer;
 };
 

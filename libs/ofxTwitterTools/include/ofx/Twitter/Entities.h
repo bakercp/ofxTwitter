@@ -43,14 +43,14 @@ public:
 
     virtual ~BaseIndexedEntity();
 
-    std::size_t getStartIndex() const;
-    std::size_t getEndIndex() const;
+    std::size_t startIndex() const;
+    std::size_t endIndex() const;
 
-    virtual const std::string& getIndexedText() const = 0;
+    virtual std::string indexedText() const = 0;
 
 private:
-    std::size_t _startIndex;
-    std::size_t _endIndex;
+    std::size_t _startIndex = 0;
+    std::size_t _endIndex = 0;
     
 };
 
@@ -64,8 +64,8 @@ public:
 
     virtual ~HashTagEntity();
 
-    const std::string& getHashTag() const;
-    const std::string& getIndexedText() const;
+    std::string hashTag() const;
+    std::string indexedText() const override;
 
 private:
     std::string _hashTag;
@@ -76,23 +76,23 @@ private:
 class URLEntity: public BaseIndexedEntity
 {
 public:
-    URLEntity(const std::string& URL,
-              const std::string& URLDisplay,
-              const std::string& URLExpanded,
+    URLEntity(const std::string& url,
+              const std::string& displayURL,
+              const std::string& expandedURL,
               std::size_t startIndex,
               std::size_t endIndex);
 
     virtual ~URLEntity();
 
-    const std::string& getURL() const;
-    const std::string& getDisplayURL() const;
-    const std::string& getExpandedURL() const;
-    const std::string& getIndexedText() const;
+    std::string url() const;
+    std::string displayURL() const;
+    std::string expandedURL() const;
+    std::string indexedText() const;
 
 private:
-    std::string _URL;
-    std::string _URLDisplay;
-    std::string _URLExpanded;
+    std::string _url;
+    std::string _displayURL;
+    std::string _expandedURL;
 
 };
 
@@ -100,7 +100,7 @@ private:
 class MediaEntitySize
 {
 public:
-    enum Type
+    enum class Type
     {
         THUMB,
         SMALL,
@@ -108,7 +108,7 @@ public:
         LARGE
     };
 
-    enum Resize
+    enum class Resize
     {
         CROP,
         FIT
@@ -121,16 +121,16 @@ public:
 
     virtual ~MediaEntitySize();
 
-    Type getType() const;
-    Resize getResize() const;
-    std::size_t getWidth() const;
-    std::size_t getHeight() const;
+    Type type() const;
+    Resize resize() const;
+    std::size_t width() const;
+    std::size_t height() const;
 
 private:
-    Type _type;
-    Resize _resize;
-    std::size_t _width;
-    std::size_t _height;
+    Type _type = Type::THUMB;
+    Resize _resize = Resize::CROP;
+    std::size_t _width = 0;
+    std::size_t _height = 0;
 
 };
 
@@ -140,16 +140,16 @@ class MediaEntity: public URLEntity
 public:
     typedef std::map<MediaEntitySize::Type, MediaEntitySize> Sizes;
 
-    enum Type
+    enum class Type
     {
         PHOTO
     };
 
-    MediaEntity(const std::string& URL,
-                const std::string& URLDisplay,
-                const std::string& URLExpanded,
-                const std::string& URLMedia,
-                const std::string& URLMediaHTTPS,
+    MediaEntity(const std::string& url,
+                const std::string& displayURL,
+                const std::string& expandedURL,
+                const std::string& mediaURL,
+                const std::string& secureMediaURL,
                 int64_t mediaID,
                 Type type,
                 Sizes sizes,
@@ -159,20 +159,20 @@ public:
 
     virtual ~MediaEntity();
 
-    const std::string& getMediaURL() const;
-    const std::string& getSecureMediaURL() const;
-    int64_t getMediaID() const;
-    Sizes getSizes() const;
-    Type getType() const;
-    int64_t getSourceStatusID() const;
+    std::string mediaURL() const;
+    std::string secureMediaURL() const;
+    int64_t mediaID() const;
+    Sizes sizes() const;
+    Type type() const;
+    int64_t sourceStatusID() const;
 
 private:
-    std::string _URLMedia;
-    std::string _URLMediaHTTPS;
-    int64_t _mediaID;
+    std::string _mediaURL;
+    std::string _secureMediaURL;
+    int64_t _mediaID = 0;
     Sizes _sizes;
     Type _type;
-    int64_t _sourceStatusID;
+    int64_t _sourceStatusID = -1;
 
 };
 
@@ -180,14 +180,15 @@ private:
 class UserMentionEntity: public BaseNamedUser, public BaseIndexedEntity
 {
 public:
-    UserMentionEntity(int64_t ID,
+    UserMentionEntity(int64_t id,
                       const std::string& screenName,
                       const std::string& name,
                       std::size_t startIndex,
                       std::size_t endIndex);
 
     virtual ~UserMentionEntity();
-    virtual const std::string& getIndexedText() const;
+    
+    virtual std::string indexedText() const override;
 
 };
 
@@ -209,10 +210,10 @@ public:
 
     virtual ~Entities();
 
-    const HashTagEntities& getHasTagEntities() const;
-    const MediaEntities& getMediaEntities() const;
-    const URLEntities& getURLEntities() const;
-    const UserMentionEntities& getUserMentionEntities() const;
+    HashTagEntities hasTagEntities() const;
+    MediaEntities mediaEntities() const;
+    URLEntities urlEntities() const;
+    UserMentionEntities userMentionEntities() const;
 
 private:
     HashTagEntities _hashTagEntities;

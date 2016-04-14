@@ -30,67 +30,14 @@ namespace ofx {
 namespace Twitter {
 
 
-User::User():
-    BaseNamedUser(),
-    _contributorsEnabled(false),
-    _createdAt(Poco::DateTime()),
-    _hasDefaultProfile(false),
-    _hasDefaultProfileImage(false),
-    _description(Poco::Nullable<std::string>()),
-    _entities(Entities()),
-    _favouritesCount(0),
-    _followRequestSent(Poco::Nullable<bool>()),
-    _followersCount(0),
-    _friendsCount(0),
-    _isGeoEnabled(false),
-    _isTranslator(false),
-    _language("en"),
-    _listedCount(0),
-    _location(Poco::Nullable<std::string>()),
-    _profile(Profile()),
-    _isProtected(false),
-    _showsAllInlineMedia(false),
-//    _status(Poco::Nullable<Tweet>()),
-    _statusesCount(0),
-    _timeZone(Poco::Nullable<std::string>()),
-    _url(Poco::Nullable<std::string>()),
-    _UTCOffset(Poco::Nullable<int>()),
-    _isVerified(false),
-    _withheldInCountries(Contries()),
-    _withheldScope(USER)
+User::User()
 {
 }
 
 User::User(int64_t ID,
            const std::string& screenName,
            const std::string& name):
-    BaseNamedUser(ID, screenName, name),
-    _contributorsEnabled(false),
-    _createdAt(Poco::DateTime()),
-    _hasDefaultProfile(false),
-    _hasDefaultProfileImage(false),
-    _description(Poco::Nullable<std::string>()),
-    _entities(Entities()),
-    _favouritesCount(0),
-    _followRequestSent(Poco::Nullable<bool>()),
-    _followersCount(0),
-    _friendsCount(0),
-    _isGeoEnabled(false),
-    _isTranslator(false),
-    _language("en"),
-    _listedCount(0),
-    _location(Poco::Nullable<std::string>()),
-    _profile(Profile()),
-    _isProtected(false),
-    _showsAllInlineMedia(false),
-//    _status(Poco::Nullable<Tweet>()),
-    _statusesCount(0),
-    _timeZone(Poco::Nullable<std::string>()),
-    _url(Poco::Nullable<std::string>()),
-    _UTCOffset(Poco::Nullable<int>()),
-    _isVerified(false),
-    _withheldInCountries(Contries()),
-    _withheldScope(USER)
+    BaseNamedUser(ID, screenName, name)
 {
 }
 
@@ -106,7 +53,7 @@ bool User::areContributorsEnabled() const
 }
 
 
-const Poco::DateTime& User::getCreatedAt() const
+Poco::DateTime User::createdAt() const
 {
     return _createdAt;
 }
@@ -124,37 +71,37 @@ bool User::hasDefaultProfileImage() const
 }
 
 
-const Poco::Nullable<std::string>& User::getDescription() const
+std::string User::description() const
 {
     return _description;
 }
 
 
-const Entities& User::getEntities() const
+Entities User::entities() const
 {
     return _entities;
 }
 
 
-int User::getFavouritesCount() const
+int User::favouritesCount() const
 {
     return _favouritesCount;
 }
 
 
-const Poco::Nullable<bool>& User::wasFollowRequestSent() const
+bool User::wasFollowRequestSent() const
 {
     return _followRequestSent;
 }
 
 
-int User::getFollowersCount() const
+int User::followersCount() const
 {
     return _followersCount;
 }
 
 
-int User::getFriendsCount() const
+int User::friendsCount() const
 {
     return _friendsCount;
 }
@@ -172,25 +119,25 @@ bool User::isTranslator() const
 }
 
 
-const std::string& User::getLanguage() const
+std::string User::language() const
 {
     return _language;
 }
 
 
-int User::getListedCount() const
+int User::listedCount() const
 {
     return _listedCount;
 }
 
 
-const Poco::Nullable<std::string>& User::getLocation() const
+std::string User::location() const
 {
     return _location;
 }
 
 
-const Profile& User::getProfile() const
+Profile User::profile() const
 {
     return _profile;
 }
@@ -214,25 +161,25 @@ bool User::showsAllInlineMedia()
 //}
 
 
-int User::getStatusesCount() const
+int User::statusesCount() const
 {
     return _statusesCount;
 }
 
 
-const Poco::Nullable<std::string>& User::getTimeZone() const
+std::string User::timeZone() const
 {
     return _timeZone;
 }
 
 
-const Poco::Nullable<std::string>& User::getURL() const
+std::string User::url() const
 {
     return _url;
 }
 
 
-const Poco::Nullable<int>& User::getUTCOffset() const
+int User::utcOffset() const
 {
     return _UTCOffset;
 }
@@ -244,13 +191,13 @@ bool User::isVerified() const
 }
 
 
-const Contries& User::getWithheldInCountries() const
+Contries User::withheldInCountries() const
 {
     return _withheldInCountries;
 }
     
 
-const User::WithheldScope& User::getWithheldScope() const
+User::WithheldScope User::withheldScope() const
 {
     return _withheldScope;
 }

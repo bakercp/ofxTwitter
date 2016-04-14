@@ -54,10 +54,10 @@ BaseTwitterClient::~BaseTwitterClient()
 void BaseTwitterClient::setCredentials(const Credentials& credentials)
 {
     _credentials = credentials;
-    _oAuth10RequestFilter.credentials().setConsumerKey(credentials.getConsumerKey());
-    _oAuth10RequestFilter.credentials().setConsumerSecret(credentials.getConsumerSecret());
-    _oAuth10RequestFilter.credentials().setToken(credentials.getAccessToken());
-    _oAuth10RequestFilter.credentials().setTokenSecret(credentials.getAccessTokenSecret());
+    _oAuth10RequestFilter.credentials().setConsumerKey(credentials.consumerKey());
+    _oAuth10RequestFilter.credentials().setConsumerSecret(credentials.consumerSecret());
+    _oAuth10RequestFilter.credentials().setToken(credentials.accessToken());
+    _oAuth10RequestFilter.credentials().setTokenSecret(credentials.accessTokenSecret());
 }
 
 

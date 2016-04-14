@@ -66,25 +66,25 @@ Credentials::~Credentials()
 }
 
 
-const std::string& Credentials::getConsumerKey() const
+std::string Credentials::consumerKey() const
 {
     return _consumerKey;
 }
 
 
-const std::string& Credentials::getConsumerSecret() const
+std::string Credentials::consumerSecret() const
 {
     return _consumerSecret;
 }
 
 
-const std::string& Credentials::getAccessToken() const
+std::string Credentials::accessToken() const
 {
     return _accessToken;
 }
 
 
-const std::string& Credentials::getAccessTokenSecret() const
+std::string Credentials::accessTokenSecret() const
 {
     return _accessTokenSecret;
 }

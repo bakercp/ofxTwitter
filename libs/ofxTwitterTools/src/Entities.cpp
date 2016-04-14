@@ -43,13 +43,13 @@ BaseIndexedEntity::~BaseIndexedEntity()
 }
 
 
-std::size_t BaseIndexedEntity::getStartIndex() const
+std::size_t BaseIndexedEntity::startIndex() const
 {
     return _startIndex;
 }
 
 
-std::size_t BaseIndexedEntity::getEndIndex() const
+std::size_t BaseIndexedEntity::endIndex() const
 {
     return _endIndex;
 }
@@ -69,26 +69,26 @@ HashTagEntity::~HashTagEntity()
 }
 
 
-const std::string& HashTagEntity::getHashTag() const
+std::string HashTagEntity::hashTag() const
 {
     return _hashTag;
 }
 
 
-const std::string& HashTagEntity::getIndexedText() const
+std::string HashTagEntity::indexedText() const
 {
     return _hashTag;
 }
 
 
-URLEntity::URLEntity(const std::string& URL,
-                     const std::string& URLDisplay,
-                     const std::string& URLExpanded,
+URLEntity::URLEntity(const std::string& url,
+                     const std::string& displayURL,
+                     const std::string& expandedURL,
                      std::size_t startIndex,
                      std::size_t endIndex):
-    _URL(URL),
-    _URLDisplay(URLDisplay),
-    _URLExpanded(URLExpanded),
+    _url(url),
+    _displayURL(displayURL),
+    _expandedURL(expandedURL),
     BaseIndexedEntity(startIndex, endIndex)
 {
 }
@@ -99,27 +99,27 @@ URLEntity::~URLEntity()
 }
 
 
-const std::string& URLEntity::getURL() const
+std::string URLEntity::url() const
 {
-    return _URL;
+    return _url;
 }
 
 
-const std::string& URLEntity::getDisplayURL() const
+std::string URLEntity::displayURL() const
 {
-    return _URLDisplay;
+    return _displayURL;
 }
 
 
-const std::string& URLEntity::getExpandedURL() const
+std::string URLEntity::expandedURL() const
 {
-    return _URLExpanded;
+    return _expandedURL;
 }
 
 
-const std::string& URLEntity::getIndexedText() const
+std::string URLEntity::indexedText() const
 {
-    return _URL;
+    return _url;
 }
 
 
@@ -140,44 +140,44 @@ MediaEntitySize::~MediaEntitySize()
 }
 
 
-MediaEntitySize::Type MediaEntitySize::getType() const
+MediaEntitySize::Type MediaEntitySize::type() const
 {
     return _type;
 }
 
 
-MediaEntitySize::Resize MediaEntitySize::getResize() const
+MediaEntitySize::Resize MediaEntitySize::resize() const
 {
     return _resize;
 }
 
 
-std::size_t MediaEntitySize::getWidth() const
+std::size_t MediaEntitySize::width() const
 {
     return _width;
 }
 
 
-std::size_t MediaEntitySize::getHeight() const
+std::size_t MediaEntitySize::height() const
 {
     return _height;
 }
 
 
-MediaEntity::MediaEntity(const std::string& URL,
-                         const std::string& URLDisplay,
-                         const std::string& URLExpanded,
-                         const std::string& URLMedia,
-                         const std::string& URLMediaHTTPS,
+MediaEntity::MediaEntity(const std::string& url,
+                         const std::string& displayURL,
+                         const std::string& expandedURL,
+                         const std::string& mediaURL,
+                         const std::string& secureMediaURL,
                          int64_t mediaID,
                          Type type,
                          Sizes sizes,
                          int64_t sourceStatusID,
                          std::size_t startIndex,
                          std::size_t endIndex):
-    URLEntity(URL, URLDisplay, URLExpanded, startIndex, endIndex),
-    _URLMedia(URLMedia),
-    _URLMediaHTTPS(URLMediaHTTPS),
+    URLEntity(url, displayURL, expandedURL, startIndex, endIndex),
+    _mediaURL(mediaURL),
+    _secureMediaURL(secureMediaURL),
     _mediaID(mediaID),
     _type(type),
     _sizes(sizes),
@@ -191,48 +191,48 @@ MediaEntity::~MediaEntity()
 }
 
 
-const std::string& MediaEntity::getMediaURL() const
+std::string MediaEntity::mediaURL() const
 {
-    return _URLMedia;
+    return _mediaURL;
 }
 
 
-const std::string& MediaEntity::getSecureMediaURL() const
+std::string MediaEntity::secureMediaURL() const
 {
-    return _URLMediaHTTPS;
+    return _secureMediaURL;
 }
 
 
-int64_t MediaEntity::getMediaID() const
+int64_t MediaEntity::mediaID() const
 {
     return _mediaID;
 }
 
 
-MediaEntity::Sizes MediaEntity::getSizes() const
+MediaEntity::Sizes MediaEntity::sizes() const
 {
     return _sizes;
 }
 
 
-MediaEntity::Type MediaEntity::getType() const
+MediaEntity::Type MediaEntity::type() const
 {
     return _type;
 }
 
 
-int64_t MediaEntity::getSourceStatusID() const
+int64_t MediaEntity::sourceStatusID() const
 {
     return _sourceStatusID;
 }
 
 
-UserMentionEntity::UserMentionEntity(int64_t ID,
+UserMentionEntity::UserMentionEntity(int64_t id,
                                      const std::string& screenName,
                                      const std::string& name,
                                      std::size_t startIndex,
                                      std::size_t endIndex):
-    BaseNamedUser(ID, screenName, name),
+    BaseNamedUser(id, screenName, name),
     BaseIndexedEntity(startIndex, endIndex)
 {
 }
@@ -243,9 +243,9 @@ UserMentionEntity::~UserMentionEntity()
 }
 
 
-const std::string& UserMentionEntity::getIndexedText() const
+std::string UserMentionEntity::indexedText() const
 {
-    return getScreenName();
+    return screenName();
 }
 
 
@@ -270,25 +270,25 @@ Entities::~Entities()
 }
 
     
-const Entities::HashTagEntities& Entities::getHasTagEntities() const
+Entities::HashTagEntities Entities::hasTagEntities() const
 {
     return _hashTagEntities;
 }
 
 
-const Entities::MediaEntities& Entities::getMediaEntities() const
+Entities::MediaEntities Entities::mediaEntities() const
 {
     return _mediaEntities;
 }
 
 
-const Entities::URLEntities& Entities::getURLEntities() const
+Entities::URLEntities Entities::urlEntities() const
 {
     return _URLEntities;
 }
 
 
-const Entities::UserMentionEntities& Entities::getUserMentionEntities() const
+Entities::UserMentionEntities Entities::userMentionEntities() const
 {
     return _userMentionEntities;
 }

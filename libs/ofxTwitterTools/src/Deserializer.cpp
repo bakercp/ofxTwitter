@@ -94,7 +94,7 @@ bool Deserializer::deserialize(const Json::Value& json, User& user)
 {
     if (json.isMember("id"))
     {
-        user._ID = json["id"].asInt64();
+        user._id = json["id"].asInt64();
     }
 
     if (json.isMember("screen_name"))
@@ -117,7 +117,7 @@ bool Deserializer::deserialize(const Json::Value& json, BaseNamedUser& user)
 {
     if (json.isMember("id"))
     {
-        user._ID = json["id"].asInt64();
+        user._id = json["id"].asInt64();
     }
 
     if (json.isMember("screen_name"))
@@ -138,7 +138,7 @@ bool Deserializer::deserialize(const Json::Value& json, BaseUser& user)
 {
     if (json.isMember("id"))
     {
-        user._ID = json["id"].asInt64();
+        user._id = json["id"].asInt64();
     }
 
     if (json.isMember("screen_name"))
@@ -189,7 +189,7 @@ bool Deserializer::deserialize(const Json::Value& json,
             {
                 User user;
                 if(deserialize(status["user"], user))
-                    tweet._user = user;
+                    tweet._user = std::make_shared<User>(user);
             }
 
             tweets.push_back(tweet);

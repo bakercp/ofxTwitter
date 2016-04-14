@@ -30,13 +30,13 @@ namespace ofx {
 namespace Twitter {
 
 
-BaseUser::BaseUser(): _ID(-1), _screenName("")
+BaseUser::BaseUser()
 {
 }
 
 
-BaseUser::BaseUser(int64_t ID, const std::string& screenName):
-    _ID(ID),
+BaseUser::BaseUser(int64_t id, const std::string& screenName):
+    _id(id),
     _screenName(screenName)
 {
 }
@@ -47,27 +47,27 @@ BaseUser::~BaseUser()
 }
 
 
-int64_t BaseUser::getID() const
+int64_t BaseUser::id() const
 {
-    return _ID;
+    return _id;
 }
 
 
-const std::string& BaseUser::getScreenName() const
+std::string BaseUser::screenName() const
 {
     return _screenName;
 }
 
 
-BaseNamedUser::BaseNamedUser(): BaseUser(), _name("")
+BaseNamedUser::BaseNamedUser()
 {
 }
 
 
-BaseNamedUser::BaseNamedUser(int64_t ID,
+BaseNamedUser::BaseNamedUser(int64_t id,
                              const std::string& screenName,
                              const std::string& name):
-    BaseUser(ID, screenName),
+    BaseUser(id, screenName),
     _name(name)
 {
 }
@@ -78,7 +78,7 @@ BaseNamedUser::~BaseNamedUser()
 }
 
 
-const std::string& BaseNamedUser::getName() const
+std::string BaseNamedUser::name() const
 {
     return _name;
 }

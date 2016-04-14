@@ -50,66 +50,90 @@ public:
     
     virtual ~Tweet();
 
-    const Annotations& annotations() const;
+    Annotations annotations() const;
 
-    Poco::Nullable<Contributors> contributors() const;
+    Contributors contributors() const;
 
-    Poco::Nullable<Geo::Coordinate> coordinates() const;
+    /// \returns coordinates or nullptr if no coordinates are specified.
+    const Geo::Coordinate* coordinates() const;
 
     int64_t id() const;
 
     Poco::DateTime createdAt() const;
 
-    Poco::Nullable<User> user() const;
+    /// \returns the user or nullptr if no user is specified.
+    const User* user() const;
 
-    const std::string& text() const;
+    std::string text() const;
 
 private:
+    Annotations _annotations;
 
-    Annotations _annotations; // unused
+    Contributors _contributors;
 
-    Poco::Nullable<Contributors> _contributors;
-
-    Poco::Nullable<Geo::Coordinate> _coordinates;
-
+    /// \brief Optional location data.
+    ///
+    /// We use a std::shared_ptr to keep track to make it nullable and avoid
+    /// the hassle of std::unique_ptr and copies.
+    std::shared_ptr<Geo::Coordinate> _coordinates;
+    
     Poco::DateTime _createdAt;
 
-    int64_t _utcOffset;
+    int64_t _utcOffset = 0;
 
-    Poco::Nullable<int64_t> _currentUserRetweet;
+    int64_t _currentUserRetweet = -1;
 
     Entities _entities;
 
-    Poco::Nullable<int64_t> _favoriteCount;
+    int64_t _favoriteCount = -1;
 
-    Poco::Nullable<bool> _favorited;
+    bool _favorited = false;
 
     std::string _filterLevel;
 
-    int64_t _id;
+    int64_t _id = -1;
 
-    Poco::Nullable<std::string> _inReplyToScreenName;
-    Poco::Nullable<int64_t> _inReplyToStatusId;
-    Poco::Nullable<int64_t> _inReplyToUserId;
-    Poco::Nullable<std::string> _lang;
-    Poco::Nullable<bool> _possiblySensitive;
+    std::string _inReplyToScreenName;
+
+    int64_t _inReplyToStatusId = -1;
+
+    int64_t _inReplyToUserId = -1;
+
+    std::string _lang;
+
+    bool _possiblySensitive = false;
+
     // Scopes _scopes;
 
-    int64_t _retweetCount;
+    int64_t _retweetCount = -1;
 
-    Poco::Nullable<bool> _retweeted;
+    bool _retweeted = false;
 
-//    Poco::Nullable<Tweet> _retweetedStatus;
+    /// \brief An optional Tweet.
+    ///
+    /// We use a std::shared_ptr to keep track to make it nullable and avoid
+    /// the hassle of std::unique_ptr and copies.
+    std::shared_ptr<Tweet> _retweetedStatus;
+
     std::string _source;
+
     std::string _text;
 
-    bool _truncated;
+    bool _truncated = false;
 
-    Poco::Nullable<User> _user;
+    /// \brief Optional user data.
+    ///
+    /// We use a std::shared_ptr to keep track to make it nullable and avoid
+    /// the hassle of std::unique_ptr and copies.
+    std::shared_ptr<User> _user;
 
     bool _withheldCopyright;
 
-    Poco::Nullable<Places> _places;
+    /// \brief Optional user data.
+    ///
+    /// We use a std::shared_ptr to keep track to make it nullable and avoid
+    /// the hassle of std::unique_ptr and copies.
+    std::shared_ptr<Places> _places;
 
     friend class Deserializer;
 

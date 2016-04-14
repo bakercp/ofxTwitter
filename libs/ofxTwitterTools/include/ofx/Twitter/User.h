@@ -35,18 +35,20 @@
 #include "ofx/Twitter/Types.h"
 #include "ofx/Twitter/Entities.h"
 #include "ofx/Twitter/Profile.h"
-//#include "ofx/Twitter/Tweet.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
+class Tweet;
+    
+
 // https://dev.twitter.com/docs/platform-objects/users
 class User: public BaseNamedUser
 {
 public:
-    enum WithheldScope
+    enum class WithheldScope
     {
         USER,
         STATUS
@@ -61,66 +63,89 @@ public:
     virtual ~User();
 
     bool areContributorsEnabled() const;
-    const Poco::DateTime& getCreatedAt() const;
+    Poco::DateTime createdAt() const;
     bool hasDefaultProfile() const;
     bool hasDefaultProfileImage() const;
-    const Poco::Nullable<std::string>& getDescription() const;
-    const Entities& getEntities() const;
-    int getFavouritesCount() const;
-    const Poco::Nullable<bool>& wasFollowRequestSent() const;
-    int getFollowersCount() const;
-    int getFriendsCount() const;
+    std::string description() const;
+    Entities entities() const;
+    int favouritesCount() const;
+    bool wasFollowRequestSent() const;
+    int followersCount() const;
+    int friendsCount() const;
     bool isGeoEnabled() const;
     bool isTranslator() const;
-    const std::string& getLanguage() const;
-    int getListedCount() const;
-    const Poco::Nullable<std::string>& getLocation() const;
-    const Profile& getProfile() const;
+    std::string language() const;
+    int listedCount() const;
+    std::string location() const;
+    Profile profile() const;
     bool isProtected() const;
     bool showsAllInlineMedia();
-//    Poco::Nullable<Tweet> getStatus() const;
-    int getStatusesCount() const;
-    const Poco::Nullable<std::string>& getTimeZone() const;
-    const Poco::Nullable<std::string>& getURL() const;
-    const Poco::Nullable<int>& getUTCOffset() const;
+
+    /// \returns status or nullptr if not available.
+    Tweet* status() const;
+    int statusesCount() const;
+    std::string timeZone() const;
+    std::string url() const;
+    int utcOffset() const;
     bool isVerified() const;
-    const Contries& getWithheldInCountries() const;
-    const WithheldScope& getWithheldScope() const;
+    Contries withheldInCountries() const;
+    WithheldScope withheldScope() const;
 
 private:
-    bool _contributorsEnabled;
-    Poco::DateTime _createdAt;
-    bool _hasDefaultProfile;
-    bool _hasDefaultProfileImage;
+    bool _contributorsEnabled = false;
 
-    Poco::Nullable<std::string> _description;
+    Poco::DateTime _createdAt;
+
+    bool _hasDefaultProfile = false;;
+
+    bool _hasDefaultProfileImage = false;
+
+    std::string _description;
+
     Entities _entities;
-    int _favouritesCount;
-    Poco::Nullable<bool> _followRequestSent;
-    int _followersCount;
-    int _friendsCount;
-    bool _isGeoEnabled;
-    bool _isTranslator;
+
+    int _favouritesCount = -1;
+
+    bool _followRequestSent = false;
+
+    int _followersCount =-1;
+
+    int _friendsCount = -1;
+
+    bool _isGeoEnabled = false;
+
+    bool _isTranslator = false;
+
     std::string _language;
-    int _listedCount;
-    Poco::Nullable<std::string> _location;
+
+    int _listedCount = 0;
+
+    std::string _location;
 
     Profile _profile;
 
-    bool _isProtected;
+    bool _isProtected = false;
 
-    bool _showsAllInlineMedia;
+    bool _showsAllInlineMedia = false;
 
-//    Poco::Nullable<Tweet> _status;
+    /// \brief Optional Twitter status.
+    ///
+    /// We use a std::shared_ptr to keep track to make it nullable and avoid
+    /// the hassle of std::unique_ptr and copies.
+    std::shared_ptr<Tweet> _status;
+
     int _statusesCount;
 
-    Poco::Nullable<std::string> _timeZone;
-    Poco::Nullable<std::string> _url;
-    Poco::Nullable<int> _UTCOffset; // < 0 unset
+    std::string _timeZone;
 
-    bool _isVerified;
+    std::string _url;
+
+    int _UTCOffset = 0;
+
+    bool _isVerified = false;
 
     Contries _withheldInCountries;
+
     WithheldScope _withheldScope;
 
     friend class Deserializer;

@@ -50,13 +50,13 @@ public:
     /// \brief Destroy the Credentials.
     virtual ~Credentials();
 
-    const std::string& getConsumerKey() const;
+    std::string consumerKey() const;
 
-    const std::string& getConsumerSecret() const;
+    std::string consumerSecret() const;
 
-    const std::string& getAccessToken() const;
+    std::string accessToken() const;
 
-    const std::string& getAccessTokenSecret() const;
+    std::string accessTokenSecret() const;
 
     static Credentials fromJSON(const Json::Value& value);
 

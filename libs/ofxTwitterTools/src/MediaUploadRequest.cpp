@@ -23,37 +23,47 @@
 // =============================================================================
 
 
-#include "ofx/Twitter/Upload.h"
+#include "ofx/Twitter/MediaUploadRequest.h"
 #include "ofLog.h"
 #include <sstream>
 #include "Poco/Net/HTTPRequest.h"
+#include "ofx/IO/ByteBuffer.h"
+#include "ofx/IO/Base64Encoding.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-const std::string UploadRequest::RESOURCE_URL = "https://upload.twitter.com/1.1/media/upload.json";
+const std::string MediaUploadRequest::RESOURCE_URL = "https://upload.twitter.com/1.1/media/upload.json";
 
 
-UploadRequest::UploadRequest():
+MediaUploadRequest::MediaUploadRequest():
     HTTP::PostRequest(RESOURCE_URL, HTTP_1_1)
 {
 }
 
 
-void UploadRequest::addFormFile(const std::string& path)
+MediaUploadRequest::~MediaUploadRequest()
+{
+}
+
+
+void MediaUploadRequest::setFile(const std::string& path)
 {
     HTTP::PostRequest::addFormFile("media", path, DEFAULT_MEDIA_TYPE);
 }
 
 
-void UploadRequest::addFormBuffer(const ofBuffer& buffer,
-                                  const std::string& mediaType)
+void MediaUploadRequest::setImage(const ofPixels& pixels,
+                                  ofImageFormat format,
+                                  ofImageQualityType quality)
 {
-    HTTP::PostRequest::addFormBuffer("media", buffer, mediaType);
+    ofBuffer buffer;
+    ofSaveImage(pixels, buffer, format, quality);
+    HTTP::PostRequest::addFormField("media_data",
+                                    IO::Base64Encoding::encode(IO::ByteBuffer(buffer)));
 }
-
 
 
 //

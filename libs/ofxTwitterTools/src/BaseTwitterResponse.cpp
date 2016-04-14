@@ -41,7 +41,7 @@ BaseTwitterResponse::~BaseTwitterResponse()
 }
 
 
-const std::vector<Error>& BaseTwitterResponse::errors() const
+std::vector<Error> BaseTwitterResponse::errors() const
 {
     return _errors;
 }
@@ -59,7 +59,7 @@ std::string BaseTwitterResponse::reasonForStatus() const
 }
 
 
-const Json::Value& BaseTwitterResponse::json() const
+Json::Value BaseTwitterResponse::json() const
 {
     return _json;
 }

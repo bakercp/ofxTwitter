@@ -28,6 +28,7 @@
 
 #include <string>
 #include <json/json.h>
+#include "ofImage.h"
 #include "ofx/Twitter/Tweet.h"
 #include "ofx/Twitter/Error.h"
 #include "ofx/HTTP/PostRequest.h"
@@ -40,7 +41,7 @@ namespace Twitter {
 /// \brief A Twitter Search Request.
 ///
 /// \sa https://dev.twitter.com/rest/reference/get/search/tweets
-class UploadRequest: public HTTP::PostRequest
+class MediaUploadRequest: protected HTTP::PostRequest
 {
 public:
 //    // search/tweets.json
@@ -58,13 +59,28 @@ public:
 //        UNITS_KILOMETERS
 //    };
 //
-    UploadRequest();
+//    UploadRequest(const std::string& path);
 //
-//    // required
-    void addFormFile(const std::string& path);
+//    UploadRequest(const std::string& path);
 
-    void addFormBuffer(const ofBuffer& buffer,
-                       const std::string& mediaType = DEFAULT_MEDIA_TYPE);
+    //
+//    // required
+
+
+    MediaUploadRequest();
+
+    virtual ~MediaUploadRequest();
+
+    /// \brief The raw binary file content being uploaded.
+    void setFile(const std::string& path);
+
+    /// \brief Set the image from an image file.
+    /// \param pixels The image pixels to send.
+    /// \param format The image format to encode.
+    /// \param quality The compression quality.
+    void setImage(const ofPixels& pixels,
+                  ofImageFormat format = OF_IMAGE_FORMAT_JPEG,
+                  ofImageQualityType quality = OF_IMAGE_QUALITY_MEDIUM);
 
 
 //

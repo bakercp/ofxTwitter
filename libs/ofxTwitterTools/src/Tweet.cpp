@@ -30,8 +30,7 @@ namespace ofx {
 namespace Twitter {
 
 
-Tweet::Tweet():
-    _currentUserRetweet(-1)
+Tweet::Tweet()
 {
 }
 
@@ -41,21 +40,21 @@ Tweet::~Tweet()
 }
 
 
-const Annotations& Tweet::annotations() const
+Annotations Tweet::annotations() const
 {
     return _annotations;
 }
 
 
-Poco::Nullable<Contributors> Tweet::contributors() const
+Contributors Tweet::contributors() const
 {
     return _contributors;
 }
 
 
-Poco::Nullable<Geo::Coordinate> Tweet::coordinates() const
+const Geo::Coordinate* Tweet::coordinates() const
 {
-    return _coordinates;
+    return _coordinates.get();
 }
 
 
@@ -71,13 +70,13 @@ Poco::DateTime Tweet::createdAt() const
 }
 
 
-Poco::Nullable<User> Tweet::user() const
+const User* Tweet::user() const
 {
-    return _user;
+    return _user.get();
 }
 
 
-const std::string& Tweet::text() const
+std::string Tweet::text() const
 {
     return _text;
 }

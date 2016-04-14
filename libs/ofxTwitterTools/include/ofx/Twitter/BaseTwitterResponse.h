@@ -44,7 +44,7 @@ public:
 
     virtual ~BaseTwitterResponse();
 
-    const std::vector<Error>& errors() const;
+    std::vector<Error> errors() const;
 
     Poco::Net::HTTPResponse::HTTPStatus status() const;
 
@@ -56,7 +56,7 @@ public:
     /// \returns A string describing the reasons for the HTTP status.
     virtual std::string reasonForStatus() const;
 
-    const Json::Value& json() const;
+    Json::Value json() const;
 
 protected:
     Json::Value _json;

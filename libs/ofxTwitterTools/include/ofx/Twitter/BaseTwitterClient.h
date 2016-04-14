@@ -26,8 +26,7 @@
 #pragma once
 
 
-#include <stdint.h>
-#include "ofx/HTTP/DefaultClient.h"
+#include "ofx/HTTP/HTTPClient.h"
 #include "ofx/HTTP/OAuth10RequestFilter.h"
 #include "ofx/Twitter/Credentials.h"
 
@@ -36,7 +35,7 @@ namespace ofx {
 namespace Twitter {
 
 
-class BaseTwitterClient: public HTTP::DefaultClient
+class BaseTwitterClient: public HTTP::HTTPClient
 {
 public:
     BaseTwitterClient();
