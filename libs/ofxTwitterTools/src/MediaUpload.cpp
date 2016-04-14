@@ -60,7 +60,7 @@ void MediaUploadRequest::setImage(const ofPixels& pixels,
                                   ofImageQualityType quality)
 {
     ofBuffer buffer;
-    ofSaveImage(pixels, buffer, format, quality);
+    ofSaveImage((ofPixels &)pixels, buffer, format, quality);
     HTTP::PostRequest::addFormField("media_data",
                                     IO::Base64Encoding::encode(IO::ByteBuffer(buffer)));
 }
