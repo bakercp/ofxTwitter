@@ -215,6 +215,8 @@ public:
     URLEntities urlEntities() const;
     UserMentionEntities userMentionEntities() const;
 
+    static Entities fromJSON(const ofJson& json);
+
 private:
     HashTagEntities _hashTagEntities;
     MediaEntities _mediaEntities;

@@ -28,6 +28,7 @@
 
 
 #include <stdint.h>
+#include "Poco/Net/NameValueCollection.h"
 #include "ofx/TaskQueue.h"
 #include "ofx/TaskQueueEvents.h"
 #include "ofx/Geo/CoordinateBounds.h"

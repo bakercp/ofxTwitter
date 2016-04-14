@@ -27,8 +27,7 @@
 
 
 #include "ofx/Twitter/BaseTwitterClient.h"
-#include "ofx/Twitter/SearchQuery.h"
-#include "ofx/Twitter/SearchResult.h"
+#include "ofx/Twitter/Search.h"
 
 
 namespace ofx {
@@ -53,20 +52,11 @@ public:
     /// \brief Destroys the REST client.
     virtual ~RESTClient();
 
-    /// \brief Execute a Twitter Search query.
-    /// \param query The query parameters to send.
-    /// \throws Various HTTP exceptions and Poco::SyntaxException.
-    /// \returns The SearchResult, including errors if any.
-    SearchResult search(const SearchQuery& query);
+    /// \brief Execute a basic Twitter Search query.
+    /// \param query The query string to send.
+    /// \returns The SearchResponse.
+    std::unique_ptr<SearchResponse> search(const std::string& query);
 
-    /// \brief Execute an arbitrary OAuth 1.0 authenticated HTTP request.
-    /// \param request The HTTP Request to send.
-    /// \param response The HTTP Response to receive.
-    /// \param results The JSON (if any to parse) from the executed response.
-    /// \throws Various HTTP exceptions and Poco::SyntaxException.
-    void execute(HTTP::BaseRequest& request,
-                 HTTP::BaseResponse& response,
-                 Json::Value& results);
 
 };
 

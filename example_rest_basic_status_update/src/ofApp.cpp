@@ -1,6 +1,6 @@
 // =============================================================================
 //
-// Copyright (c) 2009-2016 Christopher Baker <http://christopherbaker.net>
+// Copyright (c) 2013-2016 Christopher Baker <http://christopherbaker.net>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,65 +23,41 @@
 // =============================================================================
 
 
-#pragma once
+#include "ofApp.h"
 
 
-#include <string>
-#include "Poco/Net/NameValueCollection.h"
-#include "ofx/Twitter/BaseTwitterResponse.h"
-#include "ofx/Twitter/Tweet.h"
-#include "ofx/Twitter/SearchQuery.h"
-
-
-namespace ofx {
-namespace Twitter {
-
-
-/// \brief A Twitter Search Request.
-///
-/// \sa https://dev.twitter.com/rest/reference/get/search/tweets
-class SearchResult: public BaseTwitterResponse
+void ofApp::setup()
 {
-public:
-    SearchResult();
+    // First we load credentials from a file. These can also be loaded manually
+    // using the ofxTwitter::Credentials constructor.
+    //
+    // Developers must get their credentials at https://dev.twitter.com/.
+    ofxTwitter::Credentials credentials = ofxTwitter::Credentials::fromFile("NetworkedObject.json");
 
-    SearchResult(Poco::Net::HTTPResponse::HTTPStatus status);
+    // Next we add our credentials to our ofxTwitter::RESTClient.
+    client.setCredentials(credentials);
 
-    virtual ~SearchResult();
+    auto request = std::make_unique<ofxTwitter::MediaUploadRequest>();
 
-    const std::vector<Tweet>& tweets() const;
+    request->setFile("openFrameworks.png");
 
-    std::size_t count() const;
+    auto response = client.executeBuffered(std::move(request));
 
-    const std::string& query() const;
+//    std::cout << response->buffer() << std::endl;
 
-    int64_t maxId() const;
-
-    int64_t sinceId() const;
-
-    float completedIn() const;
-
-    Poco::Nullable<SearchQuery> nextResult() const;
-
-    Poco::Nullable<SearchQuery> refreshResults() const;
-
-protected:
-    std::vector<Tweet> _tweets;
-
-    float _completedIn;
-
-    int64_t _maxId;
-
-    int64_t _sinceId;
-
-    std::string _query;
-
-    Poco::Nullable<SearchQuery> _nextResult;
-
-    Poco::Nullable<SearchQuery> _refreshResult;
-
-    friend class Deserializer;
-};
+//    {"expires_after_secs":86400,"image":{"h":114,"image_type":"image/png","w":114},"media_id":720454264901013504,"media_id_string":"720454264901013505","size":3976}
 
 
-} } // namespace ofx::Twitter
+//    ofxTwitter::UpdateRequest request("Image upload!");
+//    request.addFormField("media_ids", "585667540694753281,585668476301377537");
+
+
+
+}
+
+
+void ofApp::draw()
+{
+    ofBackgroundGradient(ofColor::white, ofColor::black);
+    ofDrawBitmapStringHighlight("See console for output.", ofPoint(30, 30));
+}

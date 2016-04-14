@@ -24,6 +24,7 @@
 
 
 #include "ofx/Twitter/Entities.h"
+#include "ofLog.h"
 
 
 namespace ofx {
@@ -292,6 +293,51 @@ Entities::UserMentionEntities Entities::userMentionEntities() const
 {
     return _userMentionEntities;
 }
+
+
+Entities Entities::fromJSON(const ofJson& json)
+{
+    Entities entities;
+
+    auto iter = json.cbegin();
+    while (iter != json.cend())
+    {
+        const auto& key = iter.key();
+        const auto& value = iter.value();
+
+        if (key == "hashtags")
+        {
+        }
+        else if (key == "symbols")
+        {
+        }
+        else if (key == "urls")
+        {
+        }
+        else if (key == "url")
+        {
+        }
+        else if (key == "description")
+        {
+        }
+        else if (key == "user_mentions")
+        {
+        }
+        else if (key == "media")
+        {
+//            if (!value.is_null())
+//            {
+//                std::cout << key << " " << value.dump(4) << std::endl;
+//            }
+        }
+        else ofLogWarning("Entities::fromJSON") << "Unknown key: " << key;
+
+        ++iter;
+    }
+
+    return entities;
+}
+
 
 
 } } // namespace ofx::Twitter

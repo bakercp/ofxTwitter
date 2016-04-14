@@ -26,29 +26,30 @@
 #pragma once
 
 
-#include "ofx/Twitter/BaseTwitterClient.h"
-#include "ofx/Twitter/SearchQuery.h"
-#include "ofx/Twitter/SearchResult.h"
+#include <string>
+#include "Poco/DateTime.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-///
-class RESTClientTask: public HTTP::DefaultClientTask
+class TwitterUtils
 {
 public:
-    RESTClientTask(BaseRequest* request,
-                   BaseResponse* response,
-                   Context* context);
+    /// \brief Determine if one string ends with a given suffix.
+    /// \param str The string to check.
+    /// \param suffix The suffix to match.
+    /// \returns true if str ends with suffix.
+    static bool endsWith(const std::string& str, const std::string &suffix);
 
-    virtual ~RESTClientTask();
+    static bool parse(const std::string& dateString, Poco::DateTime& date);
 
-protected:
-    virtual void handleBufferEvent(const HTTP::ClientResponseBufferEventArgs& buffer);
-    
+    static const std::string TWITTER_DATE_FORMAT;
 
+private:
+    TwitterUtils() = delete;
+    ~TwitterUtils() = delete;
 };
 
 

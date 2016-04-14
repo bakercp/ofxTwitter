@@ -24,6 +24,8 @@
 
 
 #include "ofx/Twitter/User.h"
+#include "ofx/Twitter/TwitterUtils.h"
+#include "ofLog.h"
 
 
 namespace ofx {
@@ -34,10 +36,10 @@ User::User()
 {
 }
 
-User::User(int64_t ID,
+User::User(int64_t id,
            const std::string& screenName,
            const std::string& name):
-    BaseNamedUser(ID, screenName, name)
+    BaseNamedUser(id, screenName, name)
 {
 }
 
@@ -47,7 +49,7 @@ User::~User()
 }
 
 
-bool User::areContributorsEnabled() const
+bool User::contributorsEnabled() const
 {
     return _contributorsEnabled;
 }
@@ -59,15 +61,15 @@ Poco::DateTime User::createdAt() const
 }
 
 
-bool User::hasDefaultProfile() const
+bool User::defaultProfile() const
 {
-    return _hasDefaultProfile;
+    return _defaultProfile;
 }
 
 
-bool User::hasDefaultProfileImage() const
+bool User::defaultProfileImage() const
 {
-    return _hasDefaultProfileImage;
+    return _defaultProfileImage;
 }
 
 
@@ -167,27 +169,27 @@ int User::statusesCount() const
 }
 
 
-std::string User::timeZone() const
+const std::string* User::timeZone() const
 {
-    return _timeZone;
+    return _timeZone.get();
 }
 
 
-std::string User::url() const
+const std::string* User::url() const
 {
-    return _url;
+    return _url.get();
 }
 
 
-int User::utcOffset() const
+const int* User::utcOffset() const
 {
-    return _UTCOffset;
+    return _UTCOffset.get();
 }
 
 
-bool User::isVerified() const
+bool User::verified() const
 {
-    return _isVerified;
+    return _verified;
 }
 
 
@@ -200,6 +202,99 @@ Contries User::withheldInCountries() const
 User::WithheldScope User::withheldScope() const
 {
     return _withheldScope;
+}
+
+
+User User::fromJSON(const ofJson& json)
+{
+    User user;
+
+    auto iter = json.cbegin();
+    while (iter != json.cend())
+    {
+        const auto& key = iter.key();
+        const auto& value = iter.value();
+
+        
+        if (TwitterUtils::endsWith(key, "_str")) { /* skip */}
+
+        else if (key == "contributors_enabled") user._contributorsEnabled = value;
+        else if (key == "contributors_enabled") user._contributorsEnabled = value;
+        else if (key == "created_at")
+        {
+            Poco::DateTime date;
+
+            if (TwitterUtils::parse(value, date))
+            {
+                user._createdAt = date;
+            }
+        }
+        else if (key == "default_profile") user._defaultProfile = value;
+        else if (key == "default_profile_image") user._defaultProfileImage = value;
+        else if (key == "description") user._description = value;
+        else if (key == "entities") user._entities = Entities::fromJSON(value);
+        else if (key == "favourites_count") user._favouritesCount = value;
+        else if (key == "follow_request_sent") user._followRequestSent = value;
+        else if (key == "followers_count") user._followersCount = value;
+        else if (key == "following") user._following = value;
+        else if (key == "friends_count") user._friendsCount = value;
+        else if (key == "geo_enabled") user._geoEnabled = value;
+        else if (key == "has_extended_profile") user._hasExtendedProfile = value;
+        else if (key == "id") user._id = value;
+        else if (key == "is_translation_enabled") user._isTranslationEnabled = value;
+        else if (key == "is_translator") user._geoEnabled = value;
+        else if (key == "lang") user._language = value;
+        else if (key == "listed_count") user._listedCount = value;
+        else if (key == "location") user._location = value;
+        else if (key == "name") user._name = value;
+        else if (key == "notifications") user._notifications = value;
+        else if (key == "profile_background_color") user._profile.setBackgroundColorHex(value);
+        else if (key == "profile_background_image_url") { /* TODO */ }
+        else if (key == "profile_background_image_url_https") { /* TODO */ }
+        else if (key == "profile_background_tile") { /* TODO */ }
+        else if (key == "profile_banner_url") { /* TODO */ }
+        else if (key == "profile_image_url") { /* TODO */ }
+        else if (key == "profile_image_url_https") { /* TODO */ }
+        else if (key == "profile_link_color") { /* TODO */ }
+        else if (key == "profile_sidebar_border_color") { /* TODO */ }
+        else if (key == "profile_sidebar_fill_color") { /* TODO */ }
+        else if (key == "profile_text_color") { /* TODO */ }
+        else if (key == "profile_use_background_image") { /* TODO */ }
+        else if (key == "protected") user._protected = value;
+        else if (key == "screen_name") user._screenName = value;
+        else if (key == "statuses_count") user._statusesCount = value;
+        else if (key == "time_zone")
+        {
+            if (!value.is_null())
+            {
+                user._timeZone = std::make_shared<std::string>(value.get<std::string>());
+            }
+        }
+        else if (key == "url")
+        {
+            if (!value.is_null())
+            {
+                user._url = std::make_shared<std::string>(value.get<std::string>());
+            }
+        }
+        else if (key == "utc_offset")
+        {
+            if (!value.is_null())
+            {
+                user._UTCOffset = std::make_shared<int>(value);
+            }
+        }
+        else if (key == "verified") user._verified = value;
+        else
+        {
+            ofLogWarning("Tweet::fromJSON") << "Unknown key: " << key;
+
+            std::cout << value.dump(4) << std::endl;
+        }
+        ++iter;
+    }
+    
+    return user;
 }
 
 

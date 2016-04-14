@@ -39,9 +39,9 @@
 #include "ofx/Twitter/Tweet.h"
 #include "ofx/Twitter/Types.h"
 #include "ofx/Twitter/User.h"
-#include "ofx/Twitter/SearchQuery.h"
+#include "ofx/Twitter/Search.h"
 #include "ofx/Twitter/Update.h"
-#include "ofx/Twitter/MediaUploadRequest.h"
+#include "ofx/Twitter/MediaUpload.h"
 
 
 namespace ofxTwitter = ofx::Twitter;

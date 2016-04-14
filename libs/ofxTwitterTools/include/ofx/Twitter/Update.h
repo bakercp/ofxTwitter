@@ -91,32 +91,5 @@ public:
 };
 
 
-class UpdateMetaData
-{
-public:
-    UpdateMetaData();
-
-protected:
-//    float _completedIn;
-//    int64_t _count;
-//    int64_t _maxID;
-
-    friend class Deserializer;
-
-};
-
-
-class UpdateResult
-{
-public:
-//    SearchMetaData metadata;
-//    std::vector<Tweet> statuses;
-//    std::vector<Error> errors;
-    Json::Value raw;
-
-    friend class Deserializer;
-
-};
-
 
 } } // namespace ofx::Twitter

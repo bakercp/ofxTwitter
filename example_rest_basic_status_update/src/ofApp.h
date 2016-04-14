@@ -1,6 +1,6 @@
 // =============================================================================
 //
-// Copyright (c) 2009-2016 Christopher Baker <http://christopherbaker.net>
+// Copyright (c) 2013-2016 Christopher Baker <http://christopherbaker.net>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,62 +23,19 @@
 // =============================================================================
 
 
-#include "ofx/Twitter/Error.h"
-#include "ofLog.h"
+#pragma once
 
 
-namespace ofx {
-namespace Twitter {
+#include "ofMain.h"
+#include "ofxTwitter.h"
 
 
-Error::Error()
+class ofApp: public ofBaseApp
 {
-}
+public:
+    void setup();
+    void draw();
 
+    ofx::Twitter::RESTClient client;
 
-Error::Error(int code, const std::string& message):
-    _code(code),
-    _message(message)
-{
-}
-
-
-Error::~Error()
-{
-}
-
-
-int Error::code() const
-{
-    return _code;
-}
-
-
-std::string Error::message() const
-{
-    return _message;
-}
-
-
-Error Error::fromJSON(const ofJson& json)
-{
-    Error error;
-
-    auto iter = json.cbegin();
-    while (iter != json.cend())
-    {
-        const auto& key = iter.key();
-        const auto& value = iter.value();
-
-        if (key == "code") error._code = value;
-        else if (key == "message") error._message = value;
-        else ofLogWarning("Error::fromJSON") << "Unknown key: " << key;
-
-        ++iter;
-    }
-
-    return error;
-}
-
-
-} } // namespace ofx::Twitter
+};

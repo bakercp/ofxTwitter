@@ -23,7 +23,7 @@
 // =============================================================================
 
 
-#include "ofx/Twitter/MediaUploadRequest.h"
+#include "ofx/Twitter/MediaUpload.h"
 #include "ofLog.h"
 #include <sstream>
 #include "Poco/Net/HTTPRequest.h"
@@ -64,102 +64,6 @@ void MediaUploadRequest::setImage(const ofPixels& pixels,
     HTTP::PostRequest::addFormField("media_data",
                                     IO::Base64Encoding::encode(IO::ByteBuffer(buffer)));
 }
-
-
-//
-//void SearchRequest::setGeoCode(double latitude,
-//                               double longitude,
-//                               double radius,
-//                               RadiusUnits units)
-//{
-//    std::stringstream ss;
-//
-//    ss << latitude << "," << longitude << "," << radius;
-//
-//    switch (units)
-//    {
-//        case UNITS_KILOMETERS:
-//            ss << "km";
-//            break;
-//        case UNITS_MILES:
-//            ss << "mi";
-//            break;
-//    }
-//
-//    setFormField("geocode", ss.str());
-//}
-//
-//
-//void SearchRequest::setLanguage(const std::string& language)
-//{
-//    setFormField("lang", language);
-//}
-//
-//
-//void SearchRequest::setLocale(const std::string& locale)
-//{
-//    setFormField("locale", locale);
-//}
-//
-//
-//void SearchRequest::setResultType(ResultType resultType)
-//{
-//    switch (resultType)
-//    {
-//        case RESULT_MIXED:
-//            set("result_type", "mixed");
-//            return;
-//        case RESULT_RECENT:
-//            set("result_type", "recent");
-//            return;
-//        case RESULT_POPULAR:
-//            set("result_type", "popular");
-//            return;
-//    }
-//}
-//
-//
-//void SearchRequest::setCount(int count)
-//{
-//    if (count > 100)
-//    {
-//        ofLogWarning("SearchRequest::setCount") << "Counts greater than 100 are ignored by Twitter.";
-//    }
-//
-//    std::stringstream ss;
-//    ss << count;
-//    setFormField("count", ss.str());
-//}
-//
-//
-//void SearchRequest::setUntil(int year, int month, int day)
-//{
-//    std::stringstream ss;
-//    ss << year << "-" << month << "-" << day;
-//    setFormField("until", ss.str());
-//}
-//
-//    
-//void SearchRequest::setSinceID(int64_t id)
-//{
-//    std::stringstream ss;
-//    ss << id;
-//    setFormField("since_id", ss.str());
-//}
-//
-//
-//void SearchRequest::setMaxID(int64_t id)
-//{
-//    std::stringstream ss;
-//    ss << id;
-//    setFormField("max_id", ss.str());
-//}
-//
-//
-//void SearchRequest::setIncludeEntities(bool includeEntities)
-//{
-//    setFormField("include_entities", includeEntities ? "true" : "false");
-//}
 
 
 } } // namespace ofx::Twitter

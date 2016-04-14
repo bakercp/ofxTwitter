@@ -23,78 +23,74 @@
 // =============================================================================
 
 
-#include "ofx/Twitter/SearchResult.h"
-#include <sstream>
+#pragma once
+
+
+#include <vector>
+#include "ofx/HTTP/BaseResponse.h"
+#include "ofx/Twitter/Error.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-SearchResult::SearchResult(): BaseTwitterResponse(Poco::Net::HTTPResponse::HTTP_OK)
+template <typename RequestType>
+class TwitterResponse: public HTTP::BufferedResponse<RequestType>
 {
-}
+public:
+    using HTTP::BufferedResponse<RequestType>::BufferedResponse;
 
+    virtual ~TwitterResponse()
+    {
+    }
 
-SearchResult::SearchResult(Poco::Net::HTTPResponse::HTTPStatus status):
-    BaseTwitterResponse(status)
-{
-}
+    std::vector<Error> errors() const
+    {
+        return _errors;
+    }
 
+protected:
+    virtual void parseBuffer() override
+    {
+        ofJson json;
 
-SearchResult::~SearchResult()
-{
-}
+        try
+        {
+            json = ofJson::parse(HTTP::BufferedResponse<RequestType>::getBuffer());
 
-    
-const std::vector<Tweet>& SearchResult::tweets() const
-{
-    return _tweets;
-}
-    
+            auto iter = json.find("errors");
 
-std::size_t SearchResult::count() const
-{
-    return _tweets.size();
-}
+            if (iter != json.end())
+            {
+                for (auto& error: iter.value())
+                {
+                    _errors.push_back(Error::fromJSON(error));
+                }
 
+                // Remove the errors.
+                json.erase(iter);
+            }
+            
+            parseJSON(json);
 
-const std::string& SearchResult::query() const
-{
-    return _query;
-}
+        }
+        catch (const std::exception& exc)
+        {
+            ofLogError("TwitterResponse::json") << "Unable to interpret data as json: " << exc.what();
+        }
 
+    }
 
-int64_t SearchResult::maxId() const
-{
-    return _maxId;
-}
+    /// \brief Subclasses can further parse JSON data.
+    /// \param json The JSON Data to parse.
+    virtual void parseJSON(ofJson& json)
+    {
+    }
 
+    std::vector<Error> _errors;
 
-int64_t SearchResult::sinceId() const
-{
-    return _sinceId;
-}
-
-
-float SearchResult::completedIn() const
-{
-    return _completedIn;
-}
-
-
-Poco::Nullable<SearchQuery> SearchResult::nextResult() const
-{
-    SearchQuery query;
-    return query;
-}
-
-
-Poco::Nullable<SearchQuery> SearchResult::refreshResults() const
-{
-    SearchQuery query;
-    return query;
-}
+};
 
 
 } } // namespace ofx::Twitter

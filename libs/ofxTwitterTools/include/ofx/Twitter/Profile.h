@@ -83,10 +83,10 @@ private:
     std::string _linkColorHex;
 
     // background image
-    bool _useBackgroundImage;
+    bool _useBackgroundImage = false;
     std::string _backgroundImageUrl;
     std::string _backgroundImageUrlHttps;
-    bool _backgroundTile;
+    bool _backgroundTile = false;
 
     // banner
     std::string _bannerUrl;

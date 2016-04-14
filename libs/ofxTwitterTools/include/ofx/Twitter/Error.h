@@ -26,6 +26,7 @@
 #pragma once
 
 
+#include "json.hpp"
 #include <string>
 
 
@@ -33,6 +34,7 @@ namespace ofx {
 namespace Twitter {
 
 
+/// \brief Twitter Response/Error codes.
 /// \sa https://dev.twitter.com/overview/api/response-codes
 class Error
 {
@@ -45,13 +47,14 @@ public:
 
     int code() const;
 
-    const std::string& message() const;
+    std::string message() const;
+
+    static Error fromJSON(const ofJson& json);
 
 private:
-    int _code;
+    int _code = -1;
     std::string _message;
 
-    friend class Deserializer;
 };
 
 

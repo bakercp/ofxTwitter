@@ -33,8 +33,8 @@
 #include "Poco/Nullable.h"
 #include "ofx/Geo/Coordinate.h"
 #include "ofx/Twitter/Entities.h"
-#include "ofx/Twitter/Types.h"
 #include "ofx/Twitter/Places.h"
+#include "ofx/Twitter/Types.h"
 #include "ofx/Twitter/User.h"
 
 
@@ -46,6 +46,23 @@ namespace Twitter {
 class Tweet
 {
 public:
+    class Metadata
+    {
+    public:
+        std::string isoLanguageCode() const;
+
+        /// \todo Would be nice to return SearchRequest::RESULT_TYPE.
+        std::string resultType() const;
+
+        static Metadata fromJSON(const ofJson& json);
+        
+    private:
+        std::string _isoLanguageCode;
+        std::string _resultType;
+
+    };
+
+
     Tweet();
     
     virtual ~Tweet();
@@ -65,6 +82,8 @@ public:
     const User* user() const;
 
     std::string text() const;
+
+    static Tweet fromJSON(const ofJson& json);
 
 private:
     Annotations _annotations;
@@ -86,6 +105,16 @@ private:
     Entities _entities;
 
     int64_t _favoriteCount = -1;
+
+    bool _isQuoteStatus = false;
+
+    int64_t _quotedStatusId = -1;
+
+    /// \brief An optional Tweet.
+    ///
+    /// We use a std::shared_ptr to keep track to make it nullable and avoid
+    /// the hassle of std::unique_ptr and copies.
+    std::shared_ptr<Tweet> _quotedStatus;
 
     bool _favorited = false;
 
@@ -135,8 +164,7 @@ private:
     /// the hassle of std::unique_ptr and copies.
     std::shared_ptr<Places> _places;
 
-    friend class Deserializer;
-
+    Metadata _metadata;
 };
 
 

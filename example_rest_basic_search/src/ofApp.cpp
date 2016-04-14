@@ -37,47 +37,45 @@ void ofApp::setup()
     // Next we add our credentials to our ofxTwitter::RESTClient.
     client.setCredentials(credentials);
 
-    // Finally we craft a ofxTwitter::SearchQuery. There are many options.
-    ofxTwitter::SearchQuery query("love AND hate");
-
-    // For instance, we only want one result.
-    query.setCount(1);
-
     // Finally, we submit our search query and get the result. This can be run
     // in a thread to avoid blocking the program flow.
     //
     // Search results contain information, like the maximum Tweet id that can
     // be used to create the next search query.
-    ofxTwitter::SearchResult result = client.search(query);
+    auto result = client.search("love AND hate");
 
-    // We can look through the errors to see if there are any.
-    for (auto& error: result.errors())
+    if (result->isSuccess())
     {
-        std::cout << error.code() << " / " << error.message() << std::endl;
-    }
-
-    // We can cycle through the tweets to output their data.
-    for (auto& tweet: result.tweets())
-    {
-        // Sometimes the user information is not included.
-        if (tweet.user() != nullptr)
+        // We can cycle through the tweets to output their data.
+        for (auto& tweet: result->tweets())
         {
-            std::cout << ">>" << tweet.user()->name() << "<< (" << tweet.user()->screenName() << ")" << std::endl;
+            // Sometimes the user information is not included.
+            if (tweet.user() != nullptr)
+            {
+                std::cout << ">>" << tweet.user()->name() << "<< (" << tweet.user()->screenName() << ")" << std::endl;
+            }
+
+            std::cout << tweet.text() << std::endl << std::endl;
         }
 
-        std::cout << tweet.text() << std::endl << std::endl;
+        // We can look through the errors to see if there are any.
+        std::cout << "-------------" << std::endl;
+        std::cout << "completed_in: " << result->metadata().completedIn() << std::endl;
+        std::cout << "count: " << result->metadata().count() << std::endl;
+        std::cout << "maxId: " << result->metadata().maxId() << std::endl;
+        std::cout << "sinceId: " << result->metadata().sinceId() << std::endl;
+        std::cout << "query: " << result->metadata().query() << std::endl;
+
     }
+    else
+    {
+        for (auto& error: result->errors())
+        {
+            std::cout << error.code() << " / " << error.message() << std::endl;
+        }
 
-    // We can print additional information from the results.
-    std::cout << "-------------" << std::endl;
-    std::cout << "completed_in: " << result.completedIn() << std::endl;
-    std::cout << "count: " << result.count() << std::endl;
-    std::cout << "maxId: " << result.maxId() << std::endl;
-    std::cout << "sinceId: " << result.sinceId() << std::endl;
-    std::cout << "query: " << result.query() << std::endl;
-
-    std::cout << result.status() << std::endl;
-    std::cout << result.reasonForStatus() << std::endl;
+        std::cout << result->error() << std::endl;
+    }
 }
 
 

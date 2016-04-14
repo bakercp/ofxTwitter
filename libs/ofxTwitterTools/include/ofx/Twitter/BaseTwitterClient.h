@@ -48,9 +48,6 @@ public:
 
     const Credentials& getCredentials() const;
 
-protected:
-    HTTP::Context _context;
-
 private:
     Credentials _credentials;
 

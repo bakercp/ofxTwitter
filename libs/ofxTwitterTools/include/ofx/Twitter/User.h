@@ -62,10 +62,10 @@ public:
 
     virtual ~User();
 
-    bool areContributorsEnabled() const;
+    bool contributorsEnabled() const;
     Poco::DateTime createdAt() const;
-    bool hasDefaultProfile() const;
-    bool hasDefaultProfileImage() const;
+    bool defaultProfile() const;
+    bool defaultProfileImage() const;
     std::string description() const;
     Entities entities() const;
     int favouritesCount() const;
@@ -84,25 +84,31 @@ public:
     /// \returns status or nullptr if not available.
     Tweet* status() const;
     int statusesCount() const;
-    std::string timeZone() const;
-    std::string url() const;
-    int utcOffset() const;
-    bool isVerified() const;
+    const std::string* timeZone() const;
+    const std::string* url() const;
+    const int* utcOffset() const;
+    bool verified() const;
     Contries withheldInCountries() const;
     WithheldScope withheldScope() const;
+
+    static User fromJSON(const ofJson& json);
 
 private:
     bool _contributorsEnabled = false;
 
     Poco::DateTime _createdAt;
 
-    bool _hasDefaultProfile = false;;
+    bool _defaultProfile = false;;
 
-    bool _hasDefaultProfileImage = false;
+    bool _defaultProfileImage = false;
+
+    bool _hasExtendedProfile = false;
 
     std::string _description;
 
     Entities _entities;
+
+    bool _geoEnabled = false;
 
     int _favouritesCount = -1;
 
@@ -112,9 +118,19 @@ private:
 
     int _friendsCount = -1;
 
+    bool _following = false;
+
     bool _isGeoEnabled = false;
 
     bool _isTranslator = false;
+
+    bool _isTranslationEnabled = false;
+
+    bool _protected = false;
+
+    bool _verified = false;
+
+    bool _notifications = false;
 
     std::string _language;
 
@@ -136,13 +152,11 @@ private:
 
     int _statusesCount;
 
-    std::string _timeZone;
+    std::shared_ptr<std::string> _timeZone;
 
-    std::string _url;
+    std::shared_ptr<std::string> _url;
 
-    int _UTCOffset = 0;
-
-    bool _isVerified = false;
+    std::shared_ptr<int> _UTCOffset;
 
     Contries _withheldInCountries;
 

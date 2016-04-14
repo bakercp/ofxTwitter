@@ -23,46 +23,49 @@
 // =============================================================================
 
 
-#include "ofx/Twitter/BaseTwitterResponse.h"
+#pragma once
+
+
+#include <string>
+#include <json/json.h>
+#include "ofImage.h"
+#include "ofx/Twitter/Tweet.h"
+#include "ofx/Twitter/Error.h"
+#include "ofx/HTTP/PostRequest.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-BaseTwitterResponse::BaseTwitterResponse(Poco::Net::HTTPResponse::HTTPStatus status):
-    _status(status)
+/// \brief A Twitter media upload request.
+/// \sa https://dev.twitter.com/rest/reference/post/media/upload
+class MediaUploadRequest: public HTTP::PostRequest
 {
-}
+public:
+    /// \brief Create an empty MediaUploadRequest.
+    MediaUploadRequest();
+
+    /// \brief Destroy the MediaUploadRequest.
+    virtual ~MediaUploadRequest();
+
+    /// \brief The raw binary file content being uploaded.
+    /// \param path The path the media that should be uploaded.
+    void setFile(const std::string& path);
+
+    /// \brief Set the image from an image file.
+    /// \param pixels The image pixels to send.
+    /// \param format The image format to encode.
+    /// \param quality The compression quality.
+    void setImage(const ofPixels& pixels,
+                  ofImageFormat format = OF_IMAGE_FORMAT_JPEG,
+                  ofImageQualityType quality = OF_IMAGE_QUALITY_MEDIUM);
 
 
-BaseTwitterResponse::~BaseTwitterResponse()
-{
-}
+    /// \brief The default resource URL.
+    static const std::string RESOURCE_URL;
 
-
-std::vector<Error> BaseTwitterResponse::errors() const
-{
-    return _errors;
-}
-
-
-Poco::Net::HTTPResponse::HTTPStatus BaseTwitterResponse::status() const
-{
-    return _status;
-}
-
-
-std::string BaseTwitterResponse::reasonForStatus() const
-{
-    return Poco::Net::HTTPResponse::getReasonForStatus(_status);
-}
-
-
-Json::Value BaseTwitterResponse::json() const
-{
-    return _json;
-}
+};
 
 
 } } // namespace ofx::Twitter

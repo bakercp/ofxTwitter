@@ -23,65 +23,39 @@
 // =============================================================================
 
 
-#pragma once
-
-
-#include <string>
-#include "Poco/Net/NameValueCollection.h"
+#include "ofx/Twitter/TwitterUtils.h"
+#include "Poco/DateTimeParser.h"
+#include "Poco/Exception.h"
+#include "ofLog.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-/// \brief A Twitter Search Request.
-///
-/// \sa https://dev.twitter.com/rest/reference/get/search/tweets
-class SearchQuery: public Poco::Net::NameValueCollection
+const std::string TwitterUtils::TWITTER_DATE_FORMAT = "%w %b %f %H:%M:%S %Z %Y";
+
+
+bool TwitterUtils::endsWith(const std::string &str, const std::string &suffix)
 {
-public:
-    enum ResultType
+    return str.size() >= suffix.size()
+        && str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
+}
+
+
+bool TwitterUtils::parse(const std::string& dateString, Poco::DateTime& date)
+{
+    try
     {
-        RESULT_TYPE_MIXED,
-        RESULT_TYPE_RECENT,
-        RESULT_TYPE_POPULAR
-    };
-
-    SearchQuery();
-
-    SearchQuery(const std::string& query);
-
-    // required
-    void setQuery(const std::string& query);
-
-    // optional
-    void setGeoCode(double latitude,
-                    double longitude,
-                    double radius,
-                    const std::string& units);
-
-    // 2 letter language code.
-    // https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-    void setLanguage(const std::string& language);
-
-    void setLocale(const std::string& locale);
-
-    void setResultType(ResultType resultType);
-
-    void setCount(int count);
-
-    void setUntil(int year, int month, int day);
-
-    void setSinceId(int64_t id);
-
-    void setMaxId(int64_t id);
-
-    void setIncludeEntities(bool includeEntities);
-
-    static const std::string UNITS_MILES;
-    static const std::string UNITS_KILOMETERS;
-
-};
+        int tzd;
+        Poco::DateTimeParser::parse(TWITTER_DATE_FORMAT, dateString, date, tzd);
+    }
+    catch (const Poco::SyntaxException& exc)
+    {
+        ofLogError("TwitterUtils::parse") << "Unable to parse date time string: " << exc.displayText();
+        return false;
+    }
+}
 
 
 } } // namespace ofx::Twitter

@@ -31,6 +31,7 @@
 #include <map>
 #include <set>
 #include <vector>
+#include "json.hpp"
 
 
 namespace ofx {
@@ -51,7 +52,7 @@ public:
     /// \returns the user screen name.
     std::string screenName() const;
 
-private:
+protected:
     /// \brief The user id.
     int64_t _id = -1;
 
@@ -67,7 +68,7 @@ class BaseNamedUser: public BaseUser
 public:
     BaseNamedUser();
 
-    BaseNamedUser(int64_t ID,
+    BaseNamedUser(int64_t id,
                   const std::string& screenName,
                   const std::string& name);
 
@@ -75,7 +76,9 @@ public:
 
     std::string name() const;
 
-private:
+    static BaseNamedUser fromJSON(const ofJson& json);
+
+protected:
     std::string _name;
 
     friend class Deserializer;

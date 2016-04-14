@@ -48,46 +48,11 @@ RESTClient::~RESTClient()
 }
 
 
-SearchResult RESTClient::search(const SearchQuery& query)
+std::unique_ptr<SearchResponse> RESTClient::search(const std::string& query)
 {
-    HTTP::GetRequest request("https://api.twitter.com/1.1/search/tweets.json",
-                             Poco::Net::HTTPRequest::HTTP_1_1);
+    auto request = std::make_unique<SearchRequest>(query);
 
-    request.addFormFields(query);
-
-    HTTP::BaseResponse response;
-
-    Json::Value json;
-
-    execute(request, response, json);
-
-    SearchResult searchResult(response.getStatus());
-
-    Deserializer::deserialize(json, searchResult);
-
-    return searchResult;
-}
-
-
-void RESTClient::execute(HTTP::BaseRequest& request,
-                         HTTP::BaseResponse& response,
-                         Json::Value& results)
-{
-    // Execute the request.
-    std::istream& responseStream = BaseClient::execute(request,
-                                                       response,
-                                                       _context);
-
-    std::string buffer;
-
-    Json::Reader reader;
-
-    Poco::StreamCopier::copyToString(responseStream, buffer);
-
-    if (!reader.parse(buffer, results))
-    {
-        throw Poco::SyntaxException(reader.getFormattedErrorMessages());
-    }
+    return executeBuffered<SearchRequest, SearchResponse>(std::move(request));
 }
 
 

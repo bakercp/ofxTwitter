@@ -1,6 +1,6 @@
 // =============================================================================
 //
-// Copyright (c) 2009-2016 Christopher Baker <http://christopherbaker.net>
+// Copyright (c) 2013-2016 Christopher Baker <http://christopherbaker.net>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,51 +23,11 @@
 // =============================================================================
 
 
-#pragma once
+#include "ofApp.h"
 
 
-#include <vector>
-#include <json/json.h>
-#include "ofx/Twitter/Error.h"
-#include "Poco/Net/HTTPResponse.h"
-#include "Poco/Exception.h"
-
-
-namespace ofx {
-namespace Twitter {
-
-
-class BaseTwitterResponse
+int main()
 {
-public:
-    BaseTwitterResponse(Poco::Net::HTTPResponse::HTTPStatus status);
-
-    virtual ~BaseTwitterResponse();
-
-    std::vector<Error> errors() const;
-
-    Poco::Net::HTTPResponse::HTTPStatus status() const;
-
-    /// \brief Get the reason for the HTTP Response.
-    ///
-    /// Sub-classes can override this method to provide Twitter-specific
-    /// reasons.
-    ///
-    /// \returns A string describing the reasons for the HTTP status.
-    virtual std::string reasonForStatus() const;
-
-    Json::Value json() const;
-
-protected:
-    Json::Value _json;
-
-    Poco::Net::HTTPResponse::HTTPStatus _status;
-
-    std::vector<Error> _errors;
-
-    friend class Deserilizer;
-    
-};
-
-
-} } // namespace ofx::Twitter
+    ofSetupOpenGL(250, 50, OF_WINDOW);
+    ofRunApp(std::make_shared<ofApp>());
+}
