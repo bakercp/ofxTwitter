@@ -26,68 +26,71 @@
 #pragma once
 
 
-#include <stdint.h>
-#include <string>
-#include <map>
-#include <set>
 #include <vector>
-#include "json.hpp"
+#include "ofx/HTTP/BaseResponse.h"
+#include "ofx/Twitter/Error.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-class BaseUser
+template <typename RequestType>
+class BaseResponse: public HTTP::BufferedResponse<RequestType>
 {
 public:
-    BaseUser();
-    BaseUser(int64_t is, const std::string& screenName);
+    using HTTP::BufferedResponse<RequestType>::BufferedResponse;
 
-    virtual ~BaseUser();
+    virtual ~BaseResponse()
+    {
+    }
 
-    /// \returns the user id.
-    int64_t id() const;
-
-    /// \returns the user screen name.
-    std::string screenName() const;
-
-protected:
-    /// \brief The user id.
-    int64_t _id = -1;
-
-    /// \brief The user screen name.
-    std::string _screenName;
-
-    friend class Deserializer;
-};
-
-
-class BaseNamedUser: public BaseUser
-{
-public:
-    BaseNamedUser();
-
-    BaseNamedUser(int64_t id,
-                  const std::string& screenName,
-                  const std::string& name);
-
-    virtual ~BaseNamedUser();
-
-    std::string name() const;
-
-    static BaseNamedUser fromJSON(const ofJson& json);
+    std::vector<Error> errors() const
+    {
+        return _errors;
+    }
 
 protected:
-    std::string _name;
+    virtual void parseBuffer() override
+    {
+        ofJson json;
 
-    friend class Deserializer;
+        try
+        {
+            json = ofJson::parse(HTTP::BufferedResponse<RequestType>::getBuffer());
+
+            auto iter = json.find("errors");
+
+            if (iter != json.end())
+            {
+                for (auto& error: iter.value())
+                {
+                    _errors.push_back(Error::fromJSON(error));
+                }
+
+                // Remove the errors.
+                json.erase(iter);
+            }
+            
+            parseJSON(json);
+
+        }
+        catch (const std::exception& exc)
+        {
+            ofLogError("TwitterResponse::json") << "Unable to interpret data as json: " << exc.what();
+        }
+
+    }
+
+    /// \brief Subclasses can further parse JSON data.
+    /// \param json The JSON Data to parse.
+    virtual void parseJSON(const ofJson& json)
+    {
+    }
+
+    std::vector<Error> _errors;
+
 };
-
-
-typedef std::set<std::string> Contries;
-typedef std::map<std::string, std::string> Annotations;
-typedef std::vector<BaseNamedUser> Contributors;
 
 
 } } // namespace ofx::Twitter

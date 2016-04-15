@@ -29,7 +29,8 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "ofx/Twitter/Types.h"
+#include "json.hpp"
+#include "ofx/Twitter/BaseUser.h"
 
 
 namespace ofx {
@@ -171,7 +172,7 @@ private:
     std::string _secureMediaURL;
     int64_t _mediaID = 0;
     Sizes _sizes;
-    Type _type;
+    Type _type = Type::PHOTO;
     int64_t _sourceStatusID = -1;
 
 };
@@ -222,8 +223,6 @@ private:
     MediaEntities _mediaEntities;
     URLEntities _URLEntities;
     UserMentionEntities _userMentionEntities;
-
-    friend class Deserializer;
 
 };
 

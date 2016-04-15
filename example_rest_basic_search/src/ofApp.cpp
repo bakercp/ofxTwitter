@@ -32,7 +32,7 @@ void ofApp::setup()
     // using the ofxTwitter::Credentials constructor.
     //
     // Developers must get their credentials at https://dev.twitter.com/.
-    ofxTwitter::Credentials credentials = ofxTwitter::Credentials::fromFile("credentials.json");
+    ofxTwitter::Credentials credentials = ofxTwitter::Credentials::fromFile("NetworkedObject.json");
 
     // Next we add our credentials to our ofxTwitter::RESTClient.
     client.setCredentials(credentials);
@@ -47,15 +47,15 @@ void ofApp::setup()
     if (result->isSuccess())
     {
         // We can cycle through the tweets to output their data.
-        for (auto& tweet: result->tweets())
+        for (auto& status: result->statuses())
         {
             // Sometimes the user information is not included.
-            if (tweet.user() != nullptr)
+            if (status.user() != nullptr)
             {
-                std::cout << ">>" << tweet.user()->name() << "<< (" << tweet.user()->screenName() << ")" << std::endl;
+                std::cout << ">>" << status.user()->name() << "<< (" << status.user()->screenName() << ")" << std::endl;
             }
 
-            std::cout << tweet.text() << std::endl << std::endl;
+            std::cout << status.text() << std::endl << std::endl;
         }
 
         // We can look through the errors to see if there are any.

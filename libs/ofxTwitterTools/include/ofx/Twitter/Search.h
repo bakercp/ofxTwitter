@@ -28,8 +28,8 @@
 
 #include <string>
 #include "ofx/HTTP/GetRequest.h"
-#include "ofx/Twitter/Tweet.h"
-#include "ofx/Twitter/TwitterResponse.h"
+#include "ofx/Twitter/Status.h"
+#include "ofx/Twitter/BaseResponse.h"
 
 
 namespace ofx {
@@ -132,24 +132,23 @@ private:
 /// \brief A Twitter Search Request.
 ///
 /// \sa https://dev.twitter.com/rest/reference/get/search/tweets
-class SearchResponse: public TwitterResponse<SearchRequest>
+class SearchResponse: public BaseResponse<SearchRequest>
 {
 public:
-    using TwitterResponse<SearchRequest>::TwitterResponse;
+    using BaseResponse<SearchRequest>::BaseResponse;
 
     virtual ~SearchResponse();
 
-    std::vector<Tweet> tweets() const;
+    std::vector<Status> statuses() const;
 
     SearchMetadata metadata() const;
 
 
 protected:
-    virtual void parseJSON(ofJson& json) override;
+    virtual void parseJSON(const ofJson& json) override;
 
 private:
-
-    std::vector<Tweet> _tweets;
+    std::vector<Status> _statuses;
 
     SearchMetadata _metadata;
 

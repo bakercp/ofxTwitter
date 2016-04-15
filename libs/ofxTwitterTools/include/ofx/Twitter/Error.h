@@ -41,18 +41,18 @@ class Error
 public:
     Error();
 
-    Error(int code, const std::string& message);
+    Error(int64_t code, const std::string& message);
 
     virtual ~Error();
 
-    int code() const;
+    int64_t code() const;
 
     std::string message() const;
 
     static Error fromJSON(const ofJson& json);
 
 private:
-    int _code = -1;
+    int64_t _code = -1;
     std::string _message;
 
 };

@@ -90,44 +90,38 @@ std::string Credentials::accessTokenSecret() const
 }
 
 
-Credentials Credentials::fromJSON(const Json::Value& value)
+Credentials Credentials::fromJSON(const ofJson& json)
 {
     Credentials credentials;
 
-    if (value.isMember("consumerKey") && value["consumerKey"].isString())
+    auto iter = json.cbegin();
+    while (iter != json.cend())
     {
-        credentials._consumerKey = value["consumerKey"].asString();
-    }
+        const auto& key = iter.key();
+        const auto& value = iter.value();
 
-    if (value.isMember("consumerSecret") && value["consumerSecret"].isString())
-    {
-        credentials._consumerSecret = value["consumerSecret"].asString();
-    }
-
-    if (value.isMember("accessToken") && value["accessToken"].isString())
-    {
-        credentials._accessToken = value["accessToken"].asString();
-    }
-
-    if (value.isMember("accessTokenSecret") && value["accessTokenSecret"].isString())
-    {
-        credentials._accessTokenSecret = value["accessTokenSecret"].asString();
+        if (key == "consumerKey") credentials._consumerKey = value;
+        else if (key == "consumerSecret") credentials._consumerSecret = value;
+        else if (key == "accessToken") credentials._accessToken = value;
+        else if (key == "accessTokenSecret") credentials._accessTokenSecret = value;
+        else ofLogWarning("Credentials::fromJSON") << "Unknown key: " << key << std::endl << value.dump(4);
+        ++iter;
     }
 
     return credentials;
 }
 
 
-Json::Value Credentials::toJSON(const Credentials& credentials)
+ofJson Credentials::toJSON(const Credentials& credentials)
 {
-    Json::Value value;
+    ofJson json;
 
-    value["consumerKey"] = credentials._consumerKey;
-    value["consumerSecret"] = credentials._consumerSecret;
-    value["accessToken"] = credentials._accessToken;
-    value["accessTokenSecret"] = credentials._accessTokenSecret;
+    json["consumerKey"] = credentials._consumerKey;
+    json["consumerSecret"] = credentials._consumerSecret;
+    json["accessToken"] = credentials._accessToken;
+    json["accessTokenSecret"] = credentials._accessTokenSecret;
 
-    return value;
+    return json;
 }
 
 
@@ -137,35 +131,21 @@ Credentials Credentials::fromFile(const std::string& credentialsFile)
 
     try
     {
-        IO::ByteBuffer buffer;
-        IO::ByteBufferUtils::loadFromFile(ofToDataPath(credentialsFile, true), buffer);
-
-        Json::Reader reader;
-        Json::Value json;
-
-        if (!reader.parse(buffer.toString(), json))
-        {
-            throw Poco::IOException("Unable to parse " + credentialsFile + ": " + reader.getFormattedErrorMessages());
-        }
-        else
-        {
-            credentials = fromJSON(json);
-        }
+        credentials = fromJSON(ofJson::parse(ofBufferFromFile(credentialsFile)));
     }
-    catch (const Poco::Exception& exception)
+    catch (const std::exception& exception)
     {
-        ofLogError("Credentials::fromFile") << exception.displayText();
+        ofLogError("Credentials::fromFile") << exception.what();
     }
 
     return credentials;
-
 }
 
 
 bool Credentials::toFile(const Credentials& credentials,
                          const std::string& credentialsFile)
 {
-    Json::Value json = toJSON(credentials);
+    ofJson json = toJSON(credentials);
 
     try
     {

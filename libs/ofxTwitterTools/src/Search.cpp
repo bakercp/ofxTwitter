@@ -24,8 +24,8 @@
 
 
 #include "ofx/Twitter/Search.h"
-#include "ofx/Twitter/Tweet.h"
-#include "ofx/Twitter/TwitterUtils.h"
+#include "ofx/Twitter/Status.h"
+#include "ofx/Twitter/Utils.h"
 #include <sstream>
 #include "ofLog.h"
 
@@ -58,9 +58,9 @@ void SearchRequest::setQuery(const std::string& query)
 
 
 void SearchRequest::setGeoCode(double latitude,
-                             double longitude,
-                             double radius,
-                             const std::string& units)
+                               double longitude,
+                               double radius,
+                               const std::string& units)
 {
     std::stringstream ss;
     ss << latitude << "," << longitude << "," << radius << units;
@@ -196,7 +196,7 @@ SearchMetadata SearchMetadata::fromJSON(const ofJson& json)
         const auto& key = iter.key();
         const auto& value = iter.value();
 
-        if (TwitterUtils::endsWith(key, "_str")) { /* skip */ }
+        if (Utils::endsWith(key, "_str")) { /* skip */ }
         else if (key == "completed_in") metadata._completedIn = value;
         else if (key == "count") metadata._count = value;
         else if (key == "max_id") metadata._maxId = value;
@@ -218,9 +218,9 @@ SearchResponse::~SearchResponse()
 }
 
 
-std::vector<Tweet> SearchResponse::tweets() const
+std::vector<Status> SearchResponse::statuses() const
 {
-    return _tweets;
+    return _statuses;
 }
 
 
@@ -230,7 +230,7 @@ SearchMetadata SearchResponse::metadata() const
 }
 
 
-void SearchResponse::parseJSON(ofJson& json)
+void SearchResponse::parseJSON(const ofJson& json)
 {
     auto iter = json.cbegin();
     while (iter != json.cend())
@@ -241,9 +241,9 @@ void SearchResponse::parseJSON(ofJson& json)
         if (key == "search_metadata") _metadata = SearchMetadata::fromJSON(value);
         else if (key == "statuses")
         {
-            for (const auto& tweet: value)
+            for (const auto& status: value)
             {
-                _tweets.push_back(Tweet::fromJSON(tweet));
+                _statuses.push_back(Status::fromJSON(status));
             }
         }
         else ofLogWarning("SearchResponse::parseJSON") << "Unknown key: " << key;

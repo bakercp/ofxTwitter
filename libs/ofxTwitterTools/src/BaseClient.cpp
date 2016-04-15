@@ -23,73 +23,44 @@
 // =============================================================================
 
 
-#pragma once
-
-
-#include <string>
-#include <json/json.h>
-#include "ofx/Twitter/Tweet.h"
-#include "ofx/Twitter/Error.h"
-#include "ofx/HTTP/PostRequest.h"
+#include "ofx/Twitter/BaseClient.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-/// \brief A Twitter Search Request.
-///
-/// \sa https://dev.twitter.com/rest/reference/get/search/tweets
-class UpdateRequest: public HTTP::PostRequest
+BaseClient::BaseClient(): BaseClient(Credentials())
 {
-public:
-//    // search/tweets.json
-//
-//    enum ResultType
-//    {
-//        RESULT_MIXED,
-//        RESULT_RECENT,
-//        RESULT_POPULAR
-//    };
-//
-//    enum RadiusUnits
-//    {
-//        UNITS_MILES,
-//        UNITS_KILOMETERS
-//    };
-//
-    UpdateRequest(const std::string& status);
-//
-//    // required
-    void setStatus(const std::string& status);
-//
-//    // optional
-//    void setGeoCode(double latitude,
-//                    double longitude,
-//                    double radius,
-//                    RadiusUnits units);
-//
-//    // 2 letter language code.
-//    // https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-//    void setLanguage(const std::string& language);
-//
-//    void setLocale(const std::string& locale);
-//
-//    void setResultType(ResultType resultType);
-//
-//    void setCount(int count);
-//
-//    void setUntil(int year, int month, int day);
-//
-//    void setSinceID(int64_t id);
-//
-//    void setMaxID(int64_t id);
-//
-//    void setIncludeEntities(bool includeEntities);
+}
 
-    static const std::string RESOURCE_URL;
-};
 
+BaseClient::BaseClient(const Credentials& credentials)
+{
+    setCredentials(credentials);
+    addRequestFilter(&_oAuth10RequestFilter);
+}
+
+
+BaseClient::~BaseClient()
+{
+}
+
+
+void BaseClient::setCredentials(const Credentials& credentials)
+{
+    _credentials = credentials;
+    _oAuth10RequestFilter.credentials().setConsumerKey(credentials.consumerKey());
+    _oAuth10RequestFilter.credentials().setConsumerSecret(credentials.consumerSecret());
+    _oAuth10RequestFilter.credentials().setToken(credentials.accessToken());
+    _oAuth10RequestFilter.credentials().setTokenSecret(credentials.accessTokenSecret());
+}
+
+
+Credentials BaseClient::getCredentials() const
+{
+    return _credentials;
+}
 
 
 } } // namespace ofx::Twitter

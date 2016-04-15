@@ -26,25 +26,23 @@
 #pragma once
 
 
-#include <stdint.h>
 #include <string>
 #include <vector>
 #include <set>
 #include "Poco/DateTime.h"
-#include "Poco/Nullable.h"
-#include "ofx/Twitter/Types.h"
-#include "ofx/Twitter/Entities.h"
 #include "ofx/Twitter/Profile.h"
+#include "ofx/Twitter/Entities.h"
+#include "ofx/Twitter/BaseUser.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-class Tweet;
-    
+class Status;
 
-// https://dev.twitter.com/docs/platform-objects/users
+
+/// \sa https://dev.twitter.com/overview/api/users
 class User: public BaseNamedUser
 {
 public:
@@ -68,27 +66,27 @@ public:
     bool defaultProfileImage() const;
     std::string description() const;
     Entities entities() const;
-    int favouritesCount() const;
+    int64_t favouritesCount() const;
     bool wasFollowRequestSent() const;
-    int followersCount() const;
-    int friendsCount() const;
+    int64_t followersCount() const;
+    int64_t friendsCount() const;
     bool isGeoEnabled() const;
     bool isTranslator() const;
     std::string language() const;
-    int listedCount() const;
+    int64_t listedCount() const;
     std::string location() const;
     Profile profile() const;
     bool isProtected() const;
     bool showsAllInlineMedia();
 
     /// \returns status or nullptr if not available.
-    Tweet* status() const;
-    int statusesCount() const;
+    Status* status() const;
+    int64_t statusesCount() const;
     const std::string* timeZone() const;
     const std::string* url() const;
-    const int* utcOffset() const;
+    const int64_t* utcOffset() const;
     bool verified() const;
-    Contries withheldInCountries() const;
+    std::vector<std::string> withheldInCountries() const;
     WithheldScope withheldScope() const;
 
     static User fromJSON(const ofJson& json);
@@ -110,13 +108,13 @@ private:
 
     bool _geoEnabled = false;
 
-    int _favouritesCount = -1;
+    int64_t _favouritesCount = -1;
 
     bool _followRequestSent = false;
 
-    int _followersCount =-1;
+    int64_t _followersCount =-1;
 
-    int _friendsCount = -1;
+    int64_t _friendsCount = -1;
 
     bool _following = false;
 
@@ -134,7 +132,7 @@ private:
 
     std::string _language;
 
-    int _listedCount = 0;
+    int64_t _listedCount = -1;
 
     std::string _location;
 
@@ -148,21 +146,19 @@ private:
     ///
     /// We use a std::shared_ptr to keep track to make it nullable and avoid
     /// the hassle of std::unique_ptr and copies.
-    std::shared_ptr<Tweet> _status;
+    std::shared_ptr<Status> _status;
 
-    int _statusesCount;
+    int64_t _statusesCount;
 
     std::shared_ptr<std::string> _timeZone;
 
     std::shared_ptr<std::string> _url;
 
-    std::shared_ptr<int> _UTCOffset;
+    std::shared_ptr<int64_t> _UTCOffset;
 
-    Contries _withheldInCountries;
+    std::vector<std::string> _withheldInCountries;
 
     WithheldScope _withheldScope;
-
-    friend class Deserializer;
 
 };
 

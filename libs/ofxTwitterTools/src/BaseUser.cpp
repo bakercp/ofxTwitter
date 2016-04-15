@@ -23,74 +23,66 @@
 // =============================================================================
 
 
-#pragma once
-
-
-#include <vector>
-#include "ofx/HTTP/BaseResponse.h"
-#include "ofx/Twitter/Error.h"
+#include "ofx/Twitter/BaseUser.h"
+#include "ofLog.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-template <typename RequestType>
-class TwitterResponse: public HTTP::BufferedResponse<RequestType>
+BaseUser::BaseUser()
 {
-public:
-    using HTTP::BufferedResponse<RequestType>::BufferedResponse;
+}
 
-    virtual ~TwitterResponse()
-    {
-    }
 
-    std::vector<Error> errors() const
-    {
-        return _errors;
-    }
+BaseUser::BaseUser(int64_t id, const std::string& screenName):
+    _id(id),
+    _screenName(screenName)
+{
+}
 
-protected:
-    virtual void parseBuffer() override
-    {
-        ofJson json;
 
-        try
-        {
-            json = ofJson::parse(HTTP::BufferedResponse<RequestType>::getBuffer());
+BaseUser::~BaseUser()
+{
+}
 
-            auto iter = json.find("errors");
 
-            if (iter != json.end())
-            {
-                for (auto& error: iter.value())
-                {
-                    _errors.push_back(Error::fromJSON(error));
-                }
+int64_t BaseUser::id() const
+{
+    return _id;
+}
 
-                // Remove the errors.
-                json.erase(iter);
-            }
-            
-            parseJSON(json);
 
-        }
-        catch (const std::exception& exc)
-        {
-            ofLogError("TwitterResponse::json") << "Unable to interpret data as json: " << exc.what();
-        }
+std::string BaseUser::screenName() const
+{
+    return _screenName;
+}
 
-    }
 
-    /// \brief Subclasses can further parse JSON data.
-    /// \param json The JSON Data to parse.
-    virtual void parseJSON(ofJson& json)
-    {
-    }
+BaseNamedUser::BaseNamedUser()
+{
+}
 
-    std::vector<Error> _errors;
 
-};
+BaseNamedUser::BaseNamedUser(int64_t id,
+                             const std::string& screenName,
+                             const std::string& name):
+    BaseUser(id, screenName),
+    _name(name)
+{
+}
+
+
+BaseNamedUser::~BaseNamedUser()
+{
+}
+
+
+std::string BaseNamedUser::name() const
+{
+    return _name;
+}
 
 
 } } // namespace ofx::Twitter

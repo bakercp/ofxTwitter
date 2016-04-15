@@ -36,7 +36,7 @@ Error::Error()
 }
 
 
-Error::Error(int code, const std::string& message):
+Error::Error(int64_t code, const std::string& message):
     _code(code),
     _message(message)
 {
@@ -48,7 +48,7 @@ Error::~Error()
 }
 
 
-int Error::code() const
+int64_t Error::code() const
 {
     return _code;
 }

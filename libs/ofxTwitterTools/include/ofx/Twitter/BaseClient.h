@@ -35,20 +35,28 @@ namespace ofx {
 namespace Twitter {
 
 
-class BaseTwitterClient: public HTTP::HTTPClient
+/// \brief An OAuth 1.0 compatible base client for the Twitter API.
+class BaseClient: public HTTP::HTTPClient
 {
 public:
-    BaseTwitterClient();
-    
-    BaseTwitterClient(const Credentials& credentials);
+    /// \brief Create a default client.
+    BaseClient();
 
-    virtual ~BaseTwitterClient();
+    /// \brief Create a client with the provided credentials.
+    /// \param credentials OAuth 1.0 credentials.
+    BaseClient(const Credentials& credentials);
 
+    virtual ~BaseClient();
+
+    /// \brief Set the OAuth 1.0 credentials.
+    /// \param credentials OAuth 1.0 credentials.
     void setCredentials(const Credentials& credentials);
 
-    const Credentials& getCredentials() const;
+    /// \returns the OAuth 1.0 credentials.
+    Credentials getCredentials() const;
 
 private:
+    ///
     Credentials _credentials;
 
     HTTP::OAuth10RequestFilter _oAuth10RequestFilter;
