@@ -1,7 +1,6 @@
 ofxGeo
 ofxHTTP
 ofxIO
-ofxJSON
 ofxMediaType
 ofxNetworkUtils
 ofxSSLManager

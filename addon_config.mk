@@ -5,4 +5,4 @@ meta:
 	ADDON_TAGS = "twitter" "http" "streaming" "twitter api"
 	ADDON_URL = http://github.com/bakercp/ofxTwitterTools
 common:
-	ADDON_DEPENDENCIES = ofxHTTP ofxJSON ofxGeo
+	ADDON_DEPENDENCIES = ofxHTTP ofxGeo

@@ -27,7 +27,6 @@
 
 
 #include <string>
-#include <json/json.h>
 #include "ofImage.h"
 #include "ofx/Twitter/Status.h"
 #include "ofx/Twitter/BaseResponse.h"

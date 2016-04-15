@@ -27,7 +27,6 @@
 
 
 #include <string>
-#include <json/json.h>
 #include "ofx/HTTP/PostRequest.h"
 #include "ofx/Twitter/BaseResponse.h"
 #include "ofx/Twitter/Error.h"

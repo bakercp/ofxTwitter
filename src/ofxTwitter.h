@@ -28,7 +28,6 @@
 
 #include "ofxGeo.h"
 #include "ofxHTTP.h"
-#include "ofxJSON.h"
 #include "ofx/Twitter/Credentials.h"
 #include "ofx/Twitter/RESTClient.h"
 #include "ofx/Twitter/StreamingClient.h"
