@@ -26,7 +26,7 @@
 #pragma once
 
 
-#include "ofx/Twitter/BaseTwitterClient.h"
+#include "ofx/Twitter/BaseClient.h"
 #include "ofx/Twitter/Search.h"
 
 
@@ -36,7 +36,7 @@ namespace Twitter {
 
 /// \brief A RESTClient for the Twitter API.
 /// \sa
-class RESTClient: public BaseTwitterClient
+class RESTClient: public BaseClient
 {
 public:
     /// \brief Create a default RESTClient.
@@ -56,7 +56,6 @@ public:
     /// \param query The query string to send.
     /// \returns The SearchResponse.
     std::unique_ptr<SearchResponse> search(const std::string& query);
-
 
 };
 

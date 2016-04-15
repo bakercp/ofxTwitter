@@ -63,10 +63,6 @@ public:
     Places();
     virtual ~Places();
 
-private:
-
-    friend class Deserializer;
-
 };
 
 

@@ -24,12 +24,13 @@
 
 
 #include "ofx/Twitter/User.h"
-#include "ofx/Twitter/TwitterUtils.h"
+#include "ofx/Twitter/Utils.h"
 #include "ofLog.h"
 
 
 namespace ofx {
 namespace Twitter {
+
 
 
 User::User()
@@ -85,7 +86,7 @@ Entities User::entities() const
 }
 
 
-int User::favouritesCount() const
+int64_t User::favouritesCount() const
 {
     return _favouritesCount;
 }
@@ -97,13 +98,13 @@ bool User::wasFollowRequestSent() const
 }
 
 
-int User::followersCount() const
+int64_t User::followersCount() const
 {
     return _followersCount;
 }
 
 
-int User::friendsCount() const
+int64_t User::friendsCount() const
 {
     return _friendsCount;
 }
@@ -127,7 +128,7 @@ std::string User::language() const
 }
 
 
-int User::listedCount() const
+int64_t User::listedCount() const
 {
     return _listedCount;
 }
@@ -163,7 +164,7 @@ bool User::showsAllInlineMedia()
 //}
 
 
-int User::statusesCount() const
+int64_t User::statusesCount() const
 {
     return _statusesCount;
 }
@@ -181,7 +182,7 @@ const std::string* User::url() const
 }
 
 
-const int* User::utcOffset() const
+const int64_t* User::utcOffset() const
 {
     return _UTCOffset.get();
 }
@@ -193,7 +194,7 @@ bool User::verified() const
 }
 
 
-Contries User::withheldInCountries() const
+std::vector<std::string> User::withheldInCountries() const
 {
     return _withheldInCountries;
 }
@@ -216,7 +217,7 @@ User User::fromJSON(const ofJson& json)
         const auto& value = iter.value();
 
         
-        if (TwitterUtils::endsWith(key, "_str")) { /* skip */}
+        if (Utils::endsWith(key, "_str")) { /* skip */}
 
         else if (key == "contributors_enabled") user._contributorsEnabled = value;
         else if (key == "contributors_enabled") user._contributorsEnabled = value;
@@ -224,7 +225,7 @@ User User::fromJSON(const ofJson& json)
         {
             Poco::DateTime date;
 
-            if (TwitterUtils::parse(value, date))
+            if (Utils::parse(value, date))
             {
                 user._createdAt = date;
             }
@@ -281,13 +282,13 @@ User User::fromJSON(const ofJson& json)
         {
             if (!value.is_null())
             {
-                user._UTCOffset = std::make_shared<int>(value);
+                user._UTCOffset = std::make_shared<int64_t>(value);
             }
         }
         else if (key == "verified") user._verified = value;
         else
         {
-            ofLogWarning("Tweet::fromJSON") << "Unknown key: " << key;
+            ofLogWarning("User::fromJSON") << "Unknown key: " << key;
 
             std::cout << value.dump(4) << std::endl;
         }

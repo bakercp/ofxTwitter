@@ -26,15 +26,7 @@
 #pragma once
 
 
-#include <stdint.h>
 #include <string>
-#include <vector>
-#include <set>
-#include "Poco/DateTime.h"
-#include "Poco/Nullable.h"
-#include "ofx/Twitter/Types.h"
-#include "ofx/Twitter/Entities.h"
-//#include "ofx/Twitter/Tweet.h"
 
 
 namespace ofx {

@@ -23,8 +23,8 @@
 // =============================================================================
 
 
-#include "ofx/Twitter/Tweet.h"
-#include "ofx/Twitter/TwitterUtils.h"
+#include "ofx/Twitter/Status.h"
+#include "ofx/Twitter/Utils.h"
 #include "ofLog.h"
 
 
@@ -32,19 +32,19 @@ namespace ofx {
 namespace Twitter {
 
 
-std::string Tweet::Metadata::isoLanguageCode() const
+std::string Status::Metadata::isoLanguageCode() const
 {
     return _isoLanguageCode;
 }
 
 
-std::string Tweet::Metadata::resultType() const
+std::string Status::Metadata::resultType() const
 {
     return _resultType;
 }
 
 
-Tweet::Metadata Tweet::Metadata::fromJSON(const ofJson& json)
+Status::Metadata Status::Metadata::fromJSON(const ofJson& json)
 {
     Metadata metadata;
 
@@ -54,11 +54,11 @@ Tweet::Metadata Tweet::Metadata::fromJSON(const ofJson& json)
         const auto& key = iter.key();
         const auto& value = iter.value();
 
-        if (TwitterUtils::endsWith(key, "_str")) { /* skip */}
+        if (Utils::endsWith(key, "_str")) { /* skip */}
         else if (key == "iso_language_code") metadata._isoLanguageCode = value;
         else if (key == "result_type") metadata._resultType = value;
         else {
-            ofLogWarning("Tweet::Metadata::fromJSON") << "Unknown key: " << key;
+            ofLogWarning("Status::Metadata::fromJSON") << "Unknown key: " << key;
             std::cout << value.dump(4) << std::endl;
         }
         ++iter;
@@ -68,61 +68,61 @@ Tweet::Metadata Tweet::Metadata::fromJSON(const ofJson& json)
 }
 
 
-Tweet::Tweet()
+Status::Status()
 {
 }
 
 
-Tweet::~Tweet()
+Status::~Status()
 {
 }
 
 
-Annotations Tweet::annotations() const
+std::map<std::string, std::string> Status::annotations() const
 {
     return _annotations;
 }
 
 
-Contributors Tweet::contributors() const
+std::vector<BaseNamedUser> Status::contributors() const
 {
     return _contributors;
 }
 
 
-const Geo::Coordinate* Tweet::coordinates() const
+const Geo::Coordinate* Status::coordinates() const
 {
     return _coordinates.get();
 }
 
 
-int64_t Tweet::id() const
+int64_t Status::id() const
 {
     return _id;
 }
 
 
-Poco::DateTime Tweet::createdAt() const
+Poco::DateTime Status::createdAt() const
 {
     return _createdAt;
 }
 
 
-const User* Tweet::user() const
+const User* Status::user() const
 {
     return _user.get();
 }
 
 
-std::string Tweet::text() const
+std::string Status::text() const
 {
     return _text;
 }
 
 
-Tweet Tweet::fromJSON(const ofJson& json)
+Status Status::fromJSON(const ofJson& json)
 {
-    Tweet tweet;
+    Status status;
 
     auto iter = json.cbegin();
     while (iter != json.cend())
@@ -130,19 +130,27 @@ Tweet Tweet::fromJSON(const ofJson& json)
         const auto& key = iter.key();
         const auto& value = iter.value();
 
-        if (TwitterUtils::endsWith(key, "_str")) { /* skip */}
-        else if (key == "id") tweet._id = value;
+        if (Utils::endsWith(key, "_str")) { /* skip */}
+        else if (key == "id") status._id = value;
+
+        else if (key == "filter_level")
+        {
+            if (value == "none") status._filterLevel = FilterLevel::NONE;
+            else if (value == "low") status._filterLevel = FilterLevel::LOW;
+            else if (value == "medium") status._filterLevel = FilterLevel::LOW;
+            else ofLogError("Status::fromJSON") << "Unknown filter level: " << value;
+        }
         else if (key == "in_reply_to_screen_name")
         {
-            if (!value.is_null()) tweet._inReplyToScreenName = value;
+            if (!value.is_null()) status._inReplyToScreenName = value;
         }
         else if (key == "in_reply_to_status_id")
         {
-            if (!value.is_null()) tweet._inReplyToStatusId = value;
+            if (!value.is_null()) status._inReplyToStatusId = value;
         }
         else if (key == "in_reply_to_user_id")
         {
-            if (!value.is_null()) tweet._inReplyToUserId = value;
+            if (!value.is_null()) status._inReplyToUserId = value;
         }
         else if (key == "contributors")
         {
@@ -176,55 +184,53 @@ Tweet Tweet::fromJSON(const ofJson& json)
         {
             if (!value.is_null())
             {
-                tweet._user = std::make_shared<User>(User::fromJSON(value));
+                status._user = std::make_shared<User>(User::fromJSON(value));
             }
         }
         else if (key == "retweeted_status")
         {
             if (!value.is_null())
             {
-                tweet._retweetedStatus = std::make_shared<Tweet>(Tweet::fromJSON(value));
+                status._retweetedStatus = std::make_shared<Status>(Status::fromJSON(value));
             }
         }
-        else if (key == "quoted_status_id") tweet._quotedStatusId = value;
+        else if (key == "quoted_status_id") status._quotedStatusId = value;
         else if (key == "quoted_status")
         {
             if (!value.is_null())
             {
-                tweet._quotedStatus = std::make_shared<Tweet>(Tweet::fromJSON(value));
+                status._quotedStatus = std::make_shared<Status>(Status::fromJSON(value));
             }
         }
-        else if (key == "favorited") tweet._favorited = value;
-        else if (key == "entities") tweet._entities = Entities::fromJSON(value);
-        else if (key == "text") tweet._text = value;
-        else if (key == "possibly_sensitive") tweet._possiblySensitive = value;
-        else if (key == "retweet_count") tweet._retweetCount = value;
-        else if (key == "retweeted") tweet._retweeted = value;
-        else if (key == "source") tweet._source = value;
-        else if (key == "truncated") tweet._truncated = value;
-        else if (key == "utc_offset") tweet._utcOffset = value;
-        else if (key == "favorite_count") tweet._favoriteCount = value;
-        else if (key == "is_quote_status") tweet._isQuoteStatus = value;
-        else if (key == "lang") tweet._lang = value;
-        else if (key == "metadata") tweet._metadata = Metadata::fromJSON(value);
+        else if (key == "favorited") status._favorited = value;
+        else if (key == "entities") status._entities = Entities::fromJSON(value);
+        else if (key == "extended_entities") status._extendedEntities = Entities::fromJSON(value);
+        else if (key == "text") status._text = value;
+        else if (key == "possibly_sensitive") status._possiblySensitive = value;
+        else if (key == "retweet_count") status._retweetCount = value;
+        else if (key == "retweeted") status._retweeted = value;
+        else if (key == "source") status._source = value;
+        else if (key == "truncated") status._truncated = value;
+        else if (key == "utc_offset") status._utcOffset = value;
+        else if (key == "favorite_count") status._favoriteCount = value;
+        else if (key == "is_quote_status") status._isQuoteStatus = value;
+        else if (key == "lang") status._lang = value;
+        else if (key == "metadata") status._metadata = Metadata::fromJSON(value);
         else if (key == "created_at")
         {
             Poco::DateTime date;
 
-            if (TwitterUtils::parse(value, date))
+            if (Utils::parse(value, date))
             {
-                tweet._createdAt = date;
+                status._createdAt = date;
             }
         }
-        else {
-            ofLogWarning("Tweet::fromJSON") << "Unknown key: " << key;
+        else ofLogWarning("Status::fromJSON") << "Unknown key: " << key << std::endl << value.dump(4);
 
-            std::cout << value.dump(4) << std::endl;
-        }
         ++iter;
     }
 
-    return tweet;
+    return status;
 }
 
 

@@ -23,65 +23,41 @@
 // =============================================================================
 
 
-#include "ofx/Twitter/Types.h"
+#pragma once
+
+
+#include <string>
+#include "Poco/DateTime.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-BaseUser::BaseUser()
+/// \brief A collection of Twitter utilities.
+class Utils
 {
-}
+public:
+    /// \brief Determine if one string ends with a given suffix.
+    /// \param str The string to check.
+    /// \param suffix The suffix to match.
+    /// \returns true if str ends with suffix.
+    static bool endsWith(const std::string& str, const std::string &suffix);
 
+    /// \brief Parse a Twitter date string.
+    /// \param dateString The raw date string to parse.
+    /// \param date The destination date.
+    /// \returns true if parsing was successful.
+    static bool parse(const std::string& dateString, Poco::DateTime& date);
 
-BaseUser::BaseUser(int64_t id, const std::string& screenName):
-    _id(id),
-    _screenName(screenName)
-{
-}
+    /// \brief The default Twitter date format.
+    static const std::string TWITTER_DATE_FORMAT;
 
-
-BaseUser::~BaseUser()
-{
-}
-
-
-int64_t BaseUser::id() const
-{
-    return _id;
-}
-
-
-std::string BaseUser::screenName() const
-{
-    return _screenName;
-}
-
-
-BaseNamedUser::BaseNamedUser()
-{
-}
-
-
-BaseNamedUser::BaseNamedUser(int64_t id,
-                             const std::string& screenName,
-                             const std::string& name):
-    BaseUser(id, screenName),
-    _name(name)
-{
-}
-
-
-BaseNamedUser::~BaseNamedUser()
-{
-}
-
-
-std::string BaseNamedUser::name() const
-{
-    return _name;
-}
-
+private:
+    Utils() = delete;
+    ~Utils() = delete;
     
+};
+
+
 } } // namespace ofx::Twitter

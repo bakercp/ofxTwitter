@@ -23,7 +23,7 @@
 // =============================================================================
 
 
-#include "ofx/Twitter/TwitterUtils.h"
+#include "ofx/Twitter/Utils.h"
 #include "Poco/DateTimeParser.h"
 #include "Poco/Exception.h"
 #include "ofLog.h"
@@ -33,17 +33,17 @@ namespace ofx {
 namespace Twitter {
 
 
-const std::string TwitterUtils::TWITTER_DATE_FORMAT = "%w %b %f %H:%M:%S %Z %Y";
+const std::string Utils::TWITTER_DATE_FORMAT = "%w %b %f %H:%M:%S %Z %Y";
 
 
-bool TwitterUtils::endsWith(const std::string &str, const std::string &suffix)
+bool Utils::endsWith(const std::string &str, const std::string &suffix)
 {
     return str.size() >= suffix.size()
         && str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
 }
 
 
-bool TwitterUtils::parse(const std::string& dateString, Poco::DateTime& date)
+bool Utils::parse(const std::string& dateString, Poco::DateTime& date)
 {
     try
     {
@@ -52,7 +52,7 @@ bool TwitterUtils::parse(const std::string& dateString, Poco::DateTime& date)
     }
     catch (const Poco::SyntaxException& exc)
     {
-        ofLogError("TwitterUtils::parse") << "Unable to parse date time string: " << exc.displayText();
+        ofLogError("Utils::parse") << "Unable to parse date time string: " << exc.displayText();
         return false;
     }
 }

@@ -23,48 +23,63 @@
 // =============================================================================
 
 
-#include "ofx/Twitter/BaseTwitterClient.h"
-#include "ofx/Twitter/Deserializer.h"
-#include "ofx/HTTP/PostRequest.h"
-#include "ofx/HTTP/GetRequest.h"
-#include "ofx/HTTP/OAuth10Credentials.h"
+#pragma once
+
+
+#include <string>
+#include <set>
+#include "json.hpp"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-BaseTwitterClient::BaseTwitterClient(): BaseTwitterClient(Credentials())
+class BaseUser
 {
-}
+public:
+    BaseUser();
+    BaseUser(int64_t id, const std::string& screenName);
+
+    virtual ~BaseUser();
+
+    /// \returns the user id.
+    int64_t id() const;
+
+    /// \returns the user's screen name.
+    std::string screenName() const;
+
+protected:
+    /// \brief The user id.
+    int64_t _id = -1;
+
+    /// \brief The user screen name.
+    std::string _screenName;
+
+};
 
 
-BaseTwitterClient::BaseTwitterClient(const Credentials& credentials)
+class BaseNamedUser: public BaseUser
 {
-    setCredentials(credentials);
-    addRequestFilter(&_oAuth10RequestFilter);
-}
+public:
+    BaseNamedUser();
 
+    BaseNamedUser(int64_t id,
+                  const std::string& screenName,
+                  const std::string& name);
+    
+    virtual ~BaseNamedUser();
 
-BaseTwitterClient::~BaseTwitterClient()
-{
-}
-
-
-void BaseTwitterClient::setCredentials(const Credentials& credentials)
-{
-    _credentials = credentials;
-    _oAuth10RequestFilter.credentials().setConsumerKey(credentials.consumerKey());
-    _oAuth10RequestFilter.credentials().setConsumerSecret(credentials.consumerSecret());
-    _oAuth10RequestFilter.credentials().setToken(credentials.accessToken());
-    _oAuth10RequestFilter.credentials().setTokenSecret(credentials.accessTokenSecret());
-}
-
-
-const Credentials& BaseTwitterClient::getCredentials() const
-{
-    return _credentials;
-}
+    /// \returns the User's name.
+    std::string name() const;
+    
+    static BaseNamedUser fromJSON(const ofJson& json);
+    
+protected:
+    /// \brief The User's name.
+    std::string _name;
+    
+};
 
 
 } } // namespace ofx::Twitter

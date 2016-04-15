@@ -29,6 +29,7 @@
 #include "Poco/Net/HTTPRequest.h"
 #include "ofx/IO/ByteBuffer.h"
 #include "ofx/IO/Base64Encoding.h"
+#include "ofx/Twitter/Utils.h"
 
 
 namespace ofx {
@@ -63,6 +64,38 @@ void MediaUploadRequest::setImage(const ofPixels& pixels,
     ofSaveImage(pixels, buffer, format, quality);
     HTTP::PostRequest::addFormField("media_data",
                                     IO::Base64Encoding::encode(IO::ByteBuffer(buffer)));
+}
+
+
+MediaUploadResponse::~MediaUploadResponse()
+{
+}
+
+
+int64_t MediaUploadResponse::mediaId() const
+{
+    return _mediaId;
+}
+
+
+void MediaUploadResponse::parseJSON(const ofJson& json)
+{
+    auto iter = json.cbegin();
+    while (iter != json.cend())
+    {
+        const auto& key = iter.key();
+        const auto& value = iter.value();
+
+        if (Utils::endsWith(key, "_str")) { /* skip */ }
+        else if (Utils::endsWith(key, "_string")) { /* skip */ }
+        else if (key == "media_id") _mediaId = value;
+        else if (key == "image") { /* TODO */ }
+        else if (key == "size") { /* TODO */ }
+        else if (key == "expires_after_secs") { /* TODO */ }
+        else ofLogWarning("SearchResponse::parseJSON") << "Unknown key: " << key;
+        
+        ++iter;
+    }
 }
 
 

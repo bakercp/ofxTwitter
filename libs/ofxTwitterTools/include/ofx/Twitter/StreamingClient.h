@@ -32,16 +32,13 @@
 #include "ofx/TaskQueue.h"
 #include "ofx/TaskQueueEvents.h"
 #include "ofx/Geo/CoordinateBounds.h"
-#include "ofx/Twitter/Tweet.h"
-#include "ofx/Twitter/Deserializer.h"
+#include "ofx/Twitter/Status.h"
 #include "ofx/Twitter/Credentials.h"
 
 
 namespace ofx {
 namespace Twitter {
 
-
-//typedef TaskDataEventArgs_<Poco::UUID, ClientResponseBufferEventArgs> ClientBufferEventArgs;
 
 class StreamingParameters: public Poco::Net::NameValueCollection
 {

@@ -29,7 +29,8 @@
 #include <string>
 #include <json/json.h>
 #include "ofImage.h"
-#include "ofx/Twitter/Tweet.h"
+#include "ofx/Twitter/Status.h"
+#include "ofx/Twitter/BaseResponse.h"
 #include "ofx/Twitter/Error.h"
 #include "ofx/HTTP/PostRequest.h"
 
@@ -66,6 +67,26 @@ public:
     static const std::string RESOURCE_URL;
 
 };
+
+
+/// \brief A Twitter MediaUploadResponse.
+class MediaUploadResponse: public BaseResponse<MediaUploadRequest>
+{
+public:
+    using BaseResponse<MediaUploadRequest>::BaseResponse;
+
+    virtual ~MediaUploadResponse();
+
+    int64_t mediaId() const;
+
+protected:
+    virtual void parseJSON(const ofJson& json) override;
+    
+private:
+    int64_t _mediaId;
+
+};
+
 
 
 } } // namespace ofx::Twitter

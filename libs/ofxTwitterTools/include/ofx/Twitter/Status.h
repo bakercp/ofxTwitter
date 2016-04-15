@@ -30,11 +30,9 @@
 #include <map>
 #include <vector>
 #include "Poco/DateTime.h"
-#include "Poco/Nullable.h"
 #include "ofx/Geo/Coordinate.h"
 #include "ofx/Twitter/Entities.h"
 #include "ofx/Twitter/Places.h"
-#include "ofx/Twitter/Types.h"
 #include "ofx/Twitter/User.h"
 
 
@@ -42,10 +40,17 @@ namespace ofx {
 namespace Twitter {
 
 
-//  https://dev.twitter.com/docs/platform-objects/tweets
-class Tweet
+/// \sa https://dev.twitter.com/overview/api/tweets
+class Status
 {
 public:
+    enum class FilterLevel
+    {
+        NONE,
+        LOW,
+        MEDIUM
+    };
+
     class Metadata
     {
     public:
@@ -63,13 +68,13 @@ public:
     };
 
 
-    Tweet();
+    Status();
     
-    virtual ~Tweet();
+    virtual ~Status();
 
-    Annotations annotations() const;
+    std::map<std::string, std::string> annotations() const;
 
-    Contributors contributors() const;
+    std::vector<BaseNamedUser> contributors() const;
 
     /// \returns coordinates or nullptr if no coordinates are specified.
     const Geo::Coordinate* coordinates() const;
@@ -83,12 +88,12 @@ public:
 
     std::string text() const;
 
-    static Tweet fromJSON(const ofJson& json);
+    static Status fromJSON(const ofJson& json);
 
 private:
-    Annotations _annotations;
+    std::map<std::string, std::string> _annotations;
 
-    Contributors _contributors;
+    std::vector<BaseNamedUser> _contributors;
 
     /// \brief Optional location data.
     ///
@@ -103,6 +108,7 @@ private:
     int64_t _currentUserRetweet = -1;
 
     Entities _entities;
+    Entities _extendedEntities;
 
     int64_t _favoriteCount = -1;
 
@@ -114,11 +120,11 @@ private:
     ///
     /// We use a std::shared_ptr to keep track to make it nullable and avoid
     /// the hassle of std::unique_ptr and copies.
-    std::shared_ptr<Tweet> _quotedStatus;
+    std::shared_ptr<Status> _quotedStatus;
 
     bool _favorited = false;
 
-    std::string _filterLevel;
+    FilterLevel _filterLevel = FilterLevel::NONE;
 
     int64_t _id = -1;
 
@@ -142,7 +148,7 @@ private:
     ///
     /// We use a std::shared_ptr to keep track to make it nullable and avoid
     /// the hassle of std::unique_ptr and copies.
-    std::shared_ptr<Tweet> _retweetedStatus;
+    std::shared_ptr<Status> _retweetedStatus;
 
     std::string _source;
 
@@ -156,7 +162,7 @@ private:
     /// the hassle of std::unique_ptr and copies.
     std::shared_ptr<User> _user;
 
-    bool _withheldCopyright;
+    bool _withheldCopyright = false;
 
     /// \brief Optional user data.
     ///

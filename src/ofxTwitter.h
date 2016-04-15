@@ -32,15 +32,13 @@
 #include "ofx/Twitter/Credentials.h"
 #include "ofx/Twitter/RESTClient.h"
 #include "ofx/Twitter/StreamingClient.h"
-#include "ofx/Twitter/Deserializer.h"
 #include "ofx/Twitter/Entities.h"
 #include "ofx/Twitter/Places.h"
 #include "ofx/Twitter/Profile.h"
-#include "ofx/Twitter/Tweet.h"
-#include "ofx/Twitter/Types.h"
 #include "ofx/Twitter/User.h"
 #include "ofx/Twitter/Search.h"
-#include "ofx/Twitter/Update.h"
+#include "ofx/Twitter/Status.h"
+#include "ofx/Twitter/StatusUpdate.h"
 #include "ofx/Twitter/MediaUpload.h"
 
 

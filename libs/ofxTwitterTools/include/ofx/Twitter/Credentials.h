@@ -27,7 +27,7 @@
 
 
 #include <string>
-#include <json/json.h>
+#include "json.hpp"
 
 
 namespace ofx {
@@ -58,9 +58,9 @@ public:
 
     std::string accessTokenSecret() const;
 
-    static Credentials fromJSON(const Json::Value& value);
+    static Credentials fromJSON(const ofJson& value);
 
-    static Json::Value toJSON(const Credentials& credentials);
+    static ofJson toJSON(const Credentials& credentials);
 
     static Credentials fromFile(const std::string& credentialsFile);
 
@@ -68,10 +68,16 @@ public:
                        const std::string& credentialsFile);
 
 private:
-    /// \brief The consumer key.
+    /// \brief The OAuth 1.0 consumer key.
     std::string _consumerKey;
+
+    /// \brief The OAuth 1.0 consumer secret.
     std::string _consumerSecret;
+
+    /// \brief The OAuth 1.0 access token.
     std::string _accessToken;
+
+    /// \brief The OAuth 1.0 access token secret.
     std::string _accessTokenSecret;
 
 };

@@ -24,7 +24,6 @@
 
 
 #include "ofx/Twitter/RESTClient.h"
-#include "ofx/Twitter/Deserializer.h"
 #include "ofx/HTTP/GetRequest.h"
 
 
@@ -38,7 +37,7 @@ RESTClient::RESTClient()
 
 
 RESTClient::RESTClient(const Credentials& credentials):
-    BaseTwitterClient(credentials)
+    BaseClient(credentials)
 {
 }
 
