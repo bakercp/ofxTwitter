@@ -32,7 +32,7 @@ void ofApp::setup()
     // using the ofxTwitter::Credentials constructor.
     //
     // Developers must get their credentials at https://dev.twitter.com/.
-    ofxTwitter::Credentials credentials = ofxTwitter::Credentials::fromFile("NetworkedObject.json");
+    ofxTwitter::Credentials credentials = ofxTwitter::Credentials::fromFile("credentials.json");
 
     // Next we add our credentials to our ofxTwitter::RESTClient.
     client.setCredentials(credentials);
