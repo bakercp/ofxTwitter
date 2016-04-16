@@ -33,7 +33,7 @@ void ofApp::setup()
     // First we load credentials from a file. These can also be loaded manually
     // using the ofxTwitter::Credentials constructor.
     //
-    // Developers must get their credentials at https://dev.twitter.com/.
+    // Developers must get their credentials after creating an app at https://apps.twitter.com
     ofxTwitter::Credentials credentials = ofxTwitter::Credentials::fromFile("credentials.json");
 
     // Next we add our credentials to our ofxTwitter::RESTClient.
