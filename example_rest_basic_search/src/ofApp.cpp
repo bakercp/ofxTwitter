@@ -28,6 +28,8 @@
 
 void ofApp::setup()
 {
+	ofSetFrameRate(30);
+	
     // First we load credentials from a file. These can also be loaded manually
     // using the ofxTwitter::Credentials constructor.
     //
