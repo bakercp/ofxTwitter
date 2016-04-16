@@ -62,8 +62,8 @@ void MediaUploadRequest::setImage(const ofPixels& pixels,
 {
     ofBuffer buffer;
 #if OF_VERSION_MINOR < 10
-    ofPixels _pixels = pixels;
-    ofSaveImage(_pixels, buffer, format, quality);
+	// cast to non-const reference
+    ofSaveImage((ofPixels &)pixels, buffer, format, quality);
 #else
     ofSaveImage(pixels, buffer, format, quality);
 #endif
