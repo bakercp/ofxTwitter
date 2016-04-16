@@ -30,6 +30,10 @@
 #include "ofLog.h"
 
 
+// Undefine Status from Xlib.h.
+#undef Status
+
+
 namespace ofx {
 namespace Twitter {
 
