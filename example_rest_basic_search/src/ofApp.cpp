@@ -28,10 +28,12 @@
 
 void ofApp::setup()
 {
+    ofSetFrameRate(30);
+    
     // First we load credentials from a file. These can also be loaded manually
     // using the ofxTwitter::Credentials constructor.
     //
-    // Developers must get their credentials at https://dev.twitter.com/.
+    // Developers must get their credentials after creating an app at https://apps.twitter.com
     ofxTwitter::Credentials credentials = ofxTwitter::Credentials::fromFile("credentials.json");
 
     // Next we add our credentials to our ofxTwitter::RESTClient.
@@ -60,11 +62,11 @@ void ofApp::setup()
 
         // We can look through the errors to see if there are any.
         std::cout << "-------------" << std::endl;
-        std::cout << "completed_in: " << result->metadata().completedIn() << std::endl;
+        std::cout << "query: " << result->metadata().query() << std::endl;
         std::cout << "count: " << result->metadata().count() << std::endl;
+        std::cout << "completed_in: " << result->metadata().completedIn() << std::endl;
         std::cout << "maxId: " << result->metadata().maxId() << std::endl;
         std::cout << "sinceId: " << result->metadata().sinceId() << std::endl;
-        std::cout << "query: " << result->metadata().query() << std::endl;
 
     }
     else
@@ -82,5 +84,5 @@ void ofApp::setup()
 void ofApp::draw()
 {
     ofBackgroundGradient(ofColor::white, ofColor::black);
-    ofDrawBitmapStringHighlight("See console for output.", ofPoint(30, 30));
+    ofDrawBitmapStringHighlight("See console for output.", 30, 30);
 }
