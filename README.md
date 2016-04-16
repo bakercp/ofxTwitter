@@ -24,7 +24,7 @@ In order to use the Twitter API with ofxTwitterTools, you will need a Twitter ac
 * Access Token
 * Access Token Secret
 
-This information can be given to ofxTwitterTools via the ofxTwitter::Credentials constructor or via loading a JSON file (recommended). A template json file is provided with ofxTwitterTools: `data/credentials.json`.
+This information can be given to ofxTwitterTools via the ofxTwitter::Credentials constructor or via loading a JSON file (recommended). A template JSON file is provided with ofxTwitterTools: `data/credentials.json`.
 
 To create a Twitter app and the required credential info:
 
@@ -38,12 +38,11 @@ An OF app using ofxTwitterTools requires a set of files in it's `bin/data` folde
 
 * **credentials.json**: your Twitter app's consumer & access token information
 * **ssl/cacert.pem**: a collection of trusted root certification authorities, needed for the SSL communication for the Twitter API
-* **mime.types**: a list of known internet media [MIME](https://en.wikipedia.org/wiki/MIME) types, used to determine data types when querying info from from the Twitter API
+* **mime.types**: a list of known Internet media [MIME](https://en.wikipedia.org/wiki/MIME) types, used to determine data types when querying info from from the Twitter API
 
 ### Example Apps
 
-
-For the example apps to wotj with th Twitter api, they must be set to use your Twitter app's credential information.
+For the example apps to work with th Twitter API, they must be set to use your Twitter app's credential information.
 
 1. Open your Twitter app's page on [apps.twitter.com](http://apps.twitter.com) & choose the "Keys & Access Tokens" tab
 2. Fill in your Twitter app's Consumer & Access info into your OF app's `bin/data/credentials.json` file
@@ -67,7 +66,7 @@ If you are working with multiple OF app's using the same credential info, you ca
 Keep Your Credentials Secret
 ----------------------------
 
-Keep your Twitter appp's secret key & access token SECRET! If someone else has the right info, they can use/misuse the Twitter API in your name and possibly have your Twitter's app's access revoked!
+Keep your Twitter app's secret key & access token SECRET! If someone else has the right info, they can use/misuse the Twitter API in your name and possibly have your Twitter app's access revoked!
 
 **DO NOT let anyone else see/use your Twitter app's Consumer Secret and/or Access Token Secret!**
 
