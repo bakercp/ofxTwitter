@@ -25,6 +25,8 @@
 
 #include "ofx/Twitter/Status.h"
 #include "ofx/Twitter/Utils.h"
+#include "ofx/Twitter/BaseUser.h"
+#include "ofx/Twitter/User.h"
 #include "ofLog.h"
 
 

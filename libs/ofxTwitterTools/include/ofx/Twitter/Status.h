@@ -33,11 +33,14 @@
 #include "ofx/Geo/Coordinate.h"
 #include "ofx/Twitter/Entities.h"
 #include "ofx/Twitter/Places.h"
-#include "ofx/Twitter/User.h"
 
 
 namespace ofx {
 namespace Twitter {
+
+
+class User;
+class BaseNamedUser;
 
 
 /// \sa https://dev.twitter.com/overview/api/tweets

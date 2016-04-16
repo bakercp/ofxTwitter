@@ -25,6 +25,7 @@
 
 #include "ofx/Twitter/User.h"
 #include "ofx/Twitter/Utils.h"
+#include "ofx/Twitter/Status.h"
 #include "ofLog.h"
 
 
@@ -158,10 +159,10 @@ bool User::showsAllInlineMedia()
 }
 
 
-//Poco::Nullable<Tweet> User::getStatus() const
-//{
-//    return _status;
-//}
+const Status* User::status() const
+{
+    return _status.get();
+}
 
 
 int64_t User::statusesCount() const
