@@ -28,11 +28,13 @@
 
 void ofApp::setup()
 {
+    ofSetFrameRate(30);
+
     // First we load credentials from a file. These can also be loaded manually
     // using the ofxTwitter::Credentials constructor.
     //
-    // Developers must get their credentials at https://dev.twitter.com/.
-    ofxTwitter::Credentials credentials = ofxTwitter::Credentials::fromFile("NetworkedObject.json");
+    // Developers must get their credentials after creating an app at https://apps.twitter.com
+    ofxTwitter::Credentials credentials = ofxTwitter::Credentials::fromFile("credentials.json");
 
     // Next we add our credentials to our ofxTwitter::RESTClient.
     client.setCredentials(credentials);
@@ -42,16 +44,17 @@ void ofApp::setup()
     request->setFile("openFrameworks.png");
 
     auto response = client.executeBuffered(std::move(request));
-
+    if(response->isSuccess())
+    {
+        std::cout << "image upload successful" << std::endl;
+    }
+    
 //    std::cout << response->buffer() << std::endl;
 
 //    {"expires_after_secs":86400,"image":{"h":114,"image_type":"image/png","w":114},"media_id":720454264901013504,"media_id_string":"720454264901013505","size":3976}
 
-
 //    ofxTwitter::UpdateRequest request("Image upload!");
 //    request.addFormField("media_ids", "585667540694753281,585668476301377537");
-
-
 
 }
 
@@ -59,5 +62,5 @@ void ofApp::setup()
 void ofApp::draw()
 {
     ofBackgroundGradient(ofColor::white, ofColor::black);
-    ofDrawBitmapStringHighlight("See console for output.", ofPoint(30, 30));
+    ofDrawBitmapStringHighlight("See console for output.", 30, 30);
 }
