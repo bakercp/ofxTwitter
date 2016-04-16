@@ -35,6 +35,10 @@
 #include "ofx/Twitter/BaseUser.h"
 
 
+// Undefine Status from Xlib.h.
+#undef Status
+
+
 namespace ofx {
 namespace Twitter {
 
