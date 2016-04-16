@@ -160,35 +160,31 @@ Status Status::fromJSON(const ofJson& json)
         }
         else if (key == "contributors")
         {
-// TODO: for debugging? maybe use ofxLogVerbose("ofxTwitterTools"), etc?
-//            if (!value.is_null())
-//            {
-//                std::cout << key << " " << value.dump(4) << std::endl;
-//            }
+            if (!value.is_null())
+            {
+                ofLogVerbose("Status::fromJSON") << key << " " << value.dump(4);
+            }
         }
         else if (key == "coordinates")
         {
-// TODO: for debugging? maybe use ofxLogVerbose("ofxTwitterTools"), etc?
-//            if (!value.is_null())
-//            {
-//                std::cout << key << " " << value.dump(4) << std::endl;
-//            }
+            if (!value.is_null())
+            {
+                ofLogVerbose("Status::fromJSON") << key << " " << value.dump(4);
+            }
         }
         else if (key == "geo")
         {
-// TODO: for debugging? maybe use ofxLogVerbose("ofxTwitterTools"), etc?
-//            if (!value.is_null())
-//            {
-//                std::cout << key << " " << value.dump(4) << std::endl;
-//            }
+            if (!value.is_null())
+            {
+                ofLogVerbose("Status::fromJSON") << key << " " << value.dump(4);
+            }
         }
         else if (key == "place")
         {
-// TODO: for debugging? maybe use ofxLogVerbose("ofxTwitterTools"), etc?
-//            if (!value.is_null())
-//            {
-//                std::cout << key << " " << value.dump(4) << std::endl;
-//            }
+            if (!value.is_null())
+            {
+                ofLogVerbose("Status::fromJSON") << key << " " << value.dump(4);
+            }
         }
         else if (key == "user")
         {
