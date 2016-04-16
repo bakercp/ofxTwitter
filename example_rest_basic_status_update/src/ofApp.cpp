@@ -39,19 +39,23 @@ void ofApp::setup()
     // Next we add our credentials to our ofxTwitter::RESTClient.
     client.setCredentials(credentials);
 
-    auto request = std::make_unique<ofxTwitter::MediaUploadRequest>();
+    auto mediaRequest = std::make_unique<ofxTwitter::MediaUploadRequest>();
 
-    request->setFile("openFrameworks.png");
+    mediaRequest->setFile("openFrameworks.png");
 
-    auto response = client.executeBuffered(std::move(request));
-    if(response->isSuccess())
-    {
-        std::cout << "image upload successful" << std::endl;
-    }
-    
-//    std::cout << response->buffer() << std::endl;
+    auto response = client.executeBuffered<ofxTwitter::MediaUploadRequest, ofxTwitter::MediaUploadResponse>(std::move(mediaRequest));
 
-//    {"expires_after_secs":86400,"image":{"h":114,"image_type":"image/png","w":114},"media_id":720454264901013504,"media_id_string":"720454264901013505","size":3976}
+    cout << std::to_string(response->mediaId()) << endl;
+
+    auto updateRequest = std::make_unique<ofxTwitter::StatusUpdateRequest>("This is a test of the system!");
+
+    updateRequest->setMediaId(response->mediaId());
+
+    auto updateResponse = client.executeBuffered<ofxTwitter::StatusUpdateRequest, ofxTwitter::StatusUpdateResponse>(std::move(updateRequest));
+
+    cout << updateResponse->getBuffer() << endl;
+
+    //    {"expires_after_secs":86400,"image":{"h":114,"image_type":"image/png","w":114},"media_id":720454264901013504,"media_id_string":"720454264901013505","size":3976}
 
 //    ofxTwitter::UpdateRequest request("Image upload!");
 //    request.addFormField("media_ids", "585667540694753281,585668476301377537");
