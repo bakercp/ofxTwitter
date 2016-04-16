@@ -87,10 +87,10 @@ URLEntity::URLEntity(const std::string& url,
                      const std::string& expandedURL,
                      std::size_t startIndex,
                      std::size_t endIndex):
+    BaseIndexedEntity(startIndex, endIndex),
     _url(url),
     _displayURL(displayURL),
-    _expandedURL(expandedURL),
-    BaseIndexedEntity(startIndex, endIndex)
+    _expandedURL(expandedURL)
 {
 }
 
@@ -325,10 +325,10 @@ Entities Entities::fromJSON(const ofJson& json)
         }
         else if (key == "media")
         {
-//            if (!value.is_null())
-//            {
-//                std::cout << key << " " << value.dump(4) << std::endl;
-//            }
+            if (!value.is_null())
+            {
+                std::cout << key << " " << value.dump(4) << std::endl;
+            }
         }
         else ofLogWarning("Entities::fromJSON") << "Unknown key: " << key;
 
