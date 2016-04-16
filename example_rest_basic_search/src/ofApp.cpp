@@ -28,8 +28,8 @@
 
 void ofApp::setup()
 {
-	ofSetFrameRate(30);
-	
+    ofSetFrameRate(30);
+    
     // First we load credentials from a file. These can also be loaded manually
     // using the ofxTwitter::Credentials constructor.
     //
@@ -62,11 +62,11 @@ void ofApp::setup()
 
         // We can look through the errors to see if there are any.
         std::cout << "-------------" << std::endl;
-        std::cout << "completed_in: " << result->metadata().completedIn() << std::endl;
+        std::cout << "query: " << result->metadata().query() << std::endl;
         std::cout << "count: " << result->metadata().count() << std::endl;
+        std::cout << "completed_in: " << result->metadata().completedIn() << std::endl;
         std::cout << "maxId: " << result->metadata().maxId() << std::endl;
         std::cout << "sinceId: " << result->metadata().sinceId() << std::endl;
-        std::cout << "query: " << result->metadata().query() << std::endl;
 
     }
     else
@@ -84,5 +84,5 @@ void ofApp::setup()
 void ofApp::draw()
 {
     ofBackgroundGradient(ofColor::white, ofColor::black);
-    ofDrawBitmapStringHighlight("See console for output.", ofPoint(30, 30));
+    ofDrawBitmapStringHighlight("See console for output.", 30, 30);
 }
