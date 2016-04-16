@@ -4,6 +4,5 @@ ofxIO
 ofxMediaType
 ofxNetworkUtils
 ofxSSLManager
-ofxSpatialHash
 ofxTaskQueue
 ofxTwitterTools
