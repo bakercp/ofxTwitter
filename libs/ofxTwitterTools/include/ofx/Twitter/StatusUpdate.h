@@ -161,7 +161,7 @@ public:
 
 protected:
     virtual void parseJSON(const ofJson& json) override;
-    
+
 private:
     Status _status;
 

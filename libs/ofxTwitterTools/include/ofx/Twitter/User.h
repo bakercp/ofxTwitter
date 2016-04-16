@@ -53,7 +53,7 @@ public:
     };
 
     User();
-    
+
     User(int64_t ID,
          const std::string& screenName,
          const std::string& name);

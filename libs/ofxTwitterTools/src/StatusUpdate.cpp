@@ -100,7 +100,7 @@ void StatusUpdateRequest::setTrimUser(bool trimUser)
 void StatusUpdateRequest::setMediaIds(std::vector<int64_t> ids)
 {
     std::stringstream ss;
-    
+
     for (auto i = 0; i < ids.size(); ++i)
     {
         ss << std::to_string(ids[i]);

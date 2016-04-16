@@ -65,7 +65,7 @@ Status::Metadata Status::Metadata::fromJSON(const ofJson& json)
         }
         ++iter;
     }
-    
+
     return metadata;
 }
 

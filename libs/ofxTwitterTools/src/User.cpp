@@ -199,7 +199,7 @@ std::vector<std::string> User::withheldInCountries() const
 {
     return _withheldInCountries;
 }
-    
+
 
 User::WithheldScope User::withheldScope() const
 {
@@ -217,7 +217,7 @@ User User::fromJSON(const ofJson& json)
         const auto& key = iter.key();
         const auto& value = iter.value();
 
-        
+
         if (Utils::endsWith(key, "_str")) { /* skip */}
 
         else if (key == "contributors_enabled") user._contributorsEnabled = value;
@@ -295,7 +295,7 @@ User User::fromJSON(const ofJson& json)
         }
         ++iter;
     }
-    
+
     return user;
 }
 

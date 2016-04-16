@@ -121,6 +121,6 @@ std::string Profile::getBannerUrl() const
 {
     return _bannerUrl;
 }
-    
+
 
 } } // namespace ofx::Twitter

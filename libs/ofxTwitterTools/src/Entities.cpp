@@ -253,7 +253,7 @@ std::string UserMentionEntity::indexedText() const
 Entities::Entities()
 {
 }
-    
+
 Entities::Entities(const HashTagEntities& hashTagEntities,
                    const MediaEntities& mediaEntities,
                    const URLEntities& URLEntities,
@@ -265,12 +265,12 @@ Entities::Entities(const HashTagEntities& hashTagEntities,
 {
 }
 
-    
+
 Entities::~Entities()
 {
 }
 
-    
+
 Entities::HashTagEntities Entities::hasTagEntities() const
 {
     return _hashTagEntities;

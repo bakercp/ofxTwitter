@@ -98,7 +98,7 @@ void MediaUploadResponse::parseJSON(const ofJson& json)
         else if (key == "size") { /* TODO */ }
         else if (key == "expires_after_secs") { /* TODO */ }
         else ofLogWarning("SearchResponse::parseJSON") << "Unknown key: " << key;
-        
+
         ++iter;
     }
 }

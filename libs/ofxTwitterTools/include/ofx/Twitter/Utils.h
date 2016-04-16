@@ -56,7 +56,7 @@ public:
 private:
     Utils() = delete;
     ~Utils() = delete;
-    
+
 };
 
 

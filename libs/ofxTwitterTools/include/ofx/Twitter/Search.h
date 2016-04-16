@@ -124,7 +124,7 @@ private:
     std::string _nextResults;
 
     std::string _refreshURL;
-    
+
 
 };
 

@@ -115,7 +115,7 @@ void SearchRequest::setUntil(int year, int month, int day)
     setFormField("until", ss.str());
 }
 
-    
+
 void SearchRequest::setSinceId(int64_t id)
 {
     setFormField("since_id", std::to_string(id));

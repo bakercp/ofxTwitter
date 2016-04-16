@@ -92,5 +92,5 @@ const Credentials& StreamingClient::getCredentials() const
 
 
 
-    
+
 } } // namespace ofx::Twitter

@@ -71,7 +71,7 @@ protected:
                 // Remove the errors.
                 json.erase(iter);
             }
-            
+
             parseJSON(json);
 
         }
