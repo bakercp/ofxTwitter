@@ -50,9 +50,12 @@ public:
     virtual std::string indexedText() const = 0;
 
 private:
+    /// \brief The start index of the indexed entity in the Status text.
     std::size_t _startIndex = 0;
+
+    /// \brief The end index of the indexed entity in the Status text.
     std::size_t _endIndex = 0;
-    
+
 };
 
 
@@ -69,6 +72,7 @@ public:
     std::string indexedText() const override;
 
 private:
+    /// \brief The hashtag text.
     std::string _hashTag;
 
 };
@@ -171,8 +175,8 @@ private:
     std::string _mediaURL;
     std::string _secureMediaURL;
     int64_t _mediaID = 0;
-    Sizes _sizes;
     Type _type = Type::PHOTO;
+    Sizes _sizes;
     int64_t _sourceStatusID = -1;
 
 };
@@ -188,7 +192,7 @@ public:
                       std::size_t endIndex);
 
     virtual ~UserMentionEntity();
-    
+
     virtual std::string indexedText() const override;
 
 };

@@ -80,7 +80,7 @@ public:
 
 protected:
     virtual void parseJSON(const ofJson& json) override;
-    
+
 private:
     int64_t _mediaId;
 

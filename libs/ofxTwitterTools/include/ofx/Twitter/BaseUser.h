@@ -67,18 +67,18 @@ public:
     BaseNamedUser(int64_t id,
                   const std::string& screenName,
                   const std::string& name);
-    
+
     virtual ~BaseNamedUser();
 
     /// \returns the User's name.
     std::string name() const;
-    
+
     static BaseNamedUser fromJSON(const ofJson& json);
-    
+
 protected:
     /// \brief The User's name.
     std::string _name;
-    
+
 };
 
 

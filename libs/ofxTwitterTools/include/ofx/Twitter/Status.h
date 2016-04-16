@@ -33,11 +33,14 @@
 #include "ofx/Geo/Coordinate.h"
 #include "ofx/Twitter/Entities.h"
 #include "ofx/Twitter/Places.h"
-#include "ofx/Twitter/User.h"
 
 
 namespace ofx {
 namespace Twitter {
+
+
+class User;
+class BaseNamedUser;
 
 
 /// \sa https://dev.twitter.com/overview/api/tweets
@@ -60,7 +63,7 @@ public:
         std::string resultType() const;
 
         static Metadata fromJSON(const ofJson& json);
-        
+
     private:
         std::string _isoLanguageCode;
         std::string _resultType;
@@ -69,7 +72,7 @@ public:
 
 
     Status();
-    
+
     virtual ~Status();
 
     std::map<std::string, std::string> annotations() const;
@@ -100,7 +103,7 @@ private:
     /// We use a std::shared_ptr to keep track to make it nullable and avoid
     /// the hassle of std::unique_ptr and copies.
     std::shared_ptr<Geo::Coordinate> _coordinates;
-    
+
     Poco::DateTime _createdAt;
 
     int64_t _utcOffset = 0;

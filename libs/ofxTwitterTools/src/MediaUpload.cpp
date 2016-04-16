@@ -61,7 +61,12 @@ void MediaUploadRequest::setImage(const ofPixels& pixels,
                                   ofImageQualityType quality)
 {
     ofBuffer buffer;
-    ofSaveImage((ofPixels &)pixels, buffer, format, quality);
+#if OF_VERSION_MINOR < 10
+    ofPixels _pixels = pixels;
+    ofSaveImage(_pixels, buffer, format, quality);
+#else
+    ofSaveImage(pixels, buffer, format, quality);
+#endif
     HTTP::PostRequest::addFormField("media_data",
                                     IO::Base64Encoding::encode(IO::ByteBuffer(buffer)));
 }
@@ -93,7 +98,7 @@ void MediaUploadResponse::parseJSON(const ofJson& json)
         else if (key == "size") { /* TODO */ }
         else if (key == "expires_after_secs") { /* TODO */ }
         else ofLogWarning("SearchResponse::parseJSON") << "Unknown key: " << key;
-        
+
         ++iter;
     }
 }

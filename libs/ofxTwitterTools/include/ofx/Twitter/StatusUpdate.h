@@ -37,10 +37,10 @@ namespace ofx {
 namespace Twitter {
 
 
-/// \brief Updates the user’s current status, also known as Tweeting.
+/// \brief Updates the user's current status, also known as Tweeting.
 ///
 /// For each update attempt, the update text is compared with the authenticating
-/// user’s recent Tweets. Any attempt that would result in duplication will be
+/// user's recent Tweets. Any attempt that would result in duplication will be
 /// blocked, resulting in a 403 error. Therefore, a user cannot submit the same
 /// status twice in a row.
 ///
@@ -68,7 +68,7 @@ public:
     /// encode as necessary. t.co link wrapping may affect character counts.
     ///
     /// There are some special commands in this field to be aware of.
-    /// For instance, preceding a message with “D ” or “M ” and following
+    /// For instance, preceding a message with "D " or "M " and following
     /// it with a screen name can create a direct message to that user if the
     /// relationship allows for it.
     ///
@@ -98,7 +98,7 @@ public:
     ///
     /// The latitude of the location this tweet refers to. This parameter will
     /// be ignored unless it is inside the range -90.0 to +90.0 (North is
-    /// positive) inclusive. It will also be ignored if there isn’t a
+    /// positive) inclusive. It will also be ignored if there isn't a
     /// corresponding long parameter.
     ///
     /// The longitude of the location this tweet refers to. The valid ranges for
@@ -161,7 +161,7 @@ public:
 
 protected:
     virtual void parseJSON(const ofJson& json) override;
-    
+
 private:
     Status _status;
 

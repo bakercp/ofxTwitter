@@ -25,6 +25,7 @@
 
 #include "ofx/Twitter/User.h"
 #include "ofx/Twitter/Utils.h"
+#include "ofx/Twitter/Status.h"
 #include "ofLog.h"
 
 
@@ -158,10 +159,10 @@ bool User::showsAllInlineMedia()
 }
 
 
-//Poco::Nullable<Tweet> User::getStatus() const
-//{
-//    return _status;
-//}
+const Status* User::status() const
+{
+    return _status.get();
+}
 
 
 int64_t User::statusesCount() const
@@ -198,7 +199,7 @@ std::vector<std::string> User::withheldInCountries() const
 {
     return _withheldInCountries;
 }
-    
+
 
 User::WithheldScope User::withheldScope() const
 {
@@ -216,7 +217,7 @@ User User::fromJSON(const ofJson& json)
         const auto& key = iter.key();
         const auto& value = iter.value();
 
-        
+
         if (Utils::endsWith(key, "_str")) { /* skip */}
 
         else if (key == "contributors_enabled") user._contributorsEnabled = value;
@@ -294,7 +295,7 @@ User User::fromJSON(const ofJson& json)
         }
         ++iter;
     }
-    
+
     return user;
 }
 

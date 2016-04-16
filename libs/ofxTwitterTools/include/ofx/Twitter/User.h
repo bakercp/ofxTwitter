@@ -53,7 +53,7 @@ public:
     };
 
     User();
-    
+
     User(int64_t ID,
          const std::string& screenName,
          const std::string& name);
@@ -80,7 +80,7 @@ public:
     bool showsAllInlineMedia();
 
     /// \returns status or nullptr if not available.
-    Status* status() const;
+    const Status* status() const;
     int64_t statusesCount() const;
     const std::string* timeZone() const;
     const std::string* url() const;
@@ -112,7 +112,7 @@ private:
 
     bool _followRequestSent = false;
 
-    int64_t _followersCount =-1;
+    int64_t _followersCount = -1;
 
     int64_t _friendsCount = -1;
 

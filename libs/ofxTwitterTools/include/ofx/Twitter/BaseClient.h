@@ -60,7 +60,7 @@ private:
     Credentials _credentials;
 
     HTTP::OAuth10RequestFilter _oAuth10RequestFilter;
-    
+
 };
 
 
