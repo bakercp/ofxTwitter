@@ -69,12 +69,11 @@ Keep Your Credentials Secret
 
 Keep your Twitter appp's secret key & access token SECRET! If someone else has the right info, they can use/misuse the Twitter API in your name and possibly have your Twitter's app's access revoked!
 
-**Do NOT let anyone else see/use your Twitter app's Consumer Secret and/or Access Token Secret!**
+**DO NOT let anyone else see/use your Twitter app's Consumer Secret and/or Access Token Secret!**
 
-**Do NOT add the credentials JSON file or any source file which includes either the Consumer Secret and/or Access Token Secret to a git/GitHub repository!** 
+**DO NOT add the credentials JSON file or any source file which includes either the Consumer Secret and/or Access Token Secret to a git/GitHub repository!** 
 
-** You have been warned :) **
-
+You have been warned :)
 
 References
 ----------
