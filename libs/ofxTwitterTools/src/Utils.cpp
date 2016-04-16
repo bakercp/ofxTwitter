@@ -49,6 +49,7 @@ bool Utils::parse(const std::string& dateString, Poco::DateTime& date)
     {
         int tzd;
         Poco::DateTimeParser::parse(TWITTER_DATE_FORMAT, dateString, date, tzd);
+        return true;
     }
     catch (const Poco::SyntaxException& exc)
     {
