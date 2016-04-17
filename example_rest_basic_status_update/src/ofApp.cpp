@@ -40,7 +40,7 @@ void ofApp::setup()
     // Next we add our credentials to our ofxTwitter::RESTClient.
     client.setCredentials(credentials);
 
-    // Update the the Status and add attach an image.
+    // Update the Status and add attach an image.
     auto response = client.updateStatus("Hello from openFrameworks!",
                                         "openFrameworks.png");
 
@@ -51,6 +51,7 @@ void ofApp::setup()
     }
     else
     {
+        // List any Twitter errors if they exist.
         for (auto& error: response->errors())
         {
             ofLogError("ofApp::setup") << error.code() << " : " << error.message();
