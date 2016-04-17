@@ -27,6 +27,7 @@
 #include "ofLog.h"
 #include <sstream>
 #include "Poco/Net/HTTPRequest.h"
+#include "ofx/HTTP/HTTPUtils.h"
 
 
 namespace ofx {
@@ -99,17 +100,7 @@ void StatusUpdateRequest::setTrimUser(bool trimUser)
 
 void StatusUpdateRequest::setMediaIds(std::vector<int64_t> ids)
 {
-    std::stringstream ss;
-
-    for (auto i = 0; i < ids.size(); ++i)
-    {
-        ss << std::to_string(ids[i]);
-
-        if (i < ids.size() - 1)
-            ss << " ";
-    }
-
-    setFormField("media_ids", ss.str());
+    setFormField("media_ids", HTTP::HTTPUtils::explode(ids, " "));
 }
 
 
