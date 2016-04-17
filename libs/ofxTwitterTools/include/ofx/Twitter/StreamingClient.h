@@ -350,6 +350,12 @@ private:
 typedef UserStreamingRequestParameters SiteStreamingRequestParameters;
 
 
+/// \brief Returns a small random sample of all public statuses.
+///
+/// The Tweets returned by the default access level are the same, so if two
+/// different clients connect to this endpoint, they will see the same Tweets.
+///
+/// \sa https://dev.twitter.com/streaming/reference/get/statuses/sample
 class SampleStreamingRequest: public HTTP::GetRequest
 {
 public:
