@@ -24,73 +24,211 @@
 
 
 #include "ofx/Twitter/StreamingClient.h"
+#include "ofx/HTTP/HTTPUtils.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-const std::string StreamingParameters::DEFAULT_DELIMITED = "length";
-
-
-StreamingParameters::StreamingParameters()
-{
-    set("delimited", DEFAULT_DELIMITED);
-}
-
-
-StreamingParameters::~StreamingParameters()
+StreamingRequestParameters::~StreamingRequestParameters()
 {
 }
 
-
-void StreamingParameters::setDelimited(const std::string& delimited)
+void StreamingRequestParameters::setDelimited(Delimited delimited)
 {
-    set("delimited", delimited);
+    _delimited = delimited;
 }
 
 
-void StreamingParameters::setLanguages(const std::string& languages)
+void StreamingRequestParameters::setStallWarnings(bool stallWarnings)
 {
-    set("languages", languages);
+    _stallWarnings = stallWarnings;
 }
 
 
-FilterQuery::FilterQuery()
+void StreamingRequestParameters::setFilterLevel(FilterLevel filterLevel)
+{
+    _filterLevel = filterLevel;
+}
+
+void StreamingRequestParameters::setLanguage(const std::string& language)
+{
+    setLanguages({ language });
+}
+
+
+void StreamingRequestParameters::setLanguages(const std::vector<std::string>& languages)
+{
+    _languages = languages;
+}
+
+
+Poco::Net::NameValueCollection StreamingRequestParameters::toNameValueCollection() const
+{
+    Poco::Net::NameValueCollection parameters;
+
+    parameters.set("stall_warnings", _stallWarnings ? "true" : "false");
+
+    if (_delimited == Delimited::LENGTH) parameters.set("delimited", "length");
+
+    if (_filterLevel == FilterLevel::LOW) parameters.set("filter_level", "low");
+    else if (_filterLevel == FilterLevel::MEDIUM) parameters.set("filter_level", "medium");
+    else if (_filterLevel == FilterLevel::NONE) parameters.set("filter_level", "none");
+
+    if (!_languages.empty()) parameters.set("language", HTTP::HTTPUtils::explode(_languages, ","));
+
+    return parameters;
+}
+
+
+BaseFilterStreamingRequestParameters::~BaseFilterStreamingRequestParameters()
 {
 }
 
 
-FilterQuery::~FilterQuery()
+void BaseFilterStreamingRequestParameters::setTrack(const std::string& track)
 {
+    setTracks({ track });
+}
+
+void BaseFilterStreamingRequestParameters::setTracks(const std::vector<std::string>& tracks)
+{
+    _tracks = tracks;
+}
+
+void BaseFilterStreamingRequestParameters::setLocation(const Geo::CoordinateBounds& location)
+{
+    setLocations({ location });
 }
 
 
-StreamingClient::StreamingClient(int maxTasks, Poco::ThreadPool& threadPool)//:
-//    TaskQueue_<std::String>(maxTasks, threadPool)
+void BaseFilterStreamingRequestParameters::setLocations(const std::vector<Geo::CoordinateBounds>& locations)
 {
-}
-
-
-StreamingClient::~StreamingClient()
-{
-}
-
-
-
-void StreamingClient::setCredentials(const Credentials& credentials)
-{
-    _credentials = credentials;
-}
-
-
-const Credentials& StreamingClient::getCredentials() const
-{
-    return _credentials;
+    _locations = locations;
 }
 
 
 
+Poco::Net::NameValueCollection BaseFilterStreamingRequestParameters::toNameValueCollection() const
+{
+    Poco::Net::NameValueCollection parameters = StreamingRequestParameters::toNameValueCollection();
+
+    if (!_tracks.empty()) parameters.set("track", HTTP::HTTPUtils::explode(_tracks, ","));
+
+    if (!_locations.empty())
+    {
+        std::vector<double> values;
+
+        for (auto& bound: _locations)
+        {
+            values.push_back(bound.getSouthWest().getLongitude());
+            values.push_back(bound.getSouthWest().getLatitude());
+            values.push_back(bound.getNorthEast().getLongitude());
+            values.push_back(bound.getNorthEast().getLatitude());
+        }
+
+        parameters.set("locations", HTTP::HTTPUtils::explode(values, ","));
+    }
+
+    return parameters;
+}
+
+
+FilterStreamingRequestParameters::~FilterStreamingRequestParameters()
+{
+}
+
+
+void FilterStreamingRequestParameters::setFollow(const std::string& follow)
+{
+    setFollows({ follow });
+}
+
+
+void FilterStreamingRequestParameters::setFollows(const std::vector<std::string>& follows)
+{
+    _follows = follows;
+}
+    
+
+Poco::Net::NameValueCollection FilterStreamingRequestParameters::toNameValueCollection() const
+{
+    Poco::Net::NameValueCollection parameters = BaseFilterStreamingRequestParameters::toNameValueCollection();
+
+    if (!_follows.empty()) parameters.set("follow", HTTP::HTTPUtils::explode(_follows, ","));
+
+    return parameters;
+}
+
+
+UserStreamingRequestParameters::~UserStreamingRequestParameters()
+{
+}
+
+
+void UserStreamingRequestParameters::setReplies(bool replies)
+{
+    _replies = replies;
+}
+
+
+void UserStreamingRequestParameters::setWith(With with)
+{
+    _with = with;
+}
+
+
+Poco::Net::NameValueCollection UserStreamingRequestParameters::toNameValueCollection() const
+{
+    Poco::Net::NameValueCollection parameters = BaseFilterStreamingRequestParameters::toNameValueCollection();
+
+    if (_replies) parameters.set("replies", "all");
+
+    if (_with == With::USERS) parameters.set("with", "users");
+    else if (_with == With::FOLLOWINGS) parameters.set("with", "followings");
+
+    return parameters;
+}
+
+
+const std::string SampleStreamingRequest::RESOURCE_URL = "https://stream.twitter.com/1.1/statuses/sample.json";
+
+
+SampleStreamingRequest::SampleStreamingRequest():
+    SampleStreamingRequest(StreamingRequestParameters())
+{
+}
+
+SampleStreamingRequest::SampleStreamingRequest(const StreamingRequestParameters& parameters):
+    HTTP::GetRequest(RESOURCE_URL, Poco::Net::HTTPMessage::HTTP_1_1)
+{
+    setParameters(parameters);
+}
+
+
+SampleStreamingRequest::~SampleStreamingRequest()
+{
+}
+
+
+void SampleStreamingRequest::setParameters(const StreamingRequestParameters& parameters)
+{
+    _parameters = parameters;
+
+    clearFormFields();
+
+    for (const auto& entry: _parameters.toNameValueCollection())
+    {
+        setFormField(entry.first, entry.second);
+    }
+}
+
+
+StreamingRequestParameters SampleStreamingRequest::getParameters() const
+{
+    return _parameters;
+}
 
 
 } } // namespace ofx::Twitter
