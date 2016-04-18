@@ -178,6 +178,9 @@ private:
     std::shared_ptr<Places> _places;
 
     Metadata _metadata;
+
+    /// \brief The streaming timestamp in milliseconds.
+    uint64_t _timestamp = 0;
 };
 
 

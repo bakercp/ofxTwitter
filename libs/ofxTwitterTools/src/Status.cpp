@@ -137,6 +137,8 @@ Status Status::fromJSON(const ofJson& json)
         const auto& value = iter.value();
 
         if (Utils::endsWith(key, "_str")) { /* skip */}
+        else if (key == "delete") { /* skip */ }
+        else if (key == "timestamp_ms") status._timestamp = std::stoull(value.get<std::string>());
         else if (key == "id") status._id = value;
 
         else if (key == "filter_level")
