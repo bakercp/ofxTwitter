@@ -237,12 +237,34 @@ User User::fromJSON(const ofJson& json)
         }
         else if (key == "default_profile") user._defaultProfile = value;
         else if (key == "default_profile_image") user._defaultProfileImage = value;
-        else if (key == "description") user._description = value;
+        else if (key == "description")
+        {
+            if (!value.is_null())
+            {
+                user._description = value;
+            }
+        }
+
+
         else if (key == "entities") user._entities = Entities::fromJSON(value);
         else if (key == "favourites_count") user._favouritesCount = value;
-        else if (key == "follow_request_sent") user._followRequestSent = value;
+        else if (key == "follow_request_sent")
+        {
+            if (!value.is_null())
+            {
+                std::cout << value << std::endl;
+                user._followRequestSent = value;
+            }
+        }
+
         else if (key == "followers_count") user._followersCount = value;
-        else if (key == "following") user._following = value;
+        else if (key == "following")
+        {
+            if (!value.is_null())
+            {
+                user._following = value;
+            }
+        }
         else if (key == "friends_count") user._friendsCount = value;
         else if (key == "geo_enabled") user._geoEnabled = value;
         else if (key == "has_extended_profile") user._hasExtendedProfile = value;
@@ -251,9 +273,21 @@ User User::fromJSON(const ofJson& json)
         else if (key == "is_translator") user._geoEnabled = value;
         else if (key == "lang") user._language = value;
         else if (key == "listed_count") user._listedCount = value;
-        else if (key == "location") user._location = value;
+        else if (key == "location")
+        {
+            if (!value.is_null())
+            {
+                user._location = value;
+            }
+        }
         else if (key == "name") user._name = value;
-        else if (key == "notifications") user._notifications = value;
+        else if (key == "notifications")
+        {
+            if (!value.is_null())
+            {
+                user._notifications = value;
+            }
+        }
         else if (key == "profile_background_color") user._profile.setBackgroundColorHex(value);
         else if (key == "profile_background_image_url") { /* TODO */ }
         else if (key == "profile_background_image_url_https") { /* TODO */ }
