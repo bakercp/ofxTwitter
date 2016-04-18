@@ -45,6 +45,7 @@ public:
     /// \sa https://dev.twitter.com/streaming/overview/request-parameters#delimited
     enum class Delimited
     {
+        DEFAULT,
         LENGTH
     };
 
@@ -135,7 +136,7 @@ public:
 private:
     /// \brief Setting to indicate the Status delimiting strategy.
     /// \sa https://dev.twitter.com/streaming/overview/request-parameters#delimited
-    Delimited _delimited = Delimited::LENGTH;
+    Delimited _delimited = Delimited::DEFAULT;
 
     /// \brief Enable or disable stall warnings.
     /// \sa https://dev.twitter.com/streaming/overview/request-parameters#stallwarnings
@@ -373,6 +374,35 @@ private:
     StreamingRequestParameters _parameters;
 
 };
+
+
+/// \brief Returns public statuses that match one or more filter predicates.
+///
+/// Multiple parameters may be specified which allows most clients to use a
+/// single connection to the Streaming API.
+///
+/// \sa https://dev.twitter.com/streaming/reference/get/statuses/filter
+class FilterStreamingRequest: public HTTP::PostRequest
+{
+public:
+    FilterStreamingRequest();
+    FilterStreamingRequest(const FilterStreamingRequestParameters& parameters);
+
+    virtual ~FilterStreamingRequest();
+
+    void setParameters(const FilterStreamingRequestParameters& parameters);
+    FilterStreamingRequestParameters getParameters() const;
+
+    static const std::string RESOURCE_URL;
+    
+private:
+    FilterStreamingRequestParameters _parameters;
+    
+};
+
+
+
+
 
 
 //    class StallMessage

@@ -231,4 +231,46 @@ StreamingRequestParameters SampleStreamingRequest::getParameters() const
 }
 
 
+
+const std::string FilterStreamingRequest::RESOURCE_URL = "https://stream.twitter.com/1.1/statuses/filter.json";
+
+
+
+FilterStreamingRequest::FilterStreamingRequest():
+    FilterStreamingRequest(FilterStreamingRequestParameters())
+{
+}
+
+
+FilterStreamingRequest::FilterStreamingRequest(const FilterStreamingRequestParameters& parameters):
+    HTTP::PostRequest(RESOURCE_URL, Poco::Net::HTTPMessage::HTTP_1_1)
+{
+    setParameters(parameters);
+}
+
+
+FilterStreamingRequest::~FilterStreamingRequest()
+{
+}
+
+
+void FilterStreamingRequest::setParameters(const FilterStreamingRequestParameters& parameters)
+{
+    _parameters = parameters;
+
+    clearFormFields();
+
+    for (const auto& entry: _parameters.toNameValueCollection())
+    {
+        setFormField(entry.first, entry.second);
+    }
+}
+
+
+FilterStreamingRequestParameters FilterStreamingRequest::getParameters() const
+{
+    return _parameters;
+}
+
+
 } } // namespace ofx::Twitter
