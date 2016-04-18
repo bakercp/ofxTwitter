@@ -76,7 +76,7 @@ Poco::Net::NameValueCollection StreamingRequestParameters::toNameValueCollection
     else if (_filterLevel == FilterLevel::MEDIUM) parameters.set("filter_level", "medium");
     else if (_filterLevel == FilterLevel::NONE) parameters.set("filter_level", "none");
 
-    if (!_languages.empty()) parameters.set("language", HTTP::HTTPUtils::explode(_languages, ","));
+    if (!_languages.empty()) parameters.set("language", HTTP::HTTPUtils::join(_languages, ","));
 
     return parameters;
 }
@@ -114,7 +114,7 @@ Poco::Net::NameValueCollection BaseFilterStreamingRequestParameters::toNameValue
 {
     Poco::Net::NameValueCollection parameters = StreamingRequestParameters::toNameValueCollection();
 
-    if (!_tracks.empty()) parameters.set("track", HTTP::HTTPUtils::explode(_tracks, ","));
+    if (!_tracks.empty()) parameters.set("track", HTTP::HTTPUtils::join(_tracks, ","));
 
     if (!_locations.empty())
     {
@@ -128,7 +128,7 @@ Poco::Net::NameValueCollection BaseFilterStreamingRequestParameters::toNameValue
             values.push_back(bound.getNorthEast().getLatitude());
         }
 
-        parameters.set("locations", HTTP::HTTPUtils::explode(values, ","));
+        parameters.set("locations", HTTP::HTTPUtils::join(values, ","));
     }
 
     return parameters;
@@ -156,7 +156,7 @@ Poco::Net::NameValueCollection FilterStreamingRequestParameters::toNameValueColl
 {
     Poco::Net::NameValueCollection parameters = BaseFilterStreamingRequestParameters::toNameValueCollection();
 
-    if (!_follows.empty()) parameters.set("follow", HTTP::HTTPUtils::explode(_follows, ","));
+    if (!_follows.empty()) parameters.set("follow", HTTP::HTTPUtils::join(_follows, ","));
 
     return parameters;
 }

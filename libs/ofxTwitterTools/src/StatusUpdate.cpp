@@ -100,7 +100,7 @@ void StatusUpdateRequest::setTrimUser(bool trimUser)
 
 void StatusUpdateRequest::setMediaIds(std::vector<int64_t> ids)
 {
-    setFormField("media_ids", HTTP::HTTPUtils::explode(ids, " "));
+    setFormField("media_ids", HTTP::HTTPUtils::join(ids, " "));
 }
 
 
