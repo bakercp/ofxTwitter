@@ -77,4 +77,5 @@ You have been warned :)
 References
 ----------
 
-[Twitter API](https://dev.twitter.com/overview/api)
+* [Twitter API](https://dev.twitter.com/overview/api)
+* [Twitter Search API](https://dev.twitter.com/rest/public/search), aka building search queries
