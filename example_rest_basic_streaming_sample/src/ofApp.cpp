@@ -52,8 +52,6 @@ void ofApp::setup()
     ofxGeo::CoordinateBounds location({ 42.3524549195, -88.2586669922 },
                                       { 41.5106340606, -87.2561645508 });
 
-    params.set
-
     ofxTwitter::SampleStreamingRequest request(params);
     
 

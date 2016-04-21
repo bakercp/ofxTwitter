@@ -252,7 +252,6 @@ User User::fromJSON(const ofJson& json)
         {
             if (!value.is_null())
             {
-                std::cout << value << std::endl;
                 user._followRequestSent = value;
             }
         }
