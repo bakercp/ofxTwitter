@@ -24,7 +24,7 @@ In order to use the Twitter API with ofxTwitterTools, you will need a Twitter ac
 * Access Token
 * Access Token Secret
 
-This information can be given to ofxTwitterTools via the ofxTwitter::Credentials constructor or via loading a JSON file (recommended). A template JSON file is provided with ofxTwitterTools: `data/credentials.json`.
+This information can be given to ofxTwitterTools via the ofxHTTP::OAuth10Credentials constructor or via loading a JSON file (recommended). A template JSON file is provided with ofxTwitterTools: `data/credentials.json`.
 
 To create a Twitter app and the required credential info:
 
