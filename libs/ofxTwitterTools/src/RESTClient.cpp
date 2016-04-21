@@ -39,8 +39,8 @@ RESTClient::RESTClient()
 }
 
 
-RESTClient::RESTClient(const Credentials& credentials):
-    BaseClient(credentials)
+RESTClient::RESTClient(const HTTP::OAuth10Credentials& credentials):
+    HTTP::OAuth10HTTPClient(credentials)
 {
 }
 

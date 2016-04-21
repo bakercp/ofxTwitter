@@ -26,7 +26,7 @@
 #pragma once
 
 
-#include "ofx/Twitter/BaseClient.h"
+#include "ofx/HTTP/OAuth10HTTPClient.h"
 
 
 namespace ofx {
@@ -40,7 +40,7 @@ class StatusUpdateResponse;
 
 /// \brief A RESTClient for the Twitter API.
 /// \sa
-class RESTClient: public BaseClient
+class RESTClient: public HTTP::OAuth10HTTPClient
 {
 public:
     /// \brief Create a default RESTClient.
@@ -51,7 +51,7 @@ public:
 
     /// \brief Create a RESTClient with the given Credentials.
     /// \param credentials The Twitter Credentials.
-    RESTClient(const Credentials& credentials);
+    RESTClient(const HTTP::OAuth10Credentials& credentials);
 
     /// \brief Destroys the REST client.
     virtual ~RESTClient();

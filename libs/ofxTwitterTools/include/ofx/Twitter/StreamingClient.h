@@ -28,7 +28,7 @@
 
 
 #include "Poco/Net/NameValueCollection.h"
-#include "ofx/Twitter/BaseClient.h"
+#include "ofx/HTTP/OAuth10HTTPClient.h"
 #include "ofx/Geo/CoordinateBounds.h"
 
 
@@ -421,7 +421,7 @@ private:
 
 
 
-class StreamingClient: public BaseClient
+class StreamingClient: public HTTP::OAuth10HTTPClient
 {
 public:
 //    enum class StreamType
