@@ -325,7 +325,7 @@ Entities Entities::fromJSON(const ofJson& json)
         }
         else if (key == "media")
         {
-// TODO: for debugging? maybe use ofxLogVerbose("ofxTwitterTools"), etc?
+// TODO: for debugging? maybe use ofxLogVerbose("ofxTwitter"), etc?
 //            if (!value.is_null())
 //            {
 //                std::cout << key << " " << value.dump(4) << std::endl;
