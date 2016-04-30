@@ -16,14 +16,14 @@ Requires the following addons (and all of their dependencies):
 Twitter Credential Info
 -----------------------
 
-In order to use the Twitter API with ofxTwitterTools, you will need a Twitter account and a registered Twitter application in order to generate the required credential information:
+In order to use the Twitter API with ofxTwitter, you will need a Twitter account and a registered Twitter application in order to generate the required credential information:
 
 * Consumer Key (API Key)
 * Consumer Secret (API Secret)
 * Access Token
 * Access Token Secret
 
-This information can be given to ofxTwitterTools via the ofxHTTP::OAuth10Credentials constructor or via loading a JSON file (recommended). A template JSON file is provided with ofxTwitterTools: `data/credentials.json`.
+This information can be given to ofxTwitter via the ofxHTTP::OAuth10Credentials constructor or via loading a JSON file (recommended). A template JSON file is provided with ofxTwitter: `data/credentials.json`.
 
 To create a Twitter app and the required credential info:
 
@@ -33,7 +33,7 @@ To create a Twitter app and the required credential info:
 Setting Up OF App Data
 ----------------------
 
-An OF app using ofxTwitterTools requires a set of files in it's `bin/data` folder:
+An OF app using ofxTwitter requires a set of files in it's `bin/data` folder:
 
 * **credentials.json**: your Twitter app's consumer & access token information
 * **ssl/cacert.pem**: a collection of trusted root certification authorities, needed for the SSL communication for the Twitter API
@@ -48,12 +48,12 @@ For the example apps to work with th Twitter API, they must be set to use your T
 
 ### Your OF App(s)
 
-To set up the `credentials.json` file & associated data for your OF app using ofxTwitterTools:
+To set up the `credentials.json` file & associated data for your OF app using ofxTwitter:
 
-1. Copy the contents of the ofxTwitterTools `data` folder into your OF app's `bin/data` folder
+1. Copy the contents of the ofxTwitter `data` folder into your OF app's `bin/data` folder
 2. Open your Twitter app's page on [apps.twitter.com](http://apps.twitter.com) & choose the "Keys & Access Tokens" tab
 3. Fill in your Twitter app's Consumer & Access info into your OF app's `bin/data/credentials.json` file
-4. Load the credentials before making a query with an ofxTwitterTools client:
+4. Load the credentials before making a query with an ofxTwitter client:
 
     ofxTwitter::Credentials credentials = ofxTwitter::Credentials::fromFile("credentials.json");
     client.setCredentials(credentials);
