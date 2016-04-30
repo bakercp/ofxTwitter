@@ -1,4 +1,4 @@
-ofxTwitterTools
+ofxTwitter
 ===============
 
 Streaming and REST Twitter Clients for [openFrameworks](http://openframeworks.cc)
