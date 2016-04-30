@@ -1,5 +1,5 @@
 meta:
-	ADDON_NAME = ofxTwitterTools
+	ADDON_NAME = ofxTwitter
 	ADDON_DESCRIPTION = Streaming and REST Twitter Clients for openFrameworks.
 	ADDON_AUTHOR = bakercp
 	ADDON_TAGS = "twitter" "http" "streaming" "twitter api"
