@@ -4,4 +4,4 @@ ofxIO
 ofxMediaType
 ofxNetworkUtils
 ofxSSLManager
-ofxTwitterTools
+ofxTwitter
