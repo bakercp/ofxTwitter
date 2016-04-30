@@ -12,7 +12,6 @@ Requires the following addons (and all of their dependencies):
 
 * [ofxHTTP](https://github.com/bakercp/ofxHTTP)
 * [ofxGeo](https://github.com/bakercp/ofxGeo)
-* [ofxJSON](https://github.com/jefftimesten/ofxJSON)
 
 Twitter Credential Info
 -----------------------
