@@ -1,17 +1,15 @@
-# ignore example credentials.json to make sure
-# developers do not check in their API data
-example_rest_basic_search/bin/data/credentials.json
-example_rest_basic_status_update/bin/data/credentials.json
-
 docs/html
 docs/tagfile.xml
 docs/*.tag
 
 raw/
 
-Project.xcconfig
-*.xcodeproj
-*.plist
+exampl*/.compiler*
+exampl*/config.make
+exampl*/Makefile
+exampl*/Project.xcconfig
+exampl*/*.xcodeproj
+exampl*/*.plist
 
 *.sln
 *.vcxproj
