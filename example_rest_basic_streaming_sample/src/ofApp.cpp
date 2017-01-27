@@ -53,7 +53,6 @@ void ofApp::setup()
                                       { 41.5106340606, -87.2561645508 });
 
     ofxTwitter::SampleStreamingRequest request(params);
-    
 
     ofxHTTP::BaseResponse response;
     ofxHTTP::Context context;
