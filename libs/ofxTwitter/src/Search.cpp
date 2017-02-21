@@ -16,103 +16,102 @@ namespace ofx {
 namespace Twitter {
 
 
-const std::string SearchRequest::UNITS_MILES = "mi";
-const std::string SearchRequest::UNITS_KILOMETERS = "km";
-const std::string SearchRequest::RESOURCE_URL = "https://api.twitter.com/1.1/search/tweets.json";
+const std::string SearchQuery::UNITS_MILES = "mi";
+const std::string SearchQuery::UNITS_KILOMETERS = "km";
+const std::string SearchQuery::RESOURCE_URL = "https://api.twitter.com/1.1/search/tweets.json";
 
 
-SearchRequest::SearchRequest(const std::string& query):
-    HTTP::GetRequest(RESOURCE_URL, Poco::Net::HTTPRequest::HTTP_1_1)
+SearchQuery::SearchQuery(const std::string& query)
 {
     setQuery(query);
 }
 
 
-SearchRequest::~SearchRequest()
+SearchQuery::~SearchQuery()
 {
 }
 
 
-void SearchRequest::setQuery(const std::string& query)
+void SearchQuery::setQuery(const std::string& query)
 {
-    setFormField("q", query);
+    set("q", query);
 }
 
 
-void SearchRequest::setGeoCode(double latitude,
-                               double longitude,
-                               double radius,
-                               const std::string& units)
+void SearchQuery::setGeoCode(double latitude,
+                             double longitude,
+                             double radius,
+                             const std::string& units)
 {
     std::stringstream ss;
     ss << latitude << "," << longitude << "," << radius << units;
-    setFormField("geocode", ss.str());
+    set("geocode", ss.str());
 }
 
 
-void SearchRequest::setLanguage(const std::string& language)
+void SearchQuery::setLanguage(const std::string& language)
 {
-    setFormField("lang", language);
+    set("lang", language);
 }
 
 
-void SearchRequest::setLocale(const std::string& locale)
+void SearchQuery::setLocale(const std::string& locale)
 {
-    setFormField("locale", locale);
+    set("locale", locale);
 }
 
 
-void SearchRequest::setResultType(ResultType resultType)
+void SearchQuery::setResultType(ResultType resultType)
 {
     switch (resultType)
     {
         case ResultType::MIXED:
-            setFormField("result_type", "mixed");
+            set("result_type", "mixed");
             return;
         case ResultType::RECENT:
-            setFormField("result_type", "recent");
+            set("result_type", "recent");
             return;
         case ResultType::POPULAR:
-            setFormField("result_type", "popular");
+            set("result_type", "popular");
             return;
     }
 }
 
 
-void SearchRequest::setCount(int count)
+void SearchQuery::setCount(int count)
 {
     if (count > 100)
     {
         ofLogWarning("SearchRequest::setCount") << "Counts greater than 100 are ignored by Twitter.";
     }
 
-    setFormField("count", std::to_string(count));
+    set("count", std::to_string(count));
 }
 
 
-void SearchRequest::setUntil(int year, int month, int day)
+void SearchQuery::setUntil(int year, int month, int day)
 {
     std::stringstream ss;
     ss << year << "-" << month << "-" << day;
-    setFormField("until", ss.str());
+    set("until", ss.str());
 }
 
 
-void SearchRequest::setSinceId(int64_t id)
+void SearchQuery::setSinceId(int64_t id)
 {
-    setFormField("since_id", std::to_string(id));
+    set("since_id", std::to_string(id));
 }
 
 
-void SearchRequest::setMaxId(int64_t id)
+void SearchQuery::setMaxId(int64_t id)
 {
-    setFormField("max_id", std::to_string(id));
+    set("max_id", std::to_string(id));
 }
 
 
-void SearchRequest::setIncludeEntities(bool includeEntities)
+void SearchQuery::setIncludeEntities(bool includeEntities)
 {
-    setFormField("include_entities", includeEntities ? "true" : "false");
+    set("include_entities", includeEntities ? "true" : "false");
 }
 
 
@@ -212,26 +211,46 @@ SearchMetadata SearchResponse::metadata() const
 }
 
 
-void SearchResponse::parseJSON(const ofJson& json)
+std::vector<Error> SearchResponse::errors() const
 {
+    return _errors;
+}
+
+
+SearchResponse SearchResponse::fromJSON(const ofJson& json)
+{
+    SearchResponse response;
+
     auto iter = json.cbegin();
     while (iter != json.cend())
     {
         const auto& key = iter.key();
         const auto& value = iter.value();
 
-        if (key == "search_metadata") _metadata = SearchMetadata::fromJSON(value);
+        if (key == "search_metadata")
+        {
+            response._metadata = SearchMetadata::fromJSON(value);
+        }
         else if (key == "statuses")
         {
             for (const auto& status: value)
             {
-                _statuses.push_back(Status::fromJSON(status));
+                response._statuses.push_back(Status::fromJSON(status));
+            }
+        }
+        else if (key == "errors")
+        {
+            for (const auto& error: value)
+            {
+                response._errors.push_back(Error::fromJSON(error));
             }
         }
         else ofLogWarning("SearchResponse::parseJSON") << "Unknown key: " << key;
 
         ++iter;
     }
+
+    return response;
 }
 
 

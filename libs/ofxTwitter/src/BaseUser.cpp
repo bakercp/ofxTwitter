@@ -18,6 +18,11 @@ BaseUser::BaseUser()
 }
 
 
+BaseUser::BaseUser(int64_t id): BaseUser(id, "")
+{
+}
+
+
 BaseUser::BaseUser(int64_t id, const std::string& screenName):
     _id(id),
     _screenName(screenName)
@@ -44,6 +49,18 @@ std::string BaseUser::screenName() const
 
 BaseNamedUser::BaseNamedUser()
 {
+}
+
+
+BaseNamedUser::BaseNamedUser(int64_t id): BaseNamedUser(id, "")
+{
+}
+
+
+BaseNamedUser::BaseNamedUser(int64_t id, const std::string& screenName):
+    BaseNamedUser(id, screenName, "")
+{
+
 }
 
 

@@ -131,10 +131,10 @@ public:
 };
 
 
-class StatusUpdateResponse: public BaseResponse<StatusUpdateRequest>
+class StatusUpdateResponse//: public BaseResponse<StatusUpdateRequest>
 {
 public:
-    using BaseResponse<StatusUpdateRequest>::BaseResponse;
+//    using BaseResponse<StatusUpdateRequest>::BaseResponse;
 
     virtual ~StatusUpdateResponse();
 
@@ -142,7 +142,7 @@ public:
     Status status() const;
 
 protected:
-    virtual void parseJSON(const ofJson& json) override;
+    virtual void parseJSON(const ofJson& json);// override;
 
 private:
     Status _status;

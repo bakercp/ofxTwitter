@@ -40,7 +40,7 @@ public:
 
     User();
 
-    User(int64_t ID,
+    User(int64_t id,
          const std::string& screenName,
          const std::string& name);
 
@@ -74,6 +74,8 @@ public:
     bool verified() const;
     std::vector<std::string> withheldInCountries() const;
     WithheldScope withheldScope() const;
+
+    std::string translatorType() const;
 
     static User fromJSON(const ofJson& json);
 
@@ -146,6 +148,7 @@ private:
 
     WithheldScope _withheldScope;
 
+    std::string _translatorType;
 };
 
 

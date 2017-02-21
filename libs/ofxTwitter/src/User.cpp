@@ -24,6 +24,7 @@ User::User()
 {
 }
 
+
 User::User(int64_t id,
            const std::string& screenName,
            const std::string& name):
@@ -193,6 +194,12 @@ User::WithheldScope User::withheldScope() const
 }
 
 
+std::string User::translatorType() const
+{
+    return _translatorType;
+}
+
+
 User User::fromJSON(const ofJson& json)
 {
     User user;
@@ -206,7 +213,6 @@ User User::fromJSON(const ofJson& json)
 
         if (Utils::endsWith(key, "_str")) { /* skip */}
 
-        else if (key == "contributors_enabled") user._contributorsEnabled = value;
         else if (key == "contributors_enabled") user._contributorsEnabled = value;
         else if (key == "created_at")
         {
@@ -284,6 +290,7 @@ User User::fromJSON(const ofJson& json)
         else if (key == "protected") user._protected = value;
         else if (key == "screen_name") user._screenName = value;
         else if (key == "statuses_count") user._statusesCount = value;
+        else if (key == "translator_type") user._translatorType = value;
         else if (key == "time_zone")
         {
             if (!value.is_null())

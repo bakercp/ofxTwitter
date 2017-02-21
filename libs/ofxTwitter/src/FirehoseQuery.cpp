@@ -5,18 +5,17 @@
 //
 
 
-#include "ofx/Twitter/Places.h"
+#include "ofx/Twitter/FirehoseQuery.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-Places::Places()
-{
-}
+const std::string FirehoseQuery::RESOURCE_URL = "https://stream.twitter.com/1.1/statuses/firehose.json";
 
-Places::~Places()
+
+FirehoseQuery::~FirehoseQuery()
 {
 }
 

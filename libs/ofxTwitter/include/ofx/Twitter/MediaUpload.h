@@ -51,17 +51,17 @@ public:
 
 
 /// \brief A Twitter MediaUploadResponse.
-class MediaUploadResponse: public BaseResponse<MediaUploadRequest>
+class MediaUploadResponse//: public BaseResponse<MediaUploadRequest>
 {
 public:
-    using BaseResponse<MediaUploadRequest>::BaseResponse;
+//    using BaseResponse<MediaUploadRequest>::BaseResponse;
 
     virtual ~MediaUploadResponse();
 
     int64_t mediaId() const;
 
 protected:
-    virtual void parseJSON(const ofJson& json) override;
+    virtual void parseJSON(const ofJson& json);// override;
 
 private:
     int64_t _mediaId;

@@ -17,7 +17,7 @@ void ofApp::setup()
     //
     // Developers must get their credentials after creating an app at
     // https://apps.twitter.com.
-    auto credentials = ofxHTTP::OAuth10Credentials::fromFile("credentials.json");
+    auto credentials = ofxHTTP::OAuth10Credentials::fromFile("NetworkedObject.json");
 
     // Next we add our credentials to our ofxTwitter::RESTClient.
     client.setCredentials(credentials);
@@ -36,90 +36,104 @@ void ofApp::setup()
 
     ofxTwitter::SampleStreamingRequest request(params);
 
-    ofxHTTP::BaseResponse response;
-    ofxHTTP::Context context;
-
     // set up shorter timeout.
-    ofxHTTP::ClientSessionSettings s = context.getClientSessionSettings();
+    ofxHTTP::ClientSessionSettings s = client.context().getClientSessionSettings();
     s.setTimeout(Poco::Timespan(10, 0));
-    context.setClientSessionSettings(s);
+    client.context().setClientSessionSettings(s);
 
     // Execute a basic http request.
-    std::istream& istr = client.execute(request, response, context);
 
-    ofxHTTP::HTTPUtils::dumpHeaders(response, OF_LOG_NOTICE);
+    auto response = client.execute(request);
 
-    std::streamsize bufferSize = 8192;
-    
-    Poco::Buffer<char> buffer(bufferSize);
-    std::streamsize len = 0;
+    ofxHTTP::HTTPUtils::dumpHeaders(*response, OF_LOG_NOTICE);
 
-    ofxIO::ByteBuffer statusBuffer;
-
-    for (std::string line; std::getline(istr, line) && !istr.bad() && !istr.fail();)
+    if (!response->isSuccess())
     {
-        ofJson json = ofJson::parse(line);
-
-        if (json.is_null())
+        if (response->isBufferable())
         {
-            cout << "null prbly blank line" << endl;
-        }
-        else if (!json["delete"].is_null())
-        {
-//            cout << "delete" << endl;
-        }
-        else if (!json["text"].is_null())
-        {
-            cout << "text" << endl;
-            ofxTwitter::Status status = ofxTwitter::Status::fromJSON(json);
-
-            std::cout << status.text() << std::endl;
-        }
-        else if (!json["scrub_geo"].is_null())
-        {
-            cout << "scrub_geo" << endl;
-        }
-        else if (!json["limit"].is_null())
-        {
-            cout << "limit" << endl;
-        }
-        else if (!json["status_withheld"].is_null())
-        {
-            cout << "status_withheld" << endl;
-        }
-        else if (!json["user_withheld"].is_null())
-        {
-            cout << "user_withheld" << endl;
-        }
-        else if (!json["disconnect"].is_null())
-        {
-            cout << "disconnect" << endl;
-        }
-        else if (!json["warning"].is_null())
-        {
-            cout << "warning" << endl;
-        }
-        else if (!json["event"].is_null())
-        {
-            cout << "event." << endl;
-        }
-        else if (!json["friends"].is_null())
-        {
-            cout << "friends." << endl;
-        }
-        else if (!json["for_user"].is_null())
-        {
-            cout << "for_user update." << endl;
-        }
-        else if (!json["control"].is_null())
-        {
-            cout << "control update." << endl;
-        }
-        else
-        {
-            std::cout << json.dump(4) << std::endl;
+            std::cout << response->buffer().getText() << std::endl;
+            return;
         }
     }
+
+    std::cout << response->isBufferable() << std::endl;
+
+    auto& istr = response->stream();
+
+    Poco::StreamCopier::copyStream(istr, std::cout);
+
+//
+//    std::streamsize bufferSize = 8192;
+//    
+//    Poco::Buffer<char> buffer(bufferSize);
+//    std::streamsize len = 0;
+//
+//    ofxIO::ByteBuffer statusBuffer;
+//
+//    for (std::string line; std::getline(istr, line) && !istr.bad() && !istr.fail();)
+//    {
+//        ofJson json = ofJson::parse(line);
+//
+//        if (json.is_null())
+//        {
+//            cout << "null prbly blank line" << endl;
+//        }
+//        else if (!json["delete"].is_null())
+//        {
+////            cout << "delete" << endl;
+//        }
+//        else if (!json["text"].is_null())
+//        {
+//            cout << "text" << endl;
+//            ofxTwitter::Status status = ofxTwitter::Status::fromJSON(json);
+//
+//            std::cout << status.text() << std::endl;
+//        }
+//        else if (!json["scrub_geo"].is_null())
+//        {
+//            cout << "scrub_geo" << endl;
+//        }
+//        else if (!json["limit"].is_null())
+//        {
+//            cout << "limit" << endl;
+//        }
+//        else if (!json["status_withheld"].is_null())
+//        {
+//            cout << "status_withheld" << endl;
+//        }
+//        else if (!json["user_withheld"].is_null())
+//        {
+//            cout << "user_withheld" << endl;
+//        }
+//        else if (!json["disconnect"].is_null())
+//        {
+//            cout << "disconnect" << endl;
+//        }
+//        else if (!json["warning"].is_null())
+//        {
+//            cout << "warning" << endl;
+//        }
+//        else if (!json["event"].is_null())
+//        {
+//            cout << "event." << endl;
+//        }
+//        else if (!json["friends"].is_null())
+//        {
+//            cout << "friends." << endl;
+//        }
+//        else if (!json["for_user"].is_null())
+//        {
+//            cout << "for_user update." << endl;
+//        }
+//        else if (!json["control"].is_null())
+//        {
+//            cout << "control update." << endl;
+//        }
+//        else
+//        {
+//            std::cout << json.dump(4) << std::endl;
+//        }
+//    }
 
 }
 

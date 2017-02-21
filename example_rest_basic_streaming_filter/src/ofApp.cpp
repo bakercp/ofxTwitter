@@ -10,142 +10,148 @@
 
 void ofApp::setup()
 {
-    ofSetFrameRate(30);
-
-    // First we load credentials from a file. These can also be loaded manually
-    // using the ofxTwitter::Credentials constructor.
+    // First we load credentials from a file. These can also be loaded using
+    // the other setCredentials*(...) methods.
     //
     // Developers must get their credentials after creating an app at
     // https://apps.twitter.com.
-    auto credentials = ofxHTTP::OAuth10Credentials::fromFile("credentials.json");
+    client.setCredentialsFromFile("credentials.json");
 
-    // Next we add our credentials to our ofxTwitter::RESTClient.
-    client.setCredentials(credentials);
+    // Register all available streaming events. Alternatively, one can register
+    // events individually.
+    client.registerStreamingEvents(this);
+
+    // Set up listeners.
 
     // Use a default streaming request.
+//     client.sample();
 
-    ofxTwitter::FilterStreamingRequestParameters params;
+    //client.filter({"😬", "😬", "😁", "😂", "😃", "😄", "😅", "😆", "😇", "😉", "😊", "🙂", "🙃", "☺️", "😋", "😌", "😍", "😘", "😗", "😙", "😚", "😜", "😝", "😛", "🤑", "🤓", "😎", "🤗", "😏", "😶", "😐", "😑", "😒", "🙄", "🤔", "😳", "😞", "😟", "😠", "😡", "😔", "😕", "🙁", "☹️", "😣", "😖", "😫", "😩", "😤", "😮", "😱", "😨", "😰", "😯", "😦", "😧", "😢", "😥 ", "😪", "😓", "😭", "😵", "😲", "🤐", "😷", "🤒", "🤕", "😴", "💤", "💩"});
 
-    params.setFilterLevel(ofx::Twitter::BaseFilterStreamingRequestParameters::FilterLevel::NONE);
-
-    params.setLocation(ofxGeo::CoordinateBounds({ 42.3524549195, -88.2586669922 },
-                                                { 41.5106340606, -87.2561645508 }));
-
-    params.setTracks({"😬", "😬", "😁", "😂", "😃", "😄", "😅", "😆", "😇", "😉", "😊", "🙂", "🙃", "☺️", "😋", "😌", "😍", "😘", "😗", "😙", "😚", "😜", "😝", "😛", "🤑", "🤓", "😎", "🤗", "😏", "😶", "😐", "😑", "😒", "🙄", "🤔", "😳", "😞", "😟", "😠", "😡", "😔", "😕", "🙁", "☹️", "😣", "😖", "😫", "😩", "😤", "😮", "😱", "😨", "😰", "😯", "😦", "😧", "😢", "😥 ", "😪", "😓", "😭", "😵", "😲", "🤐", "😷", "🤒", "🤕", "😴", "💤", "💩"});
-
-
-    ofxHTTP::HTTPUtils::dumpNameValueCollection(params.toNameValueCollection(), OF_LOG_NOTICE);
-
-
-    ofxTwitter::FilterStreamingRequest request(params);
-
-
-    ofxHTTP::BaseResponse response;
-    ofxHTTP::Context context;
-
-    // set up shorter timeout.
-    ofxHTTP::ClientSessionSettings s = context.getClientSessionSettings();
-    s.setTimeout(Poco::Timespan(10, 0));
-    context.setClientSessionSettings(s);
-
-    // Execute a basic http request.
-    std::istream& istr = client.execute(request, response, context);
-
-    ofxHTTP::HTTPUtils::dumpHeaders(response, OF_LOG_NOTICE);
-
-
-    cout << response.getStatus() << endl;
-    cout << response.getReason() << endl;
-
-
-    if (response.getStatus() != Poco::Net::HTTPResponse::HTTP_OK)
-    {
-        Poco::StreamCopier::copyStream(istr, std::cout);
-    }
-    else
-    {
-        cout << "here!" << endl;
-        std::streamsize bufferSize = 8192;
-        
-        std::streamsize len = 0;
-
-        ofxIO::ByteBuffer statusBuffer;
-
-        for (std::string line; std::getline(istr, line) && !istr.bad() && !istr.fail();)
-        {
-            std::cout << "line===" << std::endl;
-
-
-            ofJson json = ofJson::parse(line);
-
-            if (json.is_null())
-            {
-                cout << "null prbly blank line" << endl;
-            }
-            else if (!json["delete"].is_null())
-            {
-    //            cout << "delete" << endl;
-            }
-            else if (!json["text"].is_null())
-            {
-                cout << "text" << endl;
-                ofxTwitter::Status status = ofxTwitter::Status::fromJSON(json);
-
-                std::cout << status.text() << std::endl;
-
-                if (status.user()) std::cout << "\t\t" << status.user()->location() << std::endl;
-            }
-            else if (!json["scrub_geo"].is_null())
-            {
-                cout << "scrub_geo" << endl;
-            }
-            else if (!json["limit"].is_null())
-            {
-                cout << "limit" << endl;
-            }
-            else if (!json["status_withheld"].is_null())
-            {
-                cout << "status_withheld" << endl;
-            }
-            else if (!json["user_withheld"].is_null())
-            {
-                cout << "user_withheld" << endl;
-            }
-            else if (!json["disconnect"].is_null())
-            {
-                cout << "disconnect" << endl;
-            }
-            else if (!json["warning"].is_null())
-            {
-                cout << "warning" << endl;
-            }
-            else if (!json["event"].is_null())
-            {
-                cout << "event." << endl;
-            }
-            else if (!json["friends"].is_null())
-            {
-                cout << "friends." << endl;
-            }
-            else if (!json["for_user"].is_null())
-            {
-                cout << "for_user update." << endl;
-            }
-            else if (!json["control"].is_null())
-            {
-                cout << "control update." << endl;
-            }
-            else
-            {
-                std::cout << json.dump(4) << std::endl;
-            }
-        }
-    }
+    client.filter({"self", "selfie", "selfies", "selfiechallenge", "selfieofday", "selpic", "selca", "selfie", "selfcamera", "selfienation", "selfstagram", "selcagram" });
 }
 
 
 void ofApp::draw()
 {
-    ofBackgroundGradient(ofColor::white, ofColor::black);
-    ofDrawBitmapStringHighlight("See console for output.", 30, 30);
+    ofBackground(0);
+    
+    auto total = count + countMissed;
+
+    std::stringstream ss;
+    ss << "  Received: " << count << std::endl;
+    ss << "    Missed: " << countMissed << std::endl;
+    ss << "     Total: " << total << std::endl;
+
+    std::string received = "...";
+
+    if (total > 0)
+    {
+        received = ofToString(static_cast<double>(count) / total * 100, 2);
+    }
+
+    ss << "% Received: " <<  received;
+
+    ofDrawBitmapStringHighlight(ss.str(), 14, 20);
+}
+
+
+void ofApp::onConnect()
+{
+    std::cout << "Connected." << std::endl;
+}
+
+
+void ofApp::onDisconnect()
+{
+    std::cout << "Disconnected." << std::endl;
+}
+
+
+void ofApp::onStatus(const ofxTwitter::Status& status)
+{
+    count++;
+
+    std::ofstream outfile;
+
+    outfile.open(ofToDataPath("log_extended.txt", true), std::ios_base::app);
+
+//    for (auto entity: status.extendedEntities().urlEntities())
+//    {
+//        std::cout << entity.expandedURL() << std::endl;
+//    }
+
+
+    for (auto entity: status.extendedEntities().mediaEntities())
+    {
+        if (entity.type() == ofxTwitter::MediaEntity::Type::PHOTO &&
+            status.retweetedStatus() == nullptr)
+        {
+            outfile << status.id() << ",";
+//            outfile << ((status.retweetedStatus() != nullptr) ? status.retweetedStatus()->id() : -1);
+            outfile << -1;
+            outfile << ",";
+            if (status.user()) outfile << status.user()->id();
+            outfile << ",";
+            outfile << status.possiblySensitive();
+            outfile << ",";
+            outfile << entity.mediaURL();
+            outfile << std::endl;
+        }
+    }
+}
+
+
+void ofApp::onStatusDeletedNotice(const ofxTwitter::StatusDeletedNotice& notice)
+{
+     std::cout << "Status deleted." << std::endl;
+}
+
+
+void ofApp::onLocationDeletedNotice(const ofxTwitter::LocationDeletedNotice& notice)
+{
+    std::cout << "Location scrubbed." << std::endl;
+}
+
+
+void ofApp::onLimitNotice(const ofxTwitter::LimitNotice& notice)
+{
+    countMissed += notice.track();
+    std::cout << "Limited: " << notice.track() << std::endl;
+}
+
+
+void ofApp::onStatusWithheldNotice(const ofxTwitter::StatusWithheldNotice& notice)
+{
+    std::cout << "Status witheld." << std::endl;
+}
+
+
+void ofApp::onUserWitheldNotice(const ofxTwitter::UserWithheldNotice& notice)
+{
+    std::cout << "User witheld." << std::endl;
+}
+
+
+void ofApp::onDisconnectNotice(const ofxTwitter::DisconnectNotice& notice)
+{
+    std::cout << "Disconnect notice: " << notice.reason() << std::endl;
+}
+
+
+void ofApp::onStallWarning(const ofxTwitter::StallWarning& notice)
+{
+    std::cout << "Stall warning: " << notice.message() << std::endl;
+}
+
+
+void ofApp::onException(const std::exception& notice)
+{
+    std::cout << "Exception: " << notice.what() << std::endl;
+}
+
+
+void ofApp::onMessage(const ofJson& json)
+{
+    // Skip.
 }

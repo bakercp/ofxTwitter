@@ -10,7 +10,7 @@
 
 #include <string>
 #include <set>
-#include "json.hpp"
+#include "ofJson.h"
 
 
 namespace ofx {
@@ -21,6 +21,7 @@ class BaseUser
 {
 public:
     BaseUser();
+    BaseUser(int64_t id);
     BaseUser(int64_t id, const std::string& screenName);
 
     virtual ~BaseUser();
@@ -28,7 +29,7 @@ public:
     /// \returns the user id.
     int64_t id() const;
 
-    /// \returns the user's screen name.
+    /// \returns the user's screen name or empty if unavailable.
     std::string screenName() const;
 
 protected:
@@ -46,16 +47,21 @@ class BaseNamedUser: public BaseUser
 public:
     BaseNamedUser();
 
+    BaseNamedUser(int64_t id);
+
+    BaseNamedUser(int64_t id,
+                  const std::string& screenName);
+
     BaseNamedUser(int64_t id,
                   const std::string& screenName,
                   const std::string& name);
 
     virtual ~BaseNamedUser();
 
-    /// \returns the User's name.
+    /// \returns the User's name if available.
     std::string name() const;
 
-    static BaseNamedUser fromJSON(const ofJson& json);
+    //static BaseNamedUser fromJSON(const ofJson& json);
 
 protected:
     /// \brief The User's name.

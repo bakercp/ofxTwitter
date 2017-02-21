@@ -9,9 +9,9 @@
 
 
 #include <string>
-#include "ofx/HTTP/GetRequest.h"
+#include "Poco/Net/NameValueCollection.h"
+#include "ofx/Twitter/Error.h"
 #include "ofx/Twitter/Status.h"
-#include "ofx/Twitter/BaseResponse.h"
 
 
 namespace ofx {
@@ -21,7 +21,7 @@ namespace Twitter {
 /// \brief A Twitter Search Request.
 ///
 /// \sa https://dev.twitter.com/rest/reference/get/search/tweets
-class SearchRequest: public HTTP::GetRequest
+class SearchQuery: public Poco::Net::NameValueCollection
 {
 public:
     enum class ResultType
@@ -31,9 +31,9 @@ public:
         POPULAR
     };
 
-    SearchRequest(const std::string& query);
+    SearchQuery(const std::string& query);
 
-    virtual ~SearchRequest();
+    virtual ~SearchQuery();
 
     // required
     void setQuery(const std::string& query);
@@ -114,29 +114,27 @@ private:
 /// \brief A Twitter Search Request.
 ///
 /// \sa https://dev.twitter.com/rest/reference/get/search/tweets
-class SearchResponse: public BaseResponse<SearchRequest>
+class SearchResponse
 {
 public:
-    using BaseResponse<SearchRequest>::BaseResponse;
-
     virtual ~SearchResponse();
 
     std::vector<Status> statuses() const;
 
     SearchMetadata metadata() const;
 
+    std::vector<Error> errors() const;
 
-protected:
-    virtual void parseJSON(const ofJson& json) override;
+    static SearchResponse fromJSON(const ofJson& json);
 
 private:
     std::vector<Status> _statuses;
 
     SearchMetadata _metadata;
 
+    std::vector<Error> _errors;
+
 };
-
-
 
 
 

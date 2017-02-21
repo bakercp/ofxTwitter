@@ -13,7 +13,9 @@
 
 
 // Undefine Status from Xlib.h.
+#ifdef Status
 #undef Status
+#endif
 
 
 namespace ofx {
@@ -66,7 +68,31 @@ Status::~Status()
 }
 
 
-std::map<std::string, std::string> Status::annotations() const
+std::string Status::url() const
+{
+    return "https://twitter.com/statuses/" + std::to_string(id());
+}
+
+
+int64_t Status::id() const
+{
+    return _id;
+}
+
+
+const User* Status::user() const
+{
+    return _user.get();
+}
+
+
+std::string Status::language() const
+{
+    return _language;
+}
+
+
+Status::Annotations Status::annotations() const
 {
     return _annotations;
 }
@@ -84,21 +110,129 @@ const Geo::Coordinate* Status::coordinates() const
 }
 
 
-int64_t Status::id() const
-{
-    return _id;
-}
-
-
 Poco::DateTime Status::createdAt() const
 {
     return _createdAt;
 }
 
 
-const User* Status::user() const
+int64_t Status::utcOffset() const
 {
-    return _user.get();
+    return _utcOffset;
+}
+
+
+int64_t Status::currentUserRetweet() const
+{
+    return _currentUserRetweet;
+}
+
+
+Entities Status::entities() const
+{
+    return _entities;
+}
+
+
+Entities Status::extendedEntities() const
+{
+    return _extendedEntities;
+}
+
+
+const Status* Status::extendedTweet() const
+{
+    return _extendedTweet.get();
+}
+
+
+int64_t Status::favoriteCount() const
+{
+    return _favoriteCount;
+}
+
+
+bool Status::isQuoteStatus() const
+{
+    return _isQuoteStatus;
+}
+
+
+int64_t Status::quotedStatusId() const
+{
+    return _quotedStatusId;
+}
+
+
+const Status* Status::quotedStatus() const
+{
+    return _quotedStatus.get();
+}
+
+
+bool Status::favorited() const
+{
+    return _favorited;
+}
+
+
+Status::FilterLevel Status::filterLevel() const
+{
+    return _filterLevel;
+}
+
+
+std::string Status::inReplyToScreenName() const
+{
+    return _inReplyToScreenName;
+}
+
+
+int64_t Status::inReplyToStatusId() const
+{
+    return _inReplyToStatusId;
+}
+
+
+int64_t Status::inReplyToUserId() const
+{
+    return _inReplyToUserId;
+}
+
+
+bool Status::possiblySensitive() const
+{
+    return _possiblySensitive;
+}
+
+
+std::map<std::string, bool> Status::scopes() const
+{
+    return _scopes;
+}
+
+
+int64_t Status::retweetCount() const
+{
+    return _retweetCount;
+}
+
+
+bool Status::retweeted() const
+{
+    return _retweeted;
+}
+
+
+const Status* Status::retweetedStatus() const
+{
+    return _retweetedStatus.get();
+}
+
+
+std::string Status::source() const
+{
+    return _source;
 }
 
 
@@ -108,9 +242,88 @@ std::string Status::text() const
 }
 
 
+std::string Status::fullText() const
+{
+    return _fullText;
+}
+
+
+std::string::size_type Status::displayTextStart() const
+{
+    return _displayTextStart;
+}
+
+
+std::string::size_type Status::displayTextEnd() const
+{
+    return _displayTextEnd;
+}
+
+
+std::string Status::displayText() const
+{
+    if (_displayTextStart < text().length() && _displayTextEnd < text().length())
+    {
+        return _text.substr(_displayTextStart, _displayTextEnd);
+    }
+    else
+    {
+        return _text;
+    }
+}
+
+bool Status::truncated() const
+{
+    return _truncated;
+}
+
+
+bool Status::withheldCopyright() const
+{
+    return _withheldCopyright;
+}
+
+
+std::vector<std::string> Status::withheldInCountries() const
+{
+    return _withheldInCountries;
+}
+
+
+std::string Status::withheldScope() const
+{
+    return _withheldScope;
+}
+
+
+const Place* Status::place() const
+{
+    return _place.get();
+}
+
+
+Status::Metadata Status::metadata() const
+{
+    return _metadata;
+}
+
+
+uint64_t Status::timestamp() const
+{
+    return _timestamp;
+}
+
+
+ofJson Status::json() const
+{
+    return _json;
+}
+
+
 Status Status::fromJSON(const ofJson& json)
 {
     Status status;
+    status._json = json;
 
     auto iter = json.cbegin();
     while (iter != json.cend())
@@ -119,7 +332,7 @@ Status Status::fromJSON(const ofJson& json)
         const auto& value = iter.value();
 
         if (Utils::endsWith(key, "_str")) { /* skip */}
-        else if (key == "delete") { /* skip */ }
+        else if (key == "delete") { std::cout << "delete" << std::endl; }
         else if (key == "timestamp_ms") status._timestamp = std::stoull(value.get<std::string>());
         else if (key == "id") status._id = value;
 
@@ -146,28 +359,62 @@ Status Status::fromJSON(const ofJson& json)
         {
             if (!value.is_null())
             {
-                ofLogVerbose("Status::fromJSON") << key << " " << value.dump(4);
+                for (auto c: value)
+                {
+                    if (c.is_number())
+                    {
+                        status._contributors.push_back(BaseNamedUser(c.get<int64_t>()));
+                    }
+                    else ofLogWarning("Status::fromJSON") << "Contributor " <<  c.dump(4);
+                }
             }
         }
         else if (key == "coordinates")
         {
             if (!value.is_null())
             {
-                ofLogVerbose("Status::fromJSON") << key << " " << value.dump(4);
+                auto _iter = value.cbegin();
+                while (_iter != value.cend())
+                {
+                    const auto& _key = _iter.key();
+                    const auto& _value = _iter.value();
+
+                    if (_key == "coordinates")
+                    {
+                        if (value.size() == 2)
+                        {
+                            if (status._coordinates != nullptr)
+                            {
+                                ofLogWarning("Status::fromJSON") << "In Coordinates: Coordinates were already set.";
+                            }
+
+                            status._coordinates = std::make_shared<Geo::Coordinate>(_value[1], _value[0]);
+                        }
+                        else ofLogWarning("Status::fromJSON") << "Coordinates have " << value.size() << " and should have 2.";
+                    }
+                    else if (_key == "type")
+                    {
+                        if (_value != "Point")
+                        {
+                            ofLogWarning("Status::fromJSON") << "Unknown coordinate type: " << _value;
+                        }
+                    }
+                    else ofLogWarning("Status::fromJSON") << "Unknown geo key: " << _key << " " << value.dump(4);
+
+                    ++_iter;
+                }
             }
         }
         else if (key == "geo")
         {
-            if (!value.is_null())
-            {
-                ofLogVerbose("Status::fromJSON") << key << " " << value.dump(4);
-            }
+            // Deprecated, use coordinate instead.
+            // https://dev.twitter.com/overview/api/tweets
         }
         else if (key == "place")
         {
             if (!value.is_null())
             {
-                ofLogVerbose("Status::fromJSON") << key << " " << value.dump(4);
+                status._place = std::make_shared<Place>(Place::fromJSON(value));
             }
         }
         else if (key == "user")
@@ -204,8 +451,37 @@ Status Status::fromJSON(const ofJson& json)
         else if (key == "utc_offset") status._utcOffset = value;
         else if (key == "favorite_count") status._favoriteCount = value;
         else if (key == "is_quote_status") status._isQuoteStatus = value;
-        else if (key == "lang") status._lang = value;
+        else if (key == "lang") status._language = value;
         else if (key == "metadata") status._metadata = Metadata::fromJSON(value);
+        else if (key == "scopes")
+        {
+            auto _iter = value.cbegin();
+            while (_iter != value.cend())
+            {
+                status._scopes.insert(std::make_pair(_iter.key(), _iter.value()));
+                ++_iter;
+            }
+        }
+        else if (key == "withheld_in_countries")
+        {
+            for (auto v: value)
+            {
+                status._withheldInCountries.push_back(v);
+            }
+        }
+        else if (key == "extended_tweet")
+        {
+            status._extendedTweet = std::make_shared<Status>(Status::fromJSON(value));
+        }
+        else if (key == "full_text")
+        {
+            status._fullText = value;
+        }
+        else if (key == "display_text_range")
+        {
+            status._displayTextStart = value[0];
+            status._displayTextEnd = value[1];
+        }
         else if (key == "created_at")
         {
             Poco::DateTime date;

@@ -8,8 +8,8 @@
 #pragma once
 
 
-#include "json.hpp"
 #include <string>
+#include "ofJson.h"
 
 
 namespace ofx {
