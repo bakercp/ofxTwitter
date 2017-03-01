@@ -49,4 +49,6 @@ public:
     uint64_t count = 0;
     uint64_t countMissed = 0;
 
+    ofxHTTP::Client webClient;
+
 };

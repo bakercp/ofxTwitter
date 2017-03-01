@@ -10,6 +10,8 @@
 
 void ofApp::setup()
 {
+    // ofSetLogLevel(OF_LOG_VERBOSE);
+
     // First we load credentials from a file. These can also be loaded using
     // the other setCredentials*(...) methods.
     //
@@ -22,13 +24,8 @@ void ofApp::setup()
     client.registerStreamingEvents(this);
 
     // Set up listeners.
+    client.filter({"😬", "😬", "😁", "😂", "😃", "😄", "😅", "😆", "😇", "😉", "😊", "🙂", "🙃", "☺️", "😋", "😌", "😍", "😘", "😗", "😙", "😚", "😜", "😝", "😛", "🤑", "🤓", "😎", "🤗", "😏", "😶", "😐", "😑", "😒", "🙄", "🤔", "😳", "😞", "😟", "😠", "😡", "😔", "😕", "🙁", "☹️", "😣", "😖", "😫", "😩", "😤", "😮", "😱", "😨", "😰", "😯", "😦", "😧", "😢", "😥 ", "😪", "😓", "😭", "😵", "😲", "🤐", "😷", "🤒", "🤕", "😴", "💤", "💩"});
 
-    // Use a default streaming request.
-//     client.sample();
-
-    //client.filter({"😬", "😬", "😁", "😂", "😃", "😄", "😅", "😆", "😇", "😉", "😊", "🙂", "🙃", "☺️", "😋", "😌", "😍", "😘", "😗", "😙", "😚", "😜", "😝", "😛", "🤑", "🤓", "😎", "🤗", "😏", "😶", "😐", "😑", "😒", "🙄", "🤔", "😳", "😞", "😟", "😠", "😡", "😔", "😕", "🙁", "☹️", "😣", "😖", "😫", "😩", "😤", "😮", "😱", "😨", "😰", "😯", "😦", "😧", "😢", "😥 ", "😪", "😓", "😭", "😵", "😲", "🤐", "😷", "🤒", "🤕", "😴", "💤", "💩"});
-
-    client.filter({"self", "selfie", "selfies", "selfiechallenge", "selfieofday", "selpic", "selca", "selfie", "selfcamera", "selfienation", "selfstagram", "selcagram" });
 }
 
 
@@ -71,34 +68,7 @@ void ofApp::onDisconnect()
 void ofApp::onStatus(const ofxTwitter::Status& status)
 {
     count++;
-
-    std::ofstream outfile;
-
-    outfile.open(ofToDataPath("log_extended.txt", true), std::ios_base::app);
-
-//    for (auto entity: status.extendedEntities().urlEntities())
-//    {
-//        std::cout << entity.expandedURL() << std::endl;
-//    }
-
-
-    for (auto entity: status.extendedEntities().mediaEntities())
-    {
-        if (entity.type() == ofxTwitter::MediaEntity::Type::PHOTO &&
-            status.retweetedStatus() == nullptr)
-        {
-            outfile << status.id() << ",";
-//            outfile << ((status.retweetedStatus() != nullptr) ? status.retweetedStatus()->id() : -1);
-            outfile << -1;
-            outfile << ",";
-            if (status.user()) outfile << status.user()->id();
-            outfile << ",";
-            outfile << status.possiblySensitive();
-            outfile << ",";
-            outfile << entity.mediaURL();
-            outfile << std::endl;
-        }
-    }
+    std::cout << status.text() << std::endl;
 }
 
 
