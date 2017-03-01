@@ -253,7 +253,7 @@ private:
 
     uint64_t _lastMessage = 0;
 
-    mutable std::mutex mutex;
+    mutable std::mutex _mutex;
 
 };
 
