@@ -51,10 +51,10 @@ void BaseFilterQuery::setLocations(const std::vector<Geo::CoordinateBounds>& loc
 
         for (auto& bound: locations)
         {
-            values.push_back(bound.getSouthwest().getLongitude());
-            values.push_back(bound.getSouthwest().getLatitude());
-            values.push_back(bound.getNortheast().getLongitude());
-            values.push_back(bound.getNortheast().getLatitude());
+            values.push_back(bound.southwest().getLongitude());
+            values.push_back(bound.southwest().getLatitude());
+            values.push_back(bound.northeast().getLongitude());
+            values.push_back(bound.northeast().getLatitude());
         }
 
         set("locations", HTTP::HTTPUtils::join(values, ","));
@@ -85,6 +85,7 @@ void FilterQuery::setFollows(const std::vector<std::string>& follows)
 }
 
 
+const std::string UserFilterQuery::RESOURCE_URL = "https://userstream.twitter.com/1.1/user.json";
 
 
 UserFilterQuery::~UserFilterQuery()

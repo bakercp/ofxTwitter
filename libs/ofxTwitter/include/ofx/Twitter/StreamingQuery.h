@@ -63,7 +63,7 @@ public:
     /// messages are only sent when the client is falling behind, and will occur
     /// at a maximum rate of about once every 5 minutes. This parameter is most
     /// appropriate for clients with high-bandwidth connections, such as the
-    /// firehose.
+    /// sample.
     ///
     /// \sa https://dev.twitter.com/streaming/overview/request-parameters#stallwarnings
     /// \param stallWarnings True to enable stall warnings.

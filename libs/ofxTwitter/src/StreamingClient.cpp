@@ -7,221 +7,107 @@
 
 #include "ofx/Twitter/StreamingClient.h"
 #include "ofx/HTTP/HTTPUtils.h"
+#include "ofx/HTTP/GetRequest.h"
+#include "ofx/HTTP/PostRequest.h"
 #include "ofx/IO/ByteBufferUtils.h"
 #include "ofx/Twitter/User.h"
-#include "ofx/Twitter/SampleQuery.h"
 
 
 namespace ofx {
 namespace Twitter {
 
 
-const uint64_t StreamingClient::TIMEOUT = 90000;
-const std::string StreamingClient::USER_AGENT = "ofxTwitter (compatible; Client/1.0 +https://github.com/bakercp/ofxTwitter)";
+const uint64_t BaseStreamingClient::TIMEOUT = 90000;
+const std::string BaseStreamingClient::USER_AGENT = "ofxTwitter (compatible; Client/1.0 +https://github.com/bakercp/ofxTwitter)";
 
 
-StreamingClient::StreamingClient():
-    StreamingClient(HTTP::OAuth10Credentials())
+BaseStreamingClient::BaseStreamingClient():
+    BaseStreamingClient(HTTP::OAuth10Credentials())
 {
 }
 
 
-StreamingClient::StreamingClient(const HTTP::OAuth10Credentials& credentials):
-    _client(credentials),
-    _isConnected(false),
-    _streamType(StreamType::NONE),
-    _exitListener(ofEvents().exit.newListener(this, &StreamingClient::exit)),
-    _updateListener(ofEvents().update.newListener(this, &StreamingClient::update))
-
+BaseStreamingClient::BaseStreamingClient(const HTTP::OAuth10Credentials& credentials):
+    IO::Thread(std::bind(&BaseStreamingClient::_run, this)),
+    _credentials(credentials)
 {
-    HTTP::ClientSessionSettings sessionSettings;
-    sessionSettings.addDefaultHeader("X-User-Agent", USER_AGENT);
-    sessionSettings.setUserAgent(USER_AGENT);
-    sessionSettings.setTimeout(TIMEOUT * Poco::Timespan::MILLISECONDS);
-    _client.context().setClientSessionSettings(sessionSettings);
-}
-
-StreamingClient::~StreamingClient()
-{
-    // N.B. In most cases, IPVideoGrabber::exit() will be called before
-    // the program ever makes it into this destructor.
-    waitForDisconnect();
-    ofLogVerbose("StreamingClient::~StreamingClient") << "Destroyed.";
-}
-
-void StreamingClient::update(ofEventArgs& a)
-{
-    {
-        bool v;
-        while (_onConnect.tryReceive(v)) onConnect.notify(this);
-    }
-    {
-        bool v;
-        while (_onDisconnect.tryReceive(v)) onDisconnect.notify(this);
-    }
-
-    {
-        Status value;
-        while (_onStatus.tryReceive(value)) onStatus.notify(this, value);
-    }
-    {
-        StatusDeletedNotice value;
-        while (_onStatusDeletedNotice.tryReceive(value)) onStatusDeletedNotice.notify(this, value);
-    }
-    {
-        LocationDeletedNotice value;
-        while (_onLocationDeletedNotice.tryReceive(value)) onLocationDeletedNotice.notify(this, value);
-    }
-    {
-        LimitNotice value;
-        while (_onLimitNotice.tryReceive(value)) onLimitNotice.notify(this, value);
-    }
-    {
-        StatusWithheldNotice value;
-        while (_onStatusWithheldNotice.tryReceive(value)) onStatusWithheldNotice.notify(this, value);
-    }
-    {
-        UserWithheldNotice value;
-        while (_onUserWitheldNotice.tryReceive(value)) onUserWitheldNotice.notify(this, value);
-    }
-    {
-        DisconnectNotice value;
-        while (_onDisconnectNotice.tryReceive(value)) onDisconnectNotice.notify(this, value);
-    }
-    {
-        StallWarning value;
-        while (_onStallWarning.tryReceive(value)) onStallWarning.notify(this, value);
-    }
-    {
-        std::exception value;
-        while (_onException.tryReceive(value)) onException.notify(this, value);
-    }
-    {
-        ofJson value;
-        while (_onMessage.tryReceive(value)) onMessage.notify(this, value);
-    }
-
-    uint64_t now = ofGetElapsedTimeMillis();
-
-    // Disconnect if no new message has arrived and the socket hasn't timed out.
-    if (_isConnected && now > (_lastMessage + TIMEOUT))
-    {
-        Poco::TimeoutException exc("No data received in " + std::to_string(TIMEOUT) + " ms. Disconnecting.");
-        onException.notify(this, exc);
-        disconnect();
-    }
-}
-
-void StreamingClient::exit(ofEventArgs& a)
-{
-    ofLogVerbose("StreamingClient::exit") << "exit() called. Cleaning up and exiting.";
-    waitForDisconnect();
 }
 
 
-void StreamingClient::waitForDisconnect()
+BaseStreamingClient::~BaseStreamingClient()
 {
-    ofLogWarning("StreamingClient::waitForDisconnect")  << "Waiting for disconnect ... ";
-
-    disconnect();
-
-    try
-    {
-        _thread.join();
-    }
-    catch (const std::exception& exc)
-    {
-        ofLogVerbose("IPVideoGrabber::waitForDisconnect")  << "Joining failed: " << exc.what();
-    }
 }
 
 
-void StreamingClient::disconnect()
+void BaseStreamingClient::setCredentialsFromFile(const std::filesystem::path& credentialsPath)
 {
-    if (_isConnected)
-    {
-        _isConnected = false;
-
-        if (_client.context().clientSession())
-        {
-            try
-            {
-                _client.context().clientSession()->abort();
-            }
-            catch (const Poco::Exception& exc)
-            {
-                ofLogWarning("StreamingClient::disconnect")  << exc.displayText();
-            }
-        }
-    }
-    else
-    {
-        ofLogWarning("StreamingClient::disconnect")  << "Not connected. Connect first.";
-    }
+    setCredentials(HTTP::OAuth10Credentials::fromFile(credentialsPath));
 }
 
 
-void StreamingClient::close()
-{
-    disconnect();
-}
-
-
-bool StreamingClient::isConnected() const
-{
-    return _isConnected;
-}
-
-
-void StreamingClient::setCredentialsFromFile(const std::filesystem::path& credentialsPath)
-{
-    setCredentials(HTTP::OAuth10Credentials::fromFile("credentials.json"));
-}
-
-
-void StreamingClient::setCredentialsFromJson(const ofJson& credentials)
+void BaseStreamingClient::setCredentialsFromJson(const ofJson& credentials)
 {
     setCredentials(HTTP::OAuth10Credentials::fromJSON(credentials));
 }
 
 
-void StreamingClient::setCredentials(const HTTP::OAuth10Credentials& credentials)
+void BaseStreamingClient::setCredentials(const HTTP::OAuth10Credentials& credentials)
 {
-    _client.setCredentials(credentials);
+    std::unique_lock<std::mutex> lock(mutex);
+    _credentials = credentials;
 }
 
 
-StreamingClient::StreamType StreamingClient::streamType() const
+void BaseStreamingClient::onStopRequested()
 {
+    if (_client.context().clientSession())
+    {
+        try
+        {
+            _client.context().clientSession()->abort();
+        }
+        catch (const Poco::Exception& exc)
+        {
+            ofLogWarning("BaseStreamingClient::disconnect")  << exc.displayText();
+        }
+    }
+}
+
+
+HTTP::OAuth10Credentials BaseStreamingClient::getCredentials() const
+{
+    std::unique_lock<std::mutex> lock(mutex);
+    return _credentials;
+}
+
+
+BaseStreamingClient::StreamType BaseStreamingClient::streamType() const
+{
+    std::unique_lock<std::mutex> lock(mutex);
     return _streamType;
 }
 
 
-void StreamingClient::sample()
+void BaseStreamingClient::sample()
 {
     sample(SampleQuery());
 }
 
 
-void StreamingClient::sample(const SampleQuery& query)
+void BaseStreamingClient::sample(const SampleQuery& query)
 {
-    if (!_isConnected)
-    {
-        waitForDisconnect();
-        _thread = std::thread(&StreamingClient::_stream,
-                              this,
-                              StreamType::SAMPLE, query);
-    }
-    else
-    {
-        ofLogWarning("StreamingClient::sample")  << "Already connected.  Disconnect first.";
-    }
+    stopAndJoin();
+    _streamType = StreamType::SAMPLE;
+    _parameters = query;
+    _httpMethod = Poco::Net::HTTPRequest::HTTP_GET;
+    _url = SampleQuery::RESOURCE_URL;
+    start();
 }
 
 
-void StreamingClient::filter(std::vector<std::string> track,
-                             std::vector<std::string> follow,
-                             std::vector<Geo::CoordinateBounds> locations)
+void BaseStreamingClient::filter(std::vector<std::string> track,
+                                 std::vector<std::string> follow,
+                                 std::vector<Geo::CoordinateBounds> locations)
 {
     FilterQuery query;
     query.setTracks(track);
@@ -231,76 +117,65 @@ void StreamingClient::filter(std::vector<std::string> track,
 }
 
 
-void StreamingClient::filter(const FilterQuery& query)
+void BaseStreamingClient::filter(const FilterQuery& query)
 {
-    if (!_isConnected)
-    {
-        waitForDisconnect();
-        _thread = std::thread(&StreamingClient::_stream,
-                              this,
-                              StreamType::FILTER,
-                              query);
-    }
-    else
-    {
-        ofLogWarning("StreamingClient::sample")  << "Already connected. Disconnect first.";
-    }
+    stopAndJoin();
+    _streamType = StreamType::FILTER;
+    _parameters = query;
+    _httpMethod = Poco::Net::HTTPRequest::HTTP_POST;
+    _url = FilterQuery::RESOURCE_URL;
+    start();
 }
 
 
-void StreamingClient::_stream(StreamType streamType,
-                              const Poco::Net::NameValueCollection& parameters)
+void BaseStreamingClient::user(const UserFilterQuery& query)
 {
+    stopAndJoin();
+    _streamType = StreamType::USER;
+    _parameters = query;
+    _httpMethod = Poco::Net::HTTPRequest::HTTP_GET;
+    _url = UserFilterQuery::RESOURCE_URL;
+    start();
+}
+
+
+void BaseStreamingClient::_run()
+{
+    HTTP::ClientSessionSettings sessionSettings;
+    sessionSettings.addDefaultHeader("X-User-Agent", USER_AGENT);
+    sessionSettings.setUserAgent(USER_AGENT);
+    sessionSettings.setTimeout(TIMEOUT * Poco::Timespan::MILLISECONDS);
+    _client.context().setClientSessionSettings(sessionSettings);
+    _client.setCredentials(_credentials);
+
     try
     {
-        std::string url;
-        std::string httpMethod;
-        std::string httpVersion = Poco::Net::HTTPMessage::HTTP_1_1;
+        _lastMessageTime = ofGetElapsedTimeMillis();
 
-        if (streamType == StreamType::NONE)
-        {
-            ofLogError("StreamingClient::_stream") << "Invalid stream type NONE.";
-            return;
-        }
-        if (streamType == StreamType::FILTER)
-        {
-            httpMethod = Poco::Net::HTTPRequest::HTTP_POST;
-            url = FilterQuery::RESOURCE_URL;
-        }
-        else if (streamType == StreamType::SAMPLE)
-        {
-            httpMethod = Poco::Net::HTTPRequest::HTTP_GET;
-            url = SampleQuery::RESOURCE_URL;
-        }
-        else if (streamType == StreamType::FIREHOSE)
-        {
-            httpMethod = Poco::Net::HTTPRequest::HTTP_GET;
-            url = FirehoseQuery::RESOURCE_URL;
-        }
+        _onConnect();
 
-        _lastMessage = ofGetElapsedTimeMillis();
-        _isConnected = true;
-        _onConnect.send(_isConnected);
-        _streamType = streamType;
+        HTTP::FormRequest request(_httpMethod,
+                                  _url,
+                                  Poco::Net::HTTPMessage::HTTP_1_1);
 
-        HTTP::FormRequest request(httpMethod, url, httpVersion);
-
-        request.addFormFields(parameters);
+        request.addFormFields(_parameters);
 
         auto response = _client.execute(request);
 
         if (!response->isSuccess())
         {
             ofBuffer result = response->buffer();
+
+            ofLogError("BaseStreamingClient::_run") << result;
         }
         else
         {
             std::istream& istr = response->stream();
             std::string line;
 
-            while (_isConnected && std::getline(istr, line))
+            while (isRunning() && std::getline(istr, line))
             {
-                _lastMessage = ofGetElapsedTimeMillis();
+                _lastMessageTime = ofGetElapsedTimeMillis();
 
                 if (!istr.fail())
                 {
@@ -317,46 +192,46 @@ void StreamingClient::_stream(StreamType streamType,
                         }
                         else
                         {
-                            _onMessage.send(json);
+                            _onMessage(json);
                         }
 
 
                         if (json.find(StatusDeletedNotice::JSON_KEY) != json.end())
                         {
-                            _onStatusDeletedNotice.send(StatusDeletedNotice::fromJSON(json[StatusDeletedNotice::JSON_KEY]));
+                            _onStatusDeletedNotice(StatusDeletedNotice::fromJSON(json[StatusDeletedNotice::JSON_KEY]));
                         }
                         else if (json.find(LocationDeletedNotice::JSON_KEY) != json.end())
                         {
-                            _onLocationDeletedNotice.send(LocationDeletedNotice::fromJSON(json[LocationDeletedNotice::JSON_KEY]));
+                            _onLocationDeletedNotice(LocationDeletedNotice::fromJSON(json[LocationDeletedNotice::JSON_KEY]));
                         }
                         else if (json.find(LimitNotice::JSON_KEY) != json.end())
                         {
-                            _onLimitNotice.send(LimitNotice::fromJSON(json[LimitNotice::JSON_KEY]));
+                            _onLimitNotice(LimitNotice::fromJSON(json[LimitNotice::JSON_KEY]));
                         }
                         else if (json.find(StatusWithheldNotice::JSON_KEY) != json.end())
                         {
-                            _onStatusWithheldNotice.send(StatusWithheldNotice::fromJSON(json[StatusWithheldNotice::JSON_KEY]));
+                            _onStatusWithheldNotice(StatusWithheldNotice::fromJSON(json[StatusWithheldNotice::JSON_KEY]));
                         }
                         else if (json.find(UserWithheldNotice::JSON_KEY) != json.end())
                         {
-                            _onUserWitheldNotice.send(UserWithheldNotice::fromJSON(json[UserWithheldNotice::JSON_KEY]));
+                            _onUserWitheldNotice(UserWithheldNotice::fromJSON(json[UserWithheldNotice::JSON_KEY]));
                         }
                         else if (json.find(DisconnectNotice::JSON_KEY) != json.end())
                         {
-                            _onDisconnectNotice.send(DisconnectNotice::fromJSON(json[DisconnectNotice::JSON_KEY]));
+                            _onDisconnectNotice(DisconnectNotice::fromJSON(json[DisconnectNotice::JSON_KEY]));
                         }
                         else if (json.find(StallWarning::JSON_KEY) != json.end())
                         {
-                            _onStallWarning.send(StallWarning::fromJSON(json[StallWarning::JSON_KEY]));
+                            _onStallWarning(StallWarning::fromJSON(json[StallWarning::JSON_KEY]));
                         }
                         else if (json.find("text") != json.end())
                         {
-                            _onStatus.send(Status::fromJSON(json));
+                            _onStatus(Status::fromJSON(json));
                         }
                     }
                     catch (const std::exception& exc)
                     {
-                        _onException.send(exc);
+                        _onException(exc);
                     }
                 }
             }
@@ -364,22 +239,167 @@ void StreamingClient::_stream(StreamType streamType,
     }
     catch (const Poco::Exception& exc)
     {
-        _onException.send(exc);
+        _onException(exc);
     }
     catch (const std::exception& exc)
     {
-        _onException.send(exc);
+        _onException(exc);
     }
     catch (...)
     {
         Poco::Exception exc("Unknown exception.");
-        _onException.send(exc);
+        _onException(exc);
     }
 
-    _isConnected = false;
-    _onDisconnect.send(_isConnected);
-    _streamType = StreamType::NONE;
+    _onDisconnect();
 
+}
+
+
+StreamingClient::StreamingClient(bool autoEventSync):
+    StreamingClient(HTTP::OAuth10Credentials())
+{
+}
+
+
+StreamingClient::StreamingClient(const HTTP::OAuth10Credentials& credentials,
+                                 bool autoEventSync):
+    BaseStreamingClient(credentials)
+{
+    setAutoEventSync(autoEventSync);
+}
+
+
+StreamingClient::~StreamingClient()
+{
+}
+
+
+void StreamingClient::setAutoEventSync(bool value)
+{
+    if (value)
+    {
+        _updateListener = ofEvents().update.newListener(this, &StreamingClient::_update);
+        _exitListener = ofEvents().exit.newListener(this, &StreamingClient::_exit);
+    }
+    else
+    {
+        _updateListener.unsubscribe();
+        _exitListener.unsubscribe();
+    }
+
+    _autoEventSync = value;
+}
+
+
+void StreamingClient::syncEvents()
+{
+    for (const auto& v: _connectChannel.tryReceiveAll()) onConnect.notify(this);
+    for (const auto& v: _disconnectChannel.tryReceiveAll()) onDisconnect.notify(this);
+    for (const auto& v: _statusChannel.tryReceiveAll()) onStatus.notify(this, v);
+    for (const auto& v: _statusDeletedNoticeChannel.tryReceiveAll()) onStatusDeletedNotice.notify(this, v);
+    for (const auto& v: _locationDeletedNoticeChannel.tryReceiveAll()) onLocationDeletedNotice.notify(this, v);
+    for (const auto& v: _limitNoticeChannel.tryReceiveAll()) onLimitNotice.notify(this, v);
+    for (const auto& v: _statusWithheldNoticeChannel.tryReceiveAll()) onStatusWithheldNotice.notify(this, v);
+    for (const auto& v: _userWithheldNoticeChannel.tryReceiveAll()) onUserWitheldNotice.notify(this, v);
+    for (const auto& v: _disconnectNoticeChannel.tryReceiveAll()) onDisconnectNotice.notify(this, v);
+    for (const auto& v: _stallwarningChannel.tryReceiveAll()) onStallWarning.notify(this, v);
+    for (const auto& v: _exceptionChannel.tryReceiveAll()) onException.notify(this, v);
+    for (const auto& v: _messageChannel.tryReceiveAll()) onMessage.notify(this, v);
+
+    uint64_t now = ofGetElapsedTimeMillis();
+
+    // Disconnect if no new message has arrived and the socket hasn't timed out.
+    if (isRunning() && now > (_lastMessageTime + TIMEOUT))
+    {
+        Poco::TimeoutException exc("No data received in " + std::to_string(TIMEOUT) + " ms. Disconnecting.");
+        onException.notify(this, exc);
+        stop();
+    }
+}
+
+
+void StreamingClient::_update(ofEventArgs& args)
+{
+    syncEvents();
+}
+
+
+void StreamingClient::_exit(ofEventArgs& args)
+{
+    syncEvents();
+}
+
+
+void StreamingClient::_onConnect()
+{
+    _connectChannel.send(ofEventArgs());
+}
+
+
+void StreamingClient::_onDisconnect()
+{
+    _disconnectChannel.send(ofEventArgs());
+}
+
+
+void StreamingClient::_onStatus(const Status& status)
+{
+    _statusChannel.send(status);
+}
+
+
+void StreamingClient::_onStatusDeletedNotice(const StatusDeletedNotice& notice)
+{
+    _statusDeletedNoticeChannel.send(notice);
+}
+
+
+void StreamingClient::_onLocationDeletedNotice(const LocationDeletedNotice& notice)
+{
+    _locationDeletedNoticeChannel.send(notice);
+}
+
+
+void StreamingClient::_onLimitNotice(const LimitNotice& notice)
+{
+    _limitNoticeChannel.send(notice);
+}
+
+
+void StreamingClient::_onStatusWithheldNotice(const StatusWithheldNotice& notice)
+{
+    _statusWithheldNoticeChannel.send(notice);
+}
+
+
+void StreamingClient::_onUserWitheldNotice(const UserWithheldNotice& notice)
+{
+    _userWithheldNoticeChannel.send(notice);
+}
+
+
+void StreamingClient::_onDisconnectNotice(const DisconnectNotice& notice)
+{
+    _disconnectNoticeChannel.send(notice);
+}
+
+
+void StreamingClient::_onStallWarning(const StallWarning& notice)
+{
+    _stallwarningChannel.send(notice);
+}
+
+
+void StreamingClient::_onException(const std::exception& exc)
+{
+    _exceptionChannel.send(exc);
+}
+
+
+void StreamingClient::_onMessage(const ofJson& message)
+{
+    _messageChannel.send(message);
 }
 
     

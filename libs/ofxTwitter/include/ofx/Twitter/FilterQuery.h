@@ -168,7 +168,13 @@ public:
     /// \sa https://dev.twitter.com/streaming/overview/request-parameters#with
     void setWith(With with);
 
+    /// \brief The endpoint.
+    static const std::string RESOURCE_URL;
+
 };
+
+
+// TODO: SiteFilterQuery
 
 
 } } // namespace ofx::Twitter

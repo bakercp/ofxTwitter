@@ -10,24 +10,55 @@
 
 void ofApp::setup()
 {
-    // ofSetLogLevel(OF_LOG_VERBOSE);
+     // ofSetLogLevel(OF_LOG_VERBOSE);
 
     // First we load credentials from a file. These can also be loaded using
     // the other setCredentials*(...) methods.
     //
     // Developers must get their credentials after creating an app at
     // https://apps.twitter.com.
-    client.setCredentialsFromFile("credentials.json");
+    client.setCredentialsFromFile("NetworkedObject.json");
 
-    // Register all available streaming events. Alternatively, one can register
-    // events individually.
+    // Register all available streaming events.
+    // Alternatively, one can register events individually.
+    //
+    // In default mode all events are sent during the update() event loop.
     client.registerStreamingEvents(this);
 
-    // Set up listeners.
-    client.filter({"😬", "😬", "😁", "😂", "😃", "😄", "😅", "😆", "😇", "😉", "😊", "🙂", "🙃", "☺️", "😋", "😌", "😍", "😘", "😗", "😙", "😚", "😜", "😝", "😛", "🤑", "🤓", "😎", "🤗", "😏", "😶", "😐", "😑", "😒", "🙄", "🤔", "😳", "😞", "😟", "😠", "😡", "😔", "😕", "🙁", "☹️", "😣", "😖", "😫", "😩", "😤", "😮", "😱", "😨", "😰", "😯", "😦", "😧", "😢", "😥 ", "😪", "😓", "😭", "😵", "😲", "🤐", "😷", "🤒", "🤕", "😴", "💤", "💩"});
+    // Create a bounding box for San Francisco.
+    ofxGeo::CoordinateBounds sanFranciscoBounds(ofxGeo::Coordinate(37.8, -122.75),
+                                                ofxGeo::Coordinate(36.8, -121.75));
+
+
+    // Create a bounding box for New York.
+    ofxGeo::CoordinateBounds newYorkBounds(ofxGeo::Coordinate(41, -74),
+                                           ofxGeo::Coordinate(40, -73));
+
+    // Create a filter query.
+    ofxTwitter::FilterQuery query;
+
+    // Set the bouning boxes of interest.
+
+    // Note that bounding boxes do not act as filters for other filter
+    // parameters. For example the locations below match any Tweets containing
+    // track terms (even non-geo Tweets) OR coming from the San Francisco /
+    // New York area.
+    //
+    // query.setLocations({ sanFranciscoBounds, newYorkBounds });
+
+    // Track two emoji.
+    query.setTracks({":)", ":("});
+
+    // Start filter query.
+    client.filter(query);
 
 }
 
+
+void ofApp::update()
+{
+    //client.syncEvents();
+}
 
 void ofApp::draw()
 {
@@ -53,75 +84,88 @@ void ofApp::draw()
 }
 
 
-void ofApp::onConnect()
+bool ofApp::onConnect(const void* source)
 {
-    std::cout << "Connected." << std::endl;
+    ofLogNotice("ofApp::onConnect") << "Connected." << std::endl;
+    return true;
 }
 
 
-void ofApp::onDisconnect()
+bool ofApp::onDisconnect(const void* source)
 {
-    std::cout << "Disconnected." << std::endl;
+    ofLogNotice("ofApp::onDisconnect") << "Disconnected." << std::endl;
+    return true;
 }
 
 
-void ofApp::onStatus(const ofxTwitter::Status& status)
+bool ofApp::onStatus(const void* source, const ofxTwitter::Status& status)
 {
     count++;
-    std::cout << status.text() << std::endl;
+    ofLogNotice("ofApp::onStatus") << "Text: " << status.text();
+    ofLogNotice("ofApp::onStatus") << "Coordinates: " << (status.coordinates() ? ofToString(status.coordinates()) : "NONE");
+    ofLogNotice("ofApp::onStatus") << "Place: " << (status.place() ? ofToString(status.place()->fullName()) : "NONE");
+    return true;
 }
 
 
-void ofApp::onStatusDeletedNotice(const ofxTwitter::StatusDeletedNotice& notice)
+bool ofApp::onStatusDeletedNotice(const void* source, const ofxTwitter::StatusDeletedNotice& notice)
 {
-     std::cout << "Status deleted." << std::endl;
+    ofLogNotice("ofApp::onStatusDeletedNotice") << "Status deleted.";
+    return true;
 }
 
 
-void ofApp::onLocationDeletedNotice(const ofxTwitter::LocationDeletedNotice& notice)
+bool ofApp::onLocationDeletedNotice(const void* source, const ofxTwitter::LocationDeletedNotice& notice)
 {
-    std::cout << "Location scrubbed." << std::endl;
+    ofLogNotice("ofApp::onLocationDeletedNotices") << "Location scrubbed.";
+    return true;
 }
 
 
-void ofApp::onLimitNotice(const ofxTwitter::LimitNotice& notice)
+bool ofApp::onLimitNotice(const void* source, const ofxTwitter::LimitNotice& notice)
 {
     countMissed += notice.track();
-    std::cout << "Limited: " << notice.track() << std::endl;
+    ofLogNotice("ofApp::onLimitNotice") << "Limited: " << notice.track();
+    return true;
 }
 
 
-void ofApp::onStatusWithheldNotice(const ofxTwitter::StatusWithheldNotice& notice)
+bool ofApp::onStatusWithheldNotice(const void* source, const ofxTwitter::StatusWithheldNotice& notice)
 {
-    std::cout << "Status witheld." << std::endl;
+    ofLogNotice("ofApp::onLimitNotice") << "Status witheld.";
+    return true;
 }
 
 
-void ofApp::onUserWitheldNotice(const ofxTwitter::UserWithheldNotice& notice)
+bool ofApp::onUserWitheldNotice(const void* source, const ofxTwitter::UserWithheldNotice& notice)
 {
-    std::cout << "User witheld." << std::endl;
+    ofLogNotice("ofApp::onUserWitheldNotice") << "User witheld.";
+    return true;
 }
 
 
-void ofApp::onDisconnectNotice(const ofxTwitter::DisconnectNotice& notice)
+bool ofApp::onDisconnectNotice(const void* source, const ofxTwitter::DisconnectNotice& notice)
 {
-    std::cout << "Disconnect notice: " << notice.reason() << std::endl;
+    ofLogNotice("ofApp::onDisconnectNotice") << "Disconnect notice: " << notice.reason();
+    return true;
 }
 
 
-void ofApp::onStallWarning(const ofxTwitter::StallWarning& notice)
+bool ofApp::onStallWarning(const void* source, const ofxTwitter::StallWarning& notice)
 {
-    std::cout << "Stall warning: " << notice.message() << std::endl;
+    ofLogNotice("ofApp::onStallWarning") << "Stall warning: " << notice.message();
+    return true;
 }
 
 
-void ofApp::onException(const std::exception& notice)
+bool ofApp::onException(const void* source, const std::exception& notice)
 {
-    std::cout << "Exception: " << notice.what() << std::endl;
+    ofLogError("ofApp::onException") << "Exception: " << notice.what();
+    return true;
 }
 
 
-void ofApp::onMessage(const ofJson& json)
+bool ofApp::onMessage(const void* source, const ofJson& json)
 {
-    // Skip.
+    return true;
 }
