@@ -16,34 +16,34 @@ namespace ofx {
 namespace Twitter {
 
 
-RESTClient::RESTClient()
-{
-}
-
-
-RESTClient::RESTClient(const HTTP::OAuth10Credentials& credentials):
-    HTTP::OAuth10HTTPClient(credentials)
-{
-}
-
-
-RESTClient::~RESTClient()
-{
-}
-
-SearchResponse RESTClient::search(const std::string& query)
-{
-    return search(SearchQuery(query));
-}
-
-
-SearchResponse RESTClient::search(const SearchQuery& query)
-{
-    HTTP::GetRequest request(SearchQuery::RESOURCE_URL);
-    request.addFormFields(query);
-    return SearchResponse::fromJSON(execute(request)->json());
-}
-
+//RESTClient::RESTClient()
+//{
+//}
+//
+//
+//RESTClient::RESTClient(const HTTP::OAuth10Credentials& credentials):
+//    HTTP::OAuth10HTTPClient(credentials)
+//{
+//}
+//
+//
+//RESTClient::~RESTClient()
+//{
+//}
+//
+//SearchResponse RESTClient::search(const std::string& query)
+//{
+//    return search(SearchQuery(query));
+//}
+//
+//
+//SearchResponse RESTClient::search(const SearchQuery& query)
+//{
+//    HTTP::GetRequest request(SearchQuery::RESOURCE_URL);
+//    request.addFormFields(query);
+//    return SearchResponse::fromHTTPResponse(*execute(request));
+//}
+//
 
 
 

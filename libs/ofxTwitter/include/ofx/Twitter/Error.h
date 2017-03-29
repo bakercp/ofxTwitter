@@ -31,6 +31,8 @@ public:
 
     std::string message() const;
 
+    ofJson toJSON() const;
+
     static Error fromJSON(const ofJson& json);
 
 private:

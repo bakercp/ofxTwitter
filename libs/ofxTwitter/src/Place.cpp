@@ -58,6 +58,12 @@ std::string Place::id() const
 }
 
 
+std::vector<std::string> Place::containedWithinId() const
+{
+    return _containedWithinIds;
+}
+
+
 std::string Place::name() const
 {
     return _name;
@@ -131,6 +137,13 @@ Place Place::fromJSON(const ofJson& json)
         else if (key == "full_name") place._fullName = value;
         else if (key == "place_type") place._placeType = value;
         else if (key == "url") place._url = value;
+        else if (key == "contained_within")
+        {
+            for (auto& placeId: value)
+            {
+                place._containedWithinIds.push_back(placeId);
+            }
+        }
         else ofLogWarning("Place::fromJSON") << "Unknown key: " << key << std::endl << value;
 
         ++iter;

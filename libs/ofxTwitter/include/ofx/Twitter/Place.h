@@ -72,6 +72,9 @@ public:
     /// \note This is represented as a string, not an integer.
     std::string id() const;
 
+    /// \returns the ID of the place that this place is contained within.
+    std::vector<std::string> containedWithinId() const;
+
     /// \returns a short human-readable representation of the Place’s name.
     std::string name() const;
 
@@ -105,6 +108,10 @@ private:
     /// \brief ID representing this place.
     /// \note This is represented as a string, not an integer.
     std::string _id;
+
+    /// \brief The place_ids within which the new place can be found.
+    /// \note This is represented as a string, not an integer.
+    std::vector<std::string> _containedWithinIds;
 
     /// \brief Short human-readable representation of the Place’s name.
     std::string _name;

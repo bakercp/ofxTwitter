@@ -19,6 +19,9 @@ namespace ofx {
 namespace Twitter {
 
 
+class User;
+
+
 /// \brief The base class for an indexed entity.
 class BaseIndexedEntity
 {
@@ -307,6 +310,28 @@ private:
 };
 
 
+class AdditionalMediaInfo
+{
+public:
+    /// \returns true if monetizable.
+    bool monetizable() const;
+
+    /// \returns a shared pointer to a source user if available.
+    std::shared_ptr<User> sourceUser() const;
+
+    /// \brief Extract the VideoInfo from JSON.
+    /// \param json The source JSON.
+    /// \returns the extracted VideoInfo.
+    static AdditionalMediaInfo fromJSON(const ofJson& json);
+
+private:
+    bool _montetizable = false;
+
+    std::shared_ptr<User> _sourceUser;
+
+};
+
+
 /// \brief An entity containing media.
 /// \sa https://dev.twitter.com/overview/api/entities-in-twitter-objects#media
 class MediaEntity: public URLEntity
@@ -399,6 +424,9 @@ public:
     /// \returns the video info if the media type is a video.
     VideoInfo videoInfo() const;
 
+    /// \returns the AdditionalMediaInfo if available.
+    AdditionalMediaInfo additionalMediaEntity() const;
+
     /// \brief Extract the MediaEntity from JSON.
     /// \param json The source JSON.
     /// \returns the extracted MediaEntity.
@@ -430,6 +458,9 @@ private:
 
     /// \brief Video info for this media, if available.
     VideoInfo _videoInfo;
+
+    /// \brief Additional media info, if available.
+    AdditionalMediaInfo _additionalMediaInfo;
 
 };
 

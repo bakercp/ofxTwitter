@@ -103,9 +103,21 @@ void SearchQuery::setSinceId(int64_t id)
 }
 
 
+int64_t SearchQuery::getSinceId() const
+{
+    return std::stoll(get("since_id", "-1"));
+}
+
+
 void SearchQuery::setMaxId(int64_t id)
 {
     set("max_id", std::to_string(id));
+}
+
+
+int64_t SearchQuery::getMaxId() const
+{
+    return std::stoll(get("max_id", "-1"));
 }
 
 

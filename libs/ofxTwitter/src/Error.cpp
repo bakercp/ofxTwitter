@@ -42,6 +42,15 @@ std::string Error::message() const
 }
 
 
+ofJson Error::toJSON() const
+{
+    ofJson json;
+    json["code"] = _code;
+    json["message"] = _message;
+    return json;
+}
+
+
 Error Error::fromJSON(const ofJson& json)
 {
     Error error;

@@ -231,7 +231,8 @@ void BaseStreamingClient::_run()
                     }
                     catch (const std::exception& exc)
                     {
-                        _onException(exc);
+                        ofLogError("BaseStreamingClient::_run") << exc.what();
+                        _onException(std::exception(exc));
                     }
                 }
             }
@@ -239,16 +240,19 @@ void BaseStreamingClient::_run()
     }
     catch (const Poco::Exception& exc)
     {
-        _onException(exc);
+        ofLogError("BaseStreamingClient::_run") << exc.displayText();
+        _onException(std::exception(exc));
     }
     catch (const std::exception& exc)
     {
-        _onException(exc);
+        ofLogError("BaseStreamingClient::_run") << exc.what();
+        _onException(std::exception(exc));
     }
     catch (...)
     {
         Poco::Exception exc("Unknown exception.");
-        _onException(exc);
+        ofLogError("BaseStreamingClient::_run") << exc.displayText();
+        _onException(std::exception(exc));
     }
 
     _onDisconnect();

@@ -21,34 +21,34 @@ class MediaUploadResponse;
 class StatusUpdateResponse;
 
 
-/// \brief A RESTClient for the Twitter API.
-/// \sa
-class RESTClient: public HTTP::OAuth10HTTPClient
-{
-public:
-    /// \brief Create a default RESTClient.
-    ///
-    /// The user must set the appropriate credentials using the setCredentials()
-    /// method before the client will connnect to the Twitter API.
-    RESTClient();
-
-    /// \brief Create a RESTClient with the given Credentials.
-    /// \param credentials The Twitter Credentials.
-    RESTClient(const HTTP::OAuth10Credentials& credentials);
-
-    /// \brief Destroys the REST client.
-    virtual ~RESTClient();
-
-    /// \brief Execute a basic Twitter Search query.
-    /// \param query The search string to send.
-    /// \returns The SearchResponse.
-    SearchResponse search(const std::string& query);
-
-    /// \brief Execute a basic Twitter Search query.
-    /// \param query The search query to send.
-    /// \returns The SearchResponse.
-    SearchResponse search(const SearchQuery& query);
-
+///// \brief A RESTClient for the Twitter API.
+///// \sa
+//class RESTClient: public HTTP::OAuth10HTTPClient
+//{
+//public:
+//    /// \brief Create a default RESTClient.
+//    ///
+//    /// The user must set the appropriate credentials using the setCredentials()
+//    /// method before the client will connnect to the Twitter API.
+//    RESTClient();
+//
+//    /// \brief Create a RESTClient with the given Credentials.
+//    /// \param credentials The Twitter Credentials.
+//    RESTClient(const HTTP::OAuth10Credentials& credentials);
+//
+//    /// \brief Destroys the REST client.
+//    virtual ~RESTClient();
+//
+//    /// \brief Execute a basic Twitter Search query.
+//    /// \param query The search string to send.
+//    /// \returns The SearchResponse.
+//    SearchResponse search(const std::string& query);
+//
+//    /// \brief Execute a basic Twitter Search query.
+//    /// \param query The search query to send.
+//    /// \returns The SearchResponse.
+//    SearchResponse search(const SearchQuery& query);
+//
 
 //    SearchResponse RESTClient::search(const SearchQuery& query)
 //    {
@@ -130,7 +130,7 @@ public:
 //                                                       ofImageFormat format = OF_IMAGE_FORMAT_JPEG,
 //                                                       ofImageQualityType quality = OF_IMAGE_QUALITY_MEDIUM);
 
-};
+//};
 
 
 } } // namespace ofx::Twitter

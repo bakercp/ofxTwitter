@@ -6,6 +6,7 @@
 
 
 #include "ofx/Twitter/Entities.h"
+#include "ofx/Twitter/User.h"
 #include "ofx/Twitter/Utils.h"
 #include "ofLog.h"
 
@@ -427,6 +428,47 @@ VideoInfo VideoInfo::fromJSON(const ofJson& json)
 }
 
 
+bool AdditionalMediaInfo::monetizable() const
+{
+    return _montetizable;
+}
+
+
+std::shared_ptr<User> AdditionalMediaInfo::sourceUser() const
+{
+    return _sourceUser;
+}
+
+
+AdditionalMediaInfo AdditionalMediaInfo::fromJSON(const ofJson& json)
+{
+    AdditionalMediaInfo info;
+
+    auto iter = json.cbegin();
+    while (iter != json.cend())
+    {
+        const auto& key = iter.key();
+        const auto& value = iter.value();
+
+        if (Utils::endsWith(key, "_str")) { /* skip */ }
+        else if (key == "monetizable")
+        {
+            info._montetizable = value;
+        }
+        else if (key == "source_user")
+        {
+            info._sourceUser = std::make_shared<User>(User::fromJSON(value));
+        }
+        else ofLogWarning("AdditionalMediaInfo::fromJson") << "Unknown key: " << key << " : " << value.dump(4);
+
+        ++iter;
+    }
+
+    return info;
+}
+
+
+
 MediaEntity::MediaEntity()
 {
 }
@@ -511,6 +553,12 @@ VideoInfo MediaEntity::videoInfo() const
 }
 
 
+AdditionalMediaInfo MediaEntity::additionalMediaEntity() const
+{
+    return _additionalMediaInfo;
+}
+
+
 MediaEntity MediaEntity::fromJson(const ofJson& json)
 {
     MediaEntity entity;
@@ -549,7 +597,8 @@ MediaEntity MediaEntity::fromJson(const ofJson& json)
         else if (key == "media_url_https") entity._secureMediaURL = value;
         else if (key == "sizes") entity._sizes = _sizesFromJson(value);
         else if (key == "id") entity._mediaID = value;
-        else ofLogWarning("MediaEntity::fromJson") << "Unknown key: " << key;
+        else if (key == "additional_media_info") entity._additionalMediaInfo = AdditionalMediaInfo::fromJSON(value);
+        else ofLogWarning("MediaEntity::fromJson") << "Unknown key: " << key << " : " << value.dump(4);
 
         ++iter;
     }
@@ -749,17 +798,17 @@ Entities Entities::fromJSON(const ofJson& json)
                 }
             }
         }
-        else if (key == "url")
+        else if (key == "url" || key == "description")
         {
-            std::cout << "url----------------------------" << std::endl;
-            std::cout << std::endl << value.dump(4) << std::endl;
-            std::cout << "url----------------------------" << std::endl;
-        }
-        else if (key == "description")
-        {
-            std::cout << "description----------------------------" << std::endl;
-            std::cout << std::endl << value.dump(4) << std::endl;
-            std::cout << "description----------------------------" << std::endl;
+            for (auto url: value["urls"])
+            {
+                auto entity = URLEntity::fromJson(url);
+
+                if (!entity.url().empty())
+                {
+                    entities._URLEntities.push_back(entity);
+                }
+            }
         }
         else if (key == "user_mentions")
         {

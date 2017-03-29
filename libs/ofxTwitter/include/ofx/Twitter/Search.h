@@ -11,6 +11,7 @@
 #include <string>
 #include "Poco/Net/NameValueCollection.h"
 #include "ofx/Twitter/Error.h"
+#include "ofx/Twitter/BaseResponse.h"
 #include "ofx/Twitter/Status.h"
 
 
@@ -58,7 +59,13 @@ public:
 
     void setSinceId(int64_t id);
 
+    /// \returns the sinceId or -1 if unset.
+    int64_t getSinceId() const;
+
     void setMaxId(int64_t id);
+
+    /// \returns the maxId or -1 if unset.
+    int64_t getMaxId() const;
 
     void setIncludeEntities(bool includeEntities);
 
@@ -114,7 +121,7 @@ private:
 /// \brief A Twitter Search Request.
 ///
 /// \sa https://dev.twitter.com/rest/reference/get/search/tweets
-class SearchResponse
+class SearchResponse: public BaseResponse
 {
 public:
     virtual ~SearchResponse();
