@@ -109,6 +109,10 @@ void BaseSearchClient::_run()
     _client.context().setClientSessionSettings(sessionSettings);
     _client.setCredentials(_credentials);
 
+    int64_t sinceId = _searchQuery->getSinceId();
+
+    ofLogNotice("BaseSearchClient::_run") << "INITIAL ID submitted: " << sinceId;
+
     try
     {
         HTTP::GetRequest request(SearchQuery::RESOURCE_URL);
@@ -128,11 +132,16 @@ void BaseSearchClient::_run()
         {
             int64_t sinceId = _searchQuery->getSinceId();
 
+            ofLogNotice("BaseSearchClient::_run") << "Since ID submitted: " << sinceId;
+
+
             for (auto& status: response.statuses())
             {
                 _onStatus(status);
                 sinceId = std::max(sinceId, status.id());
             }
+
+            ofLogNotice("BaseSearchClient::_run") << "Since ID AFTER status updates: " << sinceId;
 
             _searchQuery->setSinceId(sinceId);
         }
