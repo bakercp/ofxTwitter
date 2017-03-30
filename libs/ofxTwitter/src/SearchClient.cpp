@@ -111,14 +111,9 @@ void BaseSearchClient::_run()
 
     int64_t sinceId = _searchQuery->getSinceId();
 
-    ofLogNotice("BaseSearchClient::_run") << "INITIAL ID submitted: " << sinceId;
-
     try
     {
         HTTP::GetRequest request(SearchQuery::RESOURCE_URL);
-
-        ofLogError() << "SEARCH QUERY --- --------------- PREEgit  " ;
-        HTTP::HTTPUtils::dumpNameValueCollection(*_searchQuery, OF_LOG_ERROR);
 
         request.addFormFields(*_searchQuery);
 
@@ -134,28 +129,25 @@ void BaseSearchClient::_run()
 
         if (response.errors().empty())
         {
-            int64_t sinceId = _searchQuery->getSinceId();
-
-            ofLogNotice("BaseSearchClient::_run") << "Since ID submitted: " << sinceId;
-            ofLogNotice("BaseSearchClient::_run") << "Got : " << response.statuses().size() << " new statuses " << sinceId;
+            int64_t requestedSinceId = _searchQuery->getSinceId();
+            int64_t sinceId = requestedSinceId;
 
             for (auto& status: response.statuses())
             {
                 if (status.id() > sinceId)
                 {
                     sinceId = status.id();
-                    ofLogNotice("BaseSearchClient::_run") << "New status, with larger id: " << status.id();
-                }
-                else
-                {
-                    ofLogNotice("BaseSearchClient::_run") << "New status, but id was not larger: " << status.id();
                 }
 
-                _onStatus(status);
+                // This takes care of situations were there are less than
+                // max-count and all are returned.
+                if (status.id() > requestedSinceId)
+                {
+                    _onStatus(status);
+                }
             }
 
-            ofLogNotice("BaseSearchClient::_run") << "Since ID AFTER status updates: " << sinceId;
-
+            // Here we increment the sinceId
             _searchQuery->setSinceId(sinceId);
         }
         else
@@ -184,9 +176,6 @@ void BaseSearchClient::_run()
         ofLogError("BaseSearchClient::_run") << exc.displayText();
         _onException(exc);
     }
-
-    ofLogError() << "SEARCH QUERY --- --------------- POST " ;
-    HTTP::HTTPUtils::dumpNameValueCollection(*_searchQuery, OF_LOG_ERROR);
 
 }
 
