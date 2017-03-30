@@ -117,7 +117,7 @@ void BaseSearchClient::_run()
     {
         HTTP::GetRequest request(SearchQuery::RESOURCE_URL);
 
-        ofLogError() << "SEARCH QUERY --- --------------- PREE " ;
+        ofLogError() << "SEARCH QUERY --- --------------- PREEgit  " ;
         HTTP::HTTPUtils::dumpNameValueCollection(*_searchQuery, OF_LOG_ERROR);
 
         request.addFormFields(*_searchQuery);
