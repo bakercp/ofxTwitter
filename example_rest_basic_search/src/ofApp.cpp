@@ -19,7 +19,7 @@ void ofApp::setup()
     // using the ofxTwitter::Credentials constructor.
     //
     // Developers must get their credentials after creating an app at https://apps.twitter.com
-    client.setCredentialsFromFile("NetworkedObject.json");
+    client.setCredentialsFromFile("credentials.json");
 
     // Set the polling interval for 6 seconds.
     client.setPollingInterval(6000);
