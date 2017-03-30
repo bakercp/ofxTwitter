@@ -22,7 +22,7 @@ void ofApp::setup()
     client.setCredentialsFromFile("NetworkedObject.json");
 
     // Set the polling interval for 6 seconds.
-    client.setPollingInterval(600000);
+    client.setPollingInterval(6000);
 
     // This starts the search.
     client.search("#selfieseer");
