@@ -116,6 +116,10 @@ void BaseSearchClient::_run()
     try
     {
         HTTP::GetRequest request(SearchQuery::RESOURCE_URL);
+
+        ofLogError() << "SEARCH QUERY --- --------------- PREE " ;
+        HTTP::HTTPUtils::dumpNameValueCollection(*_searchQuery, OF_LOG_ERROR);
+
         request.addFormFields(*_searchQuery);
 
         auto httpResponse = _client.execute(request);
@@ -180,6 +184,10 @@ void BaseSearchClient::_run()
         ofLogError("BaseSearchClient::_run") << exc.displayText();
         _onException(exc);
     }
+
+    ofLogError() << "SEARCH QUERY --- --------------- POST " ;
+    HTTP::HTTPUtils::dumpNameValueCollection(*_searchQuery, OF_LOG_ERROR);
+
 }
 
 
