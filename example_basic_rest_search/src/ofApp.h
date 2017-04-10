@@ -18,10 +18,10 @@ public:
     void setup();
     void draw();
 
-    bool onStatus(const void* source, const ofxTwitter::Status& status);
-    bool onError(const void* source, const ofxTwitter::Error& error);
-    bool onException(const void* source, const std::exception& exception);
-    bool onMessage(const void* source, const ofJson& json);
+    void onStatus(const ofxTwitter::Status& status);
+    void onError(const ofxTwitter::Error& error);
+    void onException(const std::exception& exception);
+    void onMessage(const ofJson& json);
 
     ofxTwitter::SearchClient client;
 

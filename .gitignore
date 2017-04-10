@@ -3,10 +3,8 @@ docs/tagfile.xml
 docs/*.tag
 
 raw/
-
+_*
 .compiler*
-config.make
-Makefile
 Project.xcconfig
 *.xcodeproj
 *.plist

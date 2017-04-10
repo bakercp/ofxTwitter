@@ -10,14 +10,12 @@
 
 void ofApp::setup()
 {
-     // ofSetLogLevel(OF_LOG_VERBOSE);
-
     // First we load credentials from a file. These can also be loaded using
     // the other setCredentials*(...) methods.
     //
     // Developers must get their credentials after creating an app at
     // https://apps.twitter.com.
-    client.setCredentialsFromFile("NetworkedObject.json");
+    client.setCredentialsFromFile("credentials.json");
 
     // Register all available streaming events.
     // Alternatively, one can register events individually.
@@ -47,7 +45,7 @@ void ofApp::setup()
     // query.setLocations({ sanFranciscoBounds, newYorkBounds });
 
     // Track two emoji.
-    query.setTracks({":)", ":("});
+    query.setTracks({":(", ":)"});
 
     // Start filter query.
     client.filter(query);
@@ -78,94 +76,83 @@ void ofApp::draw()
         received = ofToString(static_cast<double>(count) / total * 100, 2);
     }
 
-    ss << "% Received: " <<  received;
+    ss << "% Received: " << received;
 
     ofDrawBitmapStringHighlight(ss.str(), 14, 20);
 }
 
 
-bool ofApp::onConnect(const void* source)
+void ofApp::onConnect()
 {
-    ofLogNotice("ofApp::onConnect") << "Connected." << std::endl;
-    return true;
+    ofLogNotice("ofApp::onConnect") << "Connected.";
 }
 
 
-bool ofApp::onDisconnect(const void* source)
+void ofApp::onDisconnect()
 {
-    ofLogNotice("ofApp::onDisconnect") << "Disconnected." << std::endl;
-    return true;
+    ofLogNotice("ofApp::onDisconnect") << "Disconnected.";
 }
 
 
-bool ofApp::onStatus(const void* source, const ofxTwitter::Status& status)
+void ofApp::onStatus(const ofxTwitter::Status& status)
 {
     count++;
     ofLogNotice("ofApp::onStatus") << "Text: " << status.text();
     ofLogNotice("ofApp::onStatus") << "Coordinates: " << (status.coordinates() ? ofToString(status.coordinates()) : "NONE");
     ofLogNotice("ofApp::onStatus") << "Place: " << (status.place() ? ofToString(status.place()->fullName()) : "NONE");
-    return true;
 }
 
 
-bool ofApp::onStatusDeletedNotice(const void* source, const ofxTwitter::StatusDeletedNotice& notice)
+void ofApp::onStatusDeletedNotice(const ofxTwitter::StatusDeletedNotice& notice)
 {
     ofLogNotice("ofApp::onStatusDeletedNotice") << "Status deleted.";
-    return true;
 }
 
 
-bool ofApp::onLocationDeletedNotice(const void* source, const ofxTwitter::LocationDeletedNotice& notice)
+void ofApp::onLocationDeletedNotice(const ofxTwitter::LocationDeletedNotice& notice)
 {
     ofLogNotice("ofApp::onLocationDeletedNotices") << "Location scrubbed.";
-    return true;
 }
 
 
-bool ofApp::onLimitNotice(const void* source, const ofxTwitter::LimitNotice& notice)
+void ofApp::onLimitNotice(const ofxTwitter::LimitNotice& notice)
 {
     countMissed += notice.track();
     ofLogNotice("ofApp::onLimitNotice") << "Limited: " << notice.track();
-    return true;
 }
 
 
-bool ofApp::onStatusWithheldNotice(const void* source, const ofxTwitter::StatusWithheldNotice& notice)
+void ofApp::onStatusWithheldNotice(const ofxTwitter::StatusWithheldNotice& notice)
 {
     ofLogNotice("ofApp::onLimitNotice") << "Status witheld.";
-    return true;
 }
 
 
-bool ofApp::onUserWitheldNotice(const void* source, const ofxTwitter::UserWithheldNotice& notice)
+void ofApp::onUserWitheldNotice(const ofxTwitter::UserWithheldNotice& notice)
 {
     ofLogNotice("ofApp::onUserWitheldNotice") << "User witheld.";
-    return true;
 }
 
 
-bool ofApp::onDisconnectNotice(const void* source, const ofxTwitter::DisconnectNotice& notice)
+void ofApp::onDisconnectNotice(const ofxTwitter::DisconnectNotice& notice)
 {
     ofLogNotice("ofApp::onDisconnectNotice") << "Disconnect notice: " << notice.reason();
-    return true;
 }
 
 
-bool ofApp::onStallWarning(const void* source, const ofxTwitter::StallWarning& notice)
+void ofApp::onStallWarning(const ofxTwitter::StallWarning& notice)
 {
     ofLogNotice("ofApp::onStallWarning") << "Stall warning: " << notice.message();
-    return true;
 }
 
 
-bool ofApp::onException(const void* source, const std::exception& notice)
+void ofApp::onException(const std::exception& notice)
 {
     ofLogError("ofApp::onException") << "Exception: " << notice.what();
-    return true;
 }
 
 
-bool ofApp::onMessage(const void* source, const ofJson& json)
+void ofApp::onMessage(const ofJson& json)
 {
-    return true;
+    // Ignoring the raw message.
 }

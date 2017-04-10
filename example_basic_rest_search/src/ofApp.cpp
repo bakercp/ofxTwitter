@@ -10,9 +10,9 @@
 
 void ofApp::setup()
 {
-//    ofSetLogLevel(OF_LOG_VERBOSE);
     ofSetFrameRate(30);
 
+    // Easily register for all search events.
     client.registerSearchEvents(this);
 
     // First we load credentials from a file. These can also be loaded manually
@@ -25,10 +25,8 @@ void ofApp::setup()
     client.setPollingInterval(6000);
 
     // This starts the search.
-    client.search("#selfieseer");
-
-
-    
+    client.search("#selfie");
+   
 }
 
 
@@ -52,35 +50,33 @@ void ofApp::draw()
 
     ss << "% Received: " << received;
 
-    ofDrawBitmapStringHighlight(ss.str(), 14, 20);
+    ofDrawBitmapStringHighlight(ss.str(), 14, 14);
 }
 
 
-bool ofApp::onStatus(const void* source, const ofxTwitter::Status& status)
+void ofApp::onStatus(const ofxTwitter::Status& status)
 {
     count++;
     ofLogNotice("ofApp::onStatus") << "Text: " << status.text();
     ofLogNotice("ofApp::onStatus") << "Coordinates: " << (status.coordinates() ? ofToString(status.coordinates()) : "NONE");
     ofLogNotice("ofApp::onStatus") << "Place: " << (status.place() ? ofToString(status.place()->fullName()) : "NONE");
-    return true;
 }
 
 
-bool ofApp::onError(const void* source, const ofxTwitter::Error& error)
+void ofApp::onError(const ofxTwitter::Error& error)
 {
     ofLogError("ofApp::onError") << "Error: " << error.code() << " " << error.message();
-    return true;
 }
 
 
-bool ofApp::onException(const void* source, const std::exception& notice)
+void ofApp::onException(const std::exception& notice)
 {
     ofLogError("ofApp::onException") << "Exception: " << notice.what();
     return true;
 }
 
 
-bool ofApp::onMessage(const void* source, const ofJson& json)
+void ofApp::onMessage(const ofJson& json)
 {
-    return true;
+    // This is the raw message json and is ignored here.
 }

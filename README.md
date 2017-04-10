@@ -6,11 +6,16 @@ Streaming and REST Twitter Clients for [openFrameworks](http://openframeworks.cc
 Requirements
 -----------
 
-openFrameworks 0.9.0+
+openFrameworks master branch (0.10.+)
 
-Requires the following addons (and all of their dependencies):
+Requires the _master_ branch following addons (and all of their dependencies):
 
 * [ofxHTTP](https://github.com/bakercp/ofxHTTP)
+  * [ofxNetworkUtils](https://github.com/bakercp/ofxNetworkUtils)
+  * [ofxMediaType](https://github.com/bakercp/ofxMediaType)
+  * [ofxSSLManager](https://github.com/bakercp/ofxSSLManager)
+  * [ofxIO](https://github.com/bakercp/ofxIO)
+    * ofxPoco _built-in_  
 * [ofxGeo](https://github.com/bakercp/ofxGeo)
 
 Twitter Credential Info
@@ -27,7 +32,7 @@ This information can be given to ofxTwitter via the ofxHTTP::OAuth10Credentials 
 
 To create a Twitter app and the required credential info:
 
-1. Create an account at [twitter.com](https://twitter.com) if do not already have one 
+1. Create an account at [twitter.com](https://twitter.com) if do not already have one
 2. Create a Twitter application on [apps.twitter.com](http://apps.twitter.com)
 
 Setting Up OF App Data
@@ -55,8 +60,9 @@ To set up the `credentials.json` file & associated data for your OF app using of
 3. Fill in your Twitter app's Consumer & Access info into your OF app's `bin/data/credentials.json` file
 4. Load the credentials before making a query with an ofxTwitter client:
 
-    ofxTwitter::Credentials credentials = ofxTwitter::Credentials::fromFile("credentials.json");
-    client.setCredentials(credentials);
+```c++
+  client.setCredentialsFromFile("credentials.json");
+```
 
 That's it!
 
@@ -69,7 +75,7 @@ Keep your Twitter app's secret key & access token SECRET! If someone else has th
 
 **DO NOT let anyone else see/use your Twitter app's Consumer Secret and/or Access Token Secret!**
 
-**DO NOT add the credentials JSON file or any source file which includes either the Consumer Secret and/or Access Token Secret to a git/GitHub repository!** 
+**DO NOT add the credentials JSON file or any source file which includes either the Consumer Secret and/or Access Token Secret to a git/GitHub repository!**
 
 You have been warned :)
 

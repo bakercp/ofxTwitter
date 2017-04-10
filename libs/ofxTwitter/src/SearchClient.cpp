@@ -176,7 +176,6 @@ void BaseSearchClient::_run()
         ofLogError("BaseSearchClient::_run") << exc.displayText();
         _onException(exc);
     }
-
 }
 
 
@@ -222,16 +221,6 @@ void SearchClient::syncEvents()
     for (const auto& v: _errorChannel.tryReceiveAll()) onError.notify(this, v);
     for (const auto& v: _exceptionChannel.tryReceiveAll()) onException.notify(this, v);
     for (const auto& v: _messageChannel.tryReceiveAll()) onMessage.notify(this, v);
-
-//    uint64_t now = ofGetElapsedTimeMillis();
-//
-//    // Disconnect if no new message has arrived and the socket hasn't timed out.
-//    if (isRunning() && now > (_lastMessageTime + TIMEOUT))
-//    {
-//        Poco::TimeoutException exc("No data received in " + std::to_string(TIMEOUT) + " ms. Disconnecting.");
-//        onException.notify(this, exc);
-//        stop();
-//    }
 }
 
 
