@@ -45,6 +45,8 @@ void ofApp::setup()
     // query.setLocations({ sanFranciscoBounds, newYorkBounds });
 
     // Track two emoji.
+    // Read more about query terms here:
+    // https://dev.twitter.com/streaming/overview/request-parameters
     query.setTracks({":(", ":)"});
 
     // Start filter query.
@@ -55,8 +57,8 @@ void ofApp::setup()
 
 void ofApp::update()
 {
-    //client.syncEvents();
 }
+
 
 void ofApp::draw()
 {

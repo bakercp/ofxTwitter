@@ -409,6 +409,12 @@ public:
     /// \returns the media ID.
     int64_t mediaID() const;
 
+    /// \returns the filename if available.
+    std::string mediaFilename() const;
+
+    /// \returns the media file extension, if available.
+    std::string mediaFileExtension() const;
+
     /// \returns the available sizes.
     Sizes sizes() const;
 

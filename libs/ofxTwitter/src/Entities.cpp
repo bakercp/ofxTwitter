@@ -9,6 +9,8 @@
 #include "ofx/Twitter/User.h"
 #include "ofx/Twitter/Utils.h"
 #include "ofLog.h"
+#include "Poco/Exception.h"
+#include "Poco/URI.h"
 
 
 namespace ofx {
@@ -520,6 +522,28 @@ std::string MediaEntity::secureMediaURL() const
 int64_t MediaEntity::mediaID() const
 {
     return _mediaID;
+}
+
+
+std::string MediaEntity::mediaFilename() const
+{
+    try
+    {
+        Poco::URI uri(mediaURL());
+        std::filesystem::path path(uri.getPathEtc());
+        return path.filename().string();
+    }
+    catch (const Poco::SyntaxException& exc)
+    {
+        ofLogError("MediaEntity::mediaFilename") << "Unable to parse URL " << mediaURL();
+        return "";
+    }
+}
+
+
+std::string MediaEntity::mediaFileExtension() const
+{
+    return std::filesystem::path(mediaFilename()).extension().string();
 }
 
 

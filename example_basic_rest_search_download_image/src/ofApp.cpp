@@ -58,9 +58,16 @@ void ofApp::draw()
 void ofApp::onStatus(const ofxTwitter::Status& status)
 {
     count++;
-    ofLogNotice("ofApp::onStatus") << "Text: " << status.text();
-    ofLogNotice("ofApp::onStatus") << "Coordinates: " << (status.coordinates() ? ofToString(status.coordinates()) : "NONE");
-    ofLogNotice("ofApp::onStatus") << "Place: " << (status.place() ? ofToString(status.place()->fullName()) : "NONE");
+
+    for (auto e: status.extendedEntities().mediaEntities())
+    {
+        if (e.type() == ofxTwitter::MediaEntity::Type::PHOTO)
+        {
+            std::string filename = e.mediaFilename();
+            ofSaveURLAsync(e.mediaURL(), filename);
+            std::cout << "Downloading " << filename << std::endl;
+        }
+    }
 }
 
 
