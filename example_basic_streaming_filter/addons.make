@@ -1,4 +1,3 @@
-ofxGeo
 ofxHTTP
 ofxIO
 ofxMediaType
