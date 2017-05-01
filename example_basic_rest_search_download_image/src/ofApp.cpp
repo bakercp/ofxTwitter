@@ -26,8 +26,18 @@ void ofApp::setup()
 
     // This starts the search.
     // You can test and build REST searches here http://search.twitter.com.
-    client.search(":)");
-   
+    client.search(":) filter:twimg");
+
+    // To design more complex searches, see the the API documentation here:
+    // https://dev.twitter.com/rest/public/search and use the
+    // ofxTwitter::SearchQuery object like this:
+    //
+    //    ofxTwitter::SearchQuery query(":)");
+    //    query.setGeoCode(41.8781, -87.6298, 10, ofxTwitter::SearchQuery::UNITS_MILES);
+    //    query.setLanguage("en");
+    //    client.search(query);
+    //
+
 }
 
 
@@ -35,21 +45,8 @@ void ofApp::draw()
 {
     ofBackground(0);
 
-    auto total = count + countMissed;
-
     std::stringstream ss;
     ss << "  Received: " << count << std::endl;
-    ss << "    Missed: " << countMissed << std::endl;
-    ss << "     Total: " << total << std::endl;
-
-    std::string received = "...";
-
-    if (total > 0)
-    {
-        received = ofToString(static_cast<double>(count) / total * 100, 2);
-    }
-
-    ss << "% Received: " << received;
 
     ofDrawBitmapStringHighlight(ss.str(), 14, 14);
 }
@@ -65,7 +62,7 @@ void ofApp::onStatus(const ofxTwitter::Status& status)
         {
             std::string filename = e.mediaFilename();
             ofSaveURLAsync(e.mediaURL(), filename);
-            std::cout << "Downloading " << filename << std::endl;
+            ofLogNotice("ofApp::onStatus") << "Downloading " << filename;
         }
     }
 }

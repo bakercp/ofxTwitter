@@ -26,6 +26,5 @@ public:
     ofxTwitter::SearchClient client;
 
     uint64_t count = 0;
-    uint64_t countMissed = 0;
 
 };
