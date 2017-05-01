@@ -16,7 +16,6 @@ Requires the _master_ branch following addons (and all of their dependencies):
   * [ofxSSLManager](https://github.com/bakercp/ofxSSLManager)
   * [ofxIO](https://github.com/bakercp/ofxIO)
     * ofxPoco _built-in_  
-* [ofxGeo](https://github.com/bakercp/ofxGeo)
 
 Twitter Credential Info
 -----------------------
