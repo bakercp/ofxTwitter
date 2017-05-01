@@ -18,16 +18,26 @@ void ofApp::setup()
     // First we load credentials from a file. These can also be loaded manually
     // using the ofxTwitter::Credentials constructor.
     //
-    // Developers must get their credentials after creating an app at https://apps.twitter.com
+    // Developers must get their credentials after creating an app at
+    // https://apps.twitter.com
     client.setCredentialsFromFile("credentials.json");
 
     // Set the polling interval for 6 seconds.
     client.setPollingInterval(6000);
 
-    // This starts the search.
-    // You can test and build REST searches here http://search.twitter.com.
+    // This starts a simple search for an emoticon.
     client.search(":)");
-   
+
+    // To design more complex searches, see the the API documentation here:
+    // https://dev.twitter.com/rest/public/search and use the
+    // ofxTwitter::SearchQuery object like this:
+    //
+    //    ofxTwitter::SearchQuery query(":)");
+    //    query.setGeoCode(41.8781, -87.6298, 10, ofxTwitter::SearchQuery::UNITS_MILES);
+    //    query.setLanguage("en");
+    //    client.search(query);
+    //
+
 }
 
 
