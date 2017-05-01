@@ -42,7 +42,6 @@ An OF app using ofxTwitter requires a set of files in it's `bin/data` folder:
 
 * **credentials.json**: your Twitter app's consumer & access token information
 * **ssl/cacert.pem**: a collection of trusted root certification authorities, needed for the SSL communication for the Twitter API
-* **mime.types**: a list of known Internet media [MIME](https://en.wikipedia.org/wiki/MIME) types, used to determine data types when querying info from from the Twitter API
 
 ### Example Apps
 

@@ -28,6 +28,7 @@ namespace Twitter {
 class Status;
 
 
+/// \brief A Twitter User.
 /// \sa https://dev.twitter.com/overview/api/users
 class User: public BaseNamedUser
 {

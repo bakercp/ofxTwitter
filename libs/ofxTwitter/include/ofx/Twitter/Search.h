@@ -45,8 +45,8 @@ public:
                     double radius,
                     const std::string& units);
 
-    // 2 letter language code.
-    // https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+    /// \brief The 2 letter language code.
+    /// \sa https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
     void setLanguage(const std::string& language);
 
     void setLocale(const std::string& locale);
@@ -76,6 +76,7 @@ public:
 };
 
 
+/// \brief The metadata returned with a SearchResponse.
 class SearchMetadata
 {
 public:
@@ -101,19 +102,12 @@ public:
 
 private:
     float _completedIn = -1;
-
     int64_t _count = -1;
-
     int64_t _maxId = -1;
-
     int64_t _sinceId = -1;
-
     std::string _query;
-
     std::string _nextResults;
-
     std::string _refreshURL;
-
 
 };
 
@@ -124,21 +118,26 @@ private:
 class SearchResponse: public BaseResponse
 {
 public:
+    /// \brief Destroy the SearchResponse.
     virtual ~SearchResponse();
 
+    /// \returns any resulting statuses.
     std::vector<Status> statuses() const;
 
+    /// \returns the metadata associated with the response.
     SearchMetadata metadata() const;
 
+    /// \returns any errors associated with the response.
     std::vector<Error> errors() const;
 
+    /// \brief Deserialize a SearchResponse from JSON.
+    /// \param json JSON representing a search result.
+    /// \returns a deserialized SearchResponse.
     static SearchResponse fromJSON(const ofJson& json);
 
 private:
     std::vector<Status> _statuses;
-
     SearchMetadata _metadata;
-
     std::vector<Error> _errors;
 
 };

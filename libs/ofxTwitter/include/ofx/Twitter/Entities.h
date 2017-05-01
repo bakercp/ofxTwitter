@@ -265,10 +265,16 @@ public:
         std::size_t y = 0;
     };
 
+    /// \brief A structure representing a variation on the video.
     struct Variant
     {
+        /// \brief The video bitrate.
         uint64_t bitrate = 0;
+
+        /// \brief The video's content (MIME) type.
         std::string contentType;
+
+        /// \brief The URL of the variant.
         std::string url;
     };
 
@@ -276,6 +282,9 @@ public:
     VideoInfo();
 
     /// \brief Create a VideoInfo with the given parameters.
+    /// \param aspectRatio The aspect ratio of the video.
+    /// \param duration The duration of the video in milliseconds.
+    /// \param variants A collection of variants of this video.
     VideoInfo(AspectRatio aspectRatio,
               uint64_t duration,
               const std::vector<Variant>& variants);
@@ -356,6 +365,9 @@ public:
         VIDEO
     };
 
+    /// \brief Convert a Type to std::string.
+    /// \param type The type to convert.
+    /// \returns the string representation of the given Type.
     static std::string to_string(Type type)
     {
         switch (type)
