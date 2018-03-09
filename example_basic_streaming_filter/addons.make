@@ -4,4 +4,5 @@ ofxMediaType
 ofxNetworkUtils
 ofxPoco
 ofxSSLManager
+ofxGeo
 ofxTwitter
