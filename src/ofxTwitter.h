@@ -8,6 +8,7 @@
 #pragma once
 
 
+#include "ofxGeo.h"
 #include "ofxHTTP.h"
 #include "ofx/Twitter/Entities.h"
 #include "ofx/Twitter/MediaUpload.h"
