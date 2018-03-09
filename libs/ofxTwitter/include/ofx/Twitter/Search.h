@@ -143,5 +143,4 @@ private:
 };
 
 
-
 } } // namespace ofx::Twitter

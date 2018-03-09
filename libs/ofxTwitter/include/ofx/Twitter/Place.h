@@ -65,7 +65,7 @@ public:
     /// \returns the shortened country code representing the country containing this Place.
     std::string countryCode() const;
 
-    /// \returns the full human-readable representation of the Place’s name.
+    /// \returns the full human-readable representation of the Place's name.
     std::string fullName() const;
 
     /// \returns the ID representing this place.
@@ -75,7 +75,7 @@ public:
     /// \returns the ID of the place that this place is contained within.
     std::vector<std::string> containedWithinId() const;
 
-    /// \returns a short human-readable representation of the Place’s name.
+    /// \returns a short human-readable representation of the Place's name.
     std::string name() const;
 
     /// \returns The type of location represented by this place
@@ -102,7 +102,7 @@ private:
     /// \brief Shortened country code representing the country containing this Place.
     std::string _countryCode;
 
-    /// \brief Full human-readable representation of the Place’s name.
+    /// \brief Full human-readable representation of the Place's name.
     std::string _fullName;
 
     /// \brief ID representing this place.
@@ -113,7 +113,7 @@ private:
     /// \note This is represented as a string, not an integer.
     std::vector<std::string> _containedWithinIds;
 
-    /// \brief Short human-readable representation of the Place’s name.
+    /// \brief Short human-readable representation of the Place's name.
     std::string _name;
 
     /// \brief The type of location represented by this place

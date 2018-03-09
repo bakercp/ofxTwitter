@@ -11,7 +11,6 @@
 #include <map>
 #include <vector>
 #include "Poco/DateTime.h"
-#include "ofx/Geo/Coordinate.h"
 #include "ofx/Twitter/Entities.h"
 #include "ofx/Twitter/Place.h"
 
@@ -174,7 +173,7 @@ public:
     /// \returns the filter status.
     FilterLevel filterLevel() const;
 
-    /// \returns the screen name of the original Tweet’s author, or empty.
+    /// \returns the screen name of the original Tweet's author, or empty.
     std::string inReplyToScreenName() const;
 
     /// \returns the status id of the original Tweet's if retweeted, or -1.
@@ -185,7 +184,7 @@ public:
 
     /// \brief True if any linked content may be sensitive.
     ///
-    /// The meaning of the field doesn’t pertain to the Tweet content itself,
+    /// The meaning of the field doesn't pertain to the Tweet content itself,
     /// but instead it is an indicator that the URL contained in the Tweet may
     /// contain content or media identified as sensitive content.
     ///
@@ -195,7 +194,7 @@ public:
     /// \brief The Scopes of the Tweet.
     ///
     /// A set of key-value pairs indicating the intended contextual delivery of
-    /// the containing Tweet. Currently used by Twitter’s Promoted Products.
+    /// the containing Tweet. Currently used by Twitter's Promoted Products.
     ///
     /// \returns the scopes of this Tweet.
     std::map<std::string, bool> scopes() const;
@@ -257,7 +256,7 @@ public:
     /// this content is withheld from. Twitter supports the following
     /// non-country values for this field:
     /// - "XX" - Content is withheld in all countries
-    /// - "XY” - Content is withheld due to a DMCA request
+    /// - "XY" - Content is withheld due to a DMCA request
     ///
     /// \returns the withheld in contries.
     std::vector<std::string> withheldInCountries() const;
@@ -270,7 +269,7 @@ public:
 
     /// \returns the Status metadata.
     Metadata metadata() const;
-    
+
     /// \returns the streaming timestamp in milliseconds.
     uint64_t timestamp() const;
 
@@ -353,7 +352,7 @@ protected:
     /// on none, low, and medium streams.
     FilterLevel _filterLevel = FilterLevel::NONE;
 
-    /// \brief If this is a reply, the screen name of the original Tweet’s author.
+    /// \brief If this is a reply, the screen name of the original Tweet's author.
     std::string _inReplyToScreenName;
 
     /// \brief If this is a reply, the id of the original Tweet.
@@ -368,7 +367,7 @@ protected:
 
     /// \brief True if any linked content may be sensitive.
     ///
-    /// The meaning of the field doesn’t pertain to the Tweet content itself,
+    /// The meaning of the field doesn't pertain to the Tweet content itself,
     /// but instead it is an indicator that the URL contained in the Tweet may
     /// contain content or media identified as sensitive content.
     bool _possiblySensitive = false;
@@ -376,7 +375,7 @@ protected:
     /// \brief The Scopes of the Tweet.
     ///
     /// A set of key-value pairs indicating the intended contextual delivery of
-    /// the containing Tweet. Currently used by Twitter’s Promoted Products.
+    /// the containing Tweet. Currently used by Twitter's Promoted Products.
     std::map<std::string, bool> _scopes;
 
     /// \brief Number of times this Tweet has been retweeted.
@@ -430,10 +429,10 @@ protected:
     /// this content is withheld from. Twitter supports the following
     /// non-country values for this field:
     /// - "XX" - Content is withheld in all countries
-    /// - "XY” - Content is withheld due to a DMCA request
+    /// - "XY" - Content is withheld due to a DMCA request
     std::vector<std::string> _withheldInCountries;
 
-    /// \brief Indicates whether withheld content is the "status" or a "user".
+    /// \brief Indicates whether withheld content is the "status" or a "user".
     std::string _withheldScope;
 
     /// \brief Optional Place data.

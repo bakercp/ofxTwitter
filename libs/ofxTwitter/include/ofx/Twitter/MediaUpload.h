@@ -69,5 +69,4 @@ private:
 };
 
 
-
 } } // namespace ofx::Twitter

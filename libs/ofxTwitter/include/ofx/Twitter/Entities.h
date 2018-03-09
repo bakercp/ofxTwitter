@@ -84,11 +84,11 @@ public:
     /// \param json The source JSON.
     /// \returns the extracted SymbolEntity.
     static SymbolEntity fromJson(const ofJson& json);
-    
+
 private:
     /// \brief The Symbol text.
     std::string _symbol;
-    
+
 };
 
 

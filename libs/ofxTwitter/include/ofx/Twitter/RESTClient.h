@@ -52,9 +52,9 @@ class StatusUpdateResponse;
 
 //    SearchResponse RESTClient::search(const SearchQuery& query)
 //    {
-//        
-//        
-//        
+//
+//
+//
 //    }
 
 
