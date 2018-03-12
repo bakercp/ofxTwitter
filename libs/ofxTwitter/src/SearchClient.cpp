@@ -36,6 +36,18 @@ BaseSearchClient::BaseSearchClient(const HTTP::OAuth10Credentials& credentials):
 BaseSearchClient::~BaseSearchClient()
 {
 }
+    
+
+void BaseSearchClient::setMaximumResultsPerQuery(std::size_t maximumResultsPerQuery)
+{
+    _maximumResultsPerQuery = maximumResultsPerQuery;
+}
+
+
+std::size_t BaseSearchClient::getMaximumResultsPerQuery() const
+{
+    return _maximumResultsPerQuery;
+}
 
 
 void BaseSearchClient::setCredentialsFromFile(const std::filesystem::path& credentialsPath)

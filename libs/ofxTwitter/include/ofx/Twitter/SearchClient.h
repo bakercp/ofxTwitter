@@ -34,6 +34,21 @@ public:
     /// \brief Destroy the BaseSearchClient.
     virtual ~BaseSearchClient();
 
+    /// \brief Set the maximum results per query.
+    ///
+    /// Queries provide a limited maximum number of results per page. Thus, for
+    /// searches yielding many Tweets, one must strike a blance between polling
+    /// frequency and maximum results per querey (aka "backfill") to capture all
+    /// of the Tweets. The maximum results per query is the maximum number of
+    /// Tweets that the client will attempt to retrieve during each query,
+    /// including the results per page specified in the search query.
+    ///
+    /// \param maximumResultsPerQuery The maximum number to backfill per query.
+    void setMaximumResultsPerQuery(std::size_t maximumResultsPerQuery);
+
+    /// \returns the maximum results per query.
+    std::size_t getMaximumResultsPerQuery() const;
+
     /// \brief Create an unconnected BaseSearchClient with given parameters.
     /// \param credentials The OAuth 1.0 credentials to use.
     /// \brief Set the credentials from a JSON configuration file.
@@ -93,6 +108,8 @@ protected:
 
 private:
     void _run();
+
+    std::size_t _maximumResultsPerQuery = 0;
 
     RateLimit _rateLimit;
 
