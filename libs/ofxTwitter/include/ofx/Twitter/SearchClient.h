@@ -117,14 +117,14 @@ public:
     /// \param credentials The OAuth 1.0 credentials to use.
     /// \param autoEventSync enable auto event sync.
     SearchClient(const HTTP::OAuth10Credentials& credentials,
-                    bool autoEventSync = true);
+                 bool autoEventSync = true);
 
     /// \brief Destroy the SearchClient.
     virtual ~SearchClient();
 
     /// \brief Determine sync If true, events will be triggered from the ofEvents updated loop.
     /// If false, the events will be triggered when eventSync is called.
-    /// \param
+    /// \param value True to enable auto-sync.
     void setAutoEventSync(bool value);
 
     /// \brief Trigger an event sync.
@@ -198,7 +198,6 @@ void SearchClient::unregisterSearchEvents(ListenerClass* listener,
     onException.remove(listener, &ListenerClass::onException, priority);
     onMessage.remove(listener, &ListenerClass::onMessage, priority);
 }
-
 
 
 } } // namespace ofx::Twitter
