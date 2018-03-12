@@ -151,6 +151,18 @@ int64_t Status::favoriteCount() const
     return _favoriteCount;
 }
 
+    
+int64_t Status::quoteCount() const
+{
+    return _quoteCount;
+}
+
+
+int64_t Status::replyCount() const
+{
+    return _replyCount;
+}
+
 
 bool Status::isQuoteStatus() const
 {
@@ -450,6 +462,8 @@ Status Status::fromJSON(const ofJson& json)
         else if (key == "truncated") status._truncated = value;
         else if (key == "utc_offset") status._utcOffset = value;
         else if (key == "favorite_count") status._favoriteCount = value;
+        else if (key == "reply_count") status._replyCount = value;
+        else if (key == "quote_count") status._quoteCount = value;
         else if (key == "is_quote_status") status._isQuoteStatus = value;
         else if (key == "lang") status._language = value;
         else if (key == "metadata") status._metadata = Metadata::fromJSON(value);

@@ -149,8 +149,14 @@ public:
     /// \returns the extended Tweet or nullptr if none.
     const Status* extendedTweet() const;
 
-    /// \returns the approximate number of times this Tweet has been liked, or -1 if unknown;
+    /// \returns the approximate number of times this Tweet has been liked, or -1 if unknown.
     int64_t favoriteCount() const;
+
+    /// \returns the approximate number of times this Tweet has been quote, or -1 if unknown.
+    int64_t quoteCount() const;
+
+    /// \returns Approximately how many times this Tweet has been replied-to, or -1 if unknown.
+    int64_t replyCount() const;
 
     /// \returns true if this is a quoted status.
     bool isQuoteStatus() const;
@@ -328,10 +334,20 @@ protected:
     /// \brief The extended tweet.
     std::shared_ptr<Status> _extendedTweet = nullptr;
 
-    /// \brief Approximately how many times this Tweet has been liked;
+    /// \brief Approximately how many times this Tweet has been liked.
     ///
-    /// If unknown, this value will be -1;
+    /// If unknown, this value will be -1.
     int64_t _favoriteCount = -1;
+
+    /// \brief Approximately how many times this Tweet has been quoted.
+    ///
+    /// If unknown, this value will be -1.
+    int64_t _quoteCount = -1;
+
+    /// \brief Approximately how many times this Tweet has been replied to.
+    ///
+    /// If unknown, this value will be -1.
+    int64_t _replyCount = -1;
 
     /// \brief True if this is a quote Tweet.
     bool _isQuoteStatus = false;
