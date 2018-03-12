@@ -55,11 +55,6 @@ void ofApp::setup()
 }
 
 
-void ofApp::update()
-{
-}
-
-
 void ofApp::draw()
 {
     ofBackground(0);
@@ -100,8 +95,8 @@ void ofApp::onStatus(const ofxTwitter::Status& status)
 {
     count++;
     ofLogNotice("ofApp::onStatus") << "Text: " << status.text();
-    ofLogNotice("ofApp::onStatus") << "Coordinates: " << (status.coordinates() ? ofToString(status.coordinates()) : "NONE");
-    ofLogNotice("ofApp::onStatus") << "Place: " << (status.place() ? ofToString(status.place()->fullName()) : "NONE");
+    ofLogNotice("ofApp::onStatus") << "\tCoordinates: " << (status.coordinates() ? ofToString(status.coordinates()) : "NONE");
+    ofLogNotice("ofApp::onStatus") << "\tPlace: " << (status.place() ? ofToString(status.place()->fullName()) : "NONE");
 }
 
 

@@ -23,6 +23,9 @@ void ofApp::setup()
     client.setCredentialsFromFile("credentials.json");
 
     // Set the polling interval for 6 seconds.
+    // Results will appear in the callbacks onStatus(..), onError(...), etc.
+    // The thread is synchronized with the update() loop by default and is
+    // thread-safe.
     client.setPollingInterval(6000);
 
     // This starts a simple search for an emoticon.
@@ -69,8 +72,8 @@ void ofApp::onStatus(const ofxTwitter::Status& status)
 {
     count++;
     ofLogNotice("ofApp::onStatus") << "Text: " << status.text();
-    ofLogNotice("ofApp::onStatus") << "Coordinates: " << (status.coordinates() ? ofToString(status.coordinates()) : "NONE");
-    ofLogNotice("ofApp::onStatus") << "Place: " << (status.place() ? ofToString(status.place()->fullName()) : "NONE");
+    ofLogNotice("ofApp::onStatus") << "\tCoordinates: " << (status.coordinates() ? ofToString(status.coordinates()) : "NONE");
+    ofLogNotice("ofApp::onStatus") << "\tPlace: " << (status.place() ? ofToString(status.place()->fullName()) : "NONE");
 }
 
 

@@ -15,8 +15,8 @@
 class ofApp: public ofBaseApp
 {
 public:
-    void setup();
-    void draw();
+    void setup() override;
+    void draw() override;
 
     void onStatus(const ofxTwitter::Status& status);
     void onError(const ofxTwitter::Error& error);
