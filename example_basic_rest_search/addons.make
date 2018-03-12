@@ -1,8 +1,8 @@
+ofxGeo
 ofxHTTP
 ofxIO
 ofxMediaType
 ofxNetworkUtils
 ofxPoco
 ofxSSLManager
-ofxGeo
 ofxTwitter
