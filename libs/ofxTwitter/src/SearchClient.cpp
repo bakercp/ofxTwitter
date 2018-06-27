@@ -162,13 +162,14 @@ void BaseSearchClient::_run()
     }
     catch (const Poco::Exception& exc)
     {
-        ofLogError("BaseSearchClient::_run") << exc.displayText();
-        _onException(Poco::Exception(exc));
+        ofLogError("BaseSearchClient::_run: Poco::Exception: ") << exc.displayText();
+        _onException(exc);
     }
     catch (const std::exception& exc)
     {
-        ofLogError("BaseSearchClient::_run") << exc.what();
-        _onException(std::exception(exc));
+        Poco::Exception ex(exc.what());
+        ofLogError("BaseSearchClient::_run: std::exception: ") << ex.displayText();
+        _onException(exc);
     }
     catch (...)
     {
@@ -180,13 +181,13 @@ void BaseSearchClient::_run()
 
 
 SearchClient::SearchClient(bool autoEventSync):
-    SearchClient(HTTP::OAuth10Credentials())
+    SearchClient(HTTP::OAuth10Credentials(), autoEventSync)
 {
 }
 
 
 SearchClient::SearchClient(const HTTP::OAuth10Credentials& credentials,
-                                 bool autoEventSync):
+                           bool autoEventSync):
     BaseSearchClient(credentials)
 {
     setAutoEventSync(autoEventSync);
