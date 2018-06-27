@@ -47,6 +47,8 @@ void ofApp::draw()
 
     std::stringstream ss;
     ss << "  Received: " << count << std::endl;
+    ss << "  See downloaded images in" << std::endl;
+    ss << "  the bin/data directory.";
 
     ofDrawBitmapStringHighlight(ss.str(), 14, 14);
 }
