@@ -6,9 +6,10 @@
 
 
 #include "ofx/Twitter/Status.h"
-#include "ofx/Twitter/Utils.h"
 #include "ofx/Twitter/BaseUser.h"
+#include "ofx/Twitter/Entities.h"
 #include "ofx/Twitter/User.h"
+#include "ofx/Twitter/Utils.h"
 #include "ofLog.h"
 
 
@@ -181,6 +182,12 @@ const Status* Status::quotedStatus() const
     return _quotedStatus.get();
 }
 
+    
+const QuotedStatusPermalink* Status::quotedStatusPermalink() const
+{
+    return _quotedStatusPermalink.get();
+}
+    
 
 bool Status::favorited() const
 {
@@ -504,6 +511,10 @@ Status Status::fromJSON(const ofJson& json)
             {
                 status._createdAt = date;
             }
+        }
+        else if (key == "quoted_status_permalink")
+        {
+            status._quotedStatusPermalink = std::make_shared<QuotedStatusPermalink>(QuotedStatusPermalink::fromJson(value));
         }
         else ofLogWarning("Status::fromJSON") << "Unknown key: " << key << std::endl << value.dump(4);
 

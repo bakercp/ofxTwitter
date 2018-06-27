@@ -167,6 +167,9 @@ public:
     /// \returns the quoted status, or nullptr if none.
     const Status* quotedStatus() const;
 
+    /// \returns the quoted status permalink or nullptr if none.
+    const QuotedStatusPermalink* quotedStatusPermalink() const;
+    
     /// \brief Indicates if this Tweet has been liked by the authenticating user.
     bool favorited() const;
 
@@ -358,6 +361,9 @@ protected:
     /// \brief If this is a quoted Tweet, this will be non-null.
     std::shared_ptr<Status> _quotedStatus = nullptr;
 
+    /// \brief If this is a quoted Tweet, this will be non-null.
+    std::shared_ptr<QuotedStatusPermalink> _quotedStatusPermalink = nullptr;
+    
     /// \brief Indicates if this Tweet has been liked by the authenticating user.
     bool _favorited = false;
 

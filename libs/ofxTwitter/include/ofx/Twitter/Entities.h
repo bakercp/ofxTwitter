@@ -177,6 +177,56 @@ protected:
 };
 
 
+/// \brief An URL entity.
+/// \sa https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/intro-to-tweet-json#quotetweet
+class QuotedStatusPermalink
+{
+public:
+    /// \brief Construct an empty QuotedStatusPermalink.
+    QuotedStatusPermalink();
+    
+    /// \brief Construct an QuotedStatusPermalink by making a copy.
+    /// \param permalink The permalink to copy.
+    QuotedStatusPermalink(const QuotedStatusPermalink& permalink);
+
+    /// \brief Construct an QuotedStatusPermalink.
+    /// \param url The URL that was quoted.
+    /// \param displayURL Not a URL but a string to display instead of the URL.
+    /// \param expandedURL The fully resolved URL.
+    QuotedStatusPermalink(const std::string& url,
+                          const std::string& displayURL,
+                          const std::string& expandedURL);
+    
+    /// \brief Destroy the QuotedStatusPermalink.
+    virtual ~QuotedStatusPermalink();
+    
+    /// \returns the URL that was extracted.
+    std::string url() const;
+    
+    /// \returns the displayable URL.
+    std::string displayURL() const;
+    
+    /// \returns The fully resolved URL.
+    std::string expandedURL() const;
+    
+    /// \brief Extract the QuotedStatusPermalink from JSON.
+    /// \param json The source JSON.
+    /// \returns the extracted QuotedStatusPermalink.
+    static QuotedStatusPermalink fromJson(const ofJson& json);
+    
+protected:
+    /// \brief The URL that was extracted.
+    std::string _url;
+    
+    /// \brief The displayable URL string.
+    std::string _displayURL;
+    
+    /// \brief The fully resolved URL.
+    std::string _expandedURL;
+    
+};
+    
+
 /// \brief A Media Entity Size entry.
 ///
 /// We support different sizes: thumb, small, medium and large. The media_url
@@ -325,6 +375,15 @@ public:
     /// \returns true if monetizable.
     bool monetizable() const;
 
+    /// \returns the description.
+    std::string description() const;
+
+    /// \returns true if the media is embeddable.
+    bool embeddable() const;
+
+    /// \returns the title.
+    std::string title() const;
+
     /// \returns a shared pointer to a source user if available.
     std::shared_ptr<User> sourceUser() const;
 
@@ -335,7 +394,9 @@ public:
 
 private:
     bool _montetizable = false;
-
+    std::string _description;
+    bool _embeddable;
+    std::string _title;
     std::shared_ptr<User> _sourceUser;
 
 };

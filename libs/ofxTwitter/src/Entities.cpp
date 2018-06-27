@@ -264,6 +264,77 @@ URLEntity URLEntity::fromJson(const ofJson& json)
 }
 
 
+    
+QuotedStatusPermalink::QuotedStatusPermalink()
+{
+}
+
+    
+QuotedStatusPermalink::QuotedStatusPermalink(const QuotedStatusPermalink& permalink):
+    QuotedStatusPermalink(permalink.url(),
+                          permalink.displayURL(),
+                          permalink.expandedURL())
+{
+}
+
+
+QuotedStatusPermalink::QuotedStatusPermalink(const std::string& url,
+                                             const std::string& displayURL,
+                                             const std::string& expandedURL):
+    _url(url),
+    _displayURL(displayURL),
+    _expandedURL(expandedURL)
+{
+}
+
+
+QuotedStatusPermalink::~QuotedStatusPermalink()
+{
+}
+
+
+std::string QuotedStatusPermalink::url() const
+{
+    return _url;
+}
+
+
+std::string QuotedStatusPermalink::displayURL() const
+{
+    return _displayURL;
+}
+
+
+std::string QuotedStatusPermalink::expandedURL() const
+{
+    return _expandedURL;
+}
+
+
+QuotedStatusPermalink QuotedStatusPermalink::fromJson(const ofJson& json)
+{
+    std::string url;
+    std::string displayUrl;
+    std::string expandedUrl;
+    
+    auto iter = json.cbegin();
+    while (iter != json.cend())
+    {
+        const auto& key = iter.key();
+        const auto& value = iter.value();
+        
+        if (key == "url") { if (!value.is_null()) url = value; }
+        else if (key == "display") { if (!value.is_null()) displayUrl = value; }
+        else if (key == "expanded") { if (!value.is_null()) expandedUrl = value; }
+        else ofLogWarning("QuotedStatusPermalink::fromJson") << "Unknown key: " << key;
+        
+        ++iter;
+    }
+    
+    return QuotedStatusPermalink(url, displayUrl, expandedUrl);
+}
+
+    
 
 MediaEntitySize::MediaEntitySize(Resize resize,
                                  std::size_t width,
@@ -436,6 +507,24 @@ bool AdditionalMediaInfo::monetizable() const
 }
 
 
+std::string AdditionalMediaInfo::description() const
+{
+    return _description;
+}
+    
+
+bool AdditionalMediaInfo::embeddable() const
+{
+    return _embeddable;
+}
+
+
+std::string AdditionalMediaInfo::title() const
+{
+    return _title;
+}
+    
+    
 std::shared_ptr<User> AdditionalMediaInfo::sourceUser() const
 {
     return _sourceUser;
@@ -460,6 +549,18 @@ AdditionalMediaInfo AdditionalMediaInfo::fromJSON(const ofJson& json)
         else if (key == "source_user")
         {
             info._sourceUser = std::make_shared<User>(User::fromJSON(value));
+        }
+        else if (key == "description")
+        {
+            info._description = value;
+        }
+        else if (key == "embeddable")
+        {
+            info._embeddable = value;
+        }
+        else if (key == "title")
+        {
+            info._title = value;
         }
         else ofLogWarning("AdditionalMediaInfo::fromJson") << "Unknown key: " << key << " : " << value.dump(4);
 
