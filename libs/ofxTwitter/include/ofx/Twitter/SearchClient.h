@@ -20,7 +20,7 @@ namespace ofx {
 namespace Twitter {
 
 
-/// \brief Twitter Streaming API client.
+/// \brief Twitter REST API client.
 class BaseSearchClient: public IO::PollingThread
 {
 public:
