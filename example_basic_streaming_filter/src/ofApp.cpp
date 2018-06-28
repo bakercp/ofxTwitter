@@ -17,6 +17,7 @@ void ofApp::setup()
     // https://apps.twitter.com.
     client.setCredentialsFromFile("credentials.json");
 
+    
     // Register all available streaming events.
     // Alternatively, one can register events individually.
     //
