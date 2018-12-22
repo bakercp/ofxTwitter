@@ -73,12 +73,13 @@ The `master` branch of this repository is meant to be compatible with the openFr
 Some past openFrameworks releases are supported via [releases](../../releases/), but only the [stable branch](../../tree/stable) and the [master branch](../../tree/master) are actively supported.
 
 ### Requirements
--   [ofxIO](https://github.com/bakercp/ofxIO)
--   ofxPoco (included with openFrameworks)
--   [ofxMediaType](https://github.com/bakercp/ofxMediaType)
--   [ofxSSLManager](https://github.com/bakercp/ofxSSLManager)
--   [ofxNetworkUtils](https://github.com/bakercp/ofxNetworkUtils)
 -   [ofxGeo](https://github.com/bakercp/ofxGeo)
+-   [ofxHTTP](https://github.com/bakercp/ofxHTTP)
+    -   [ofxIO](https://github.com/bakercp/ofxIO)
+        -   ofxPoco (included with openFrameworks)
+    -   [ofxMediaType](https://github.com/bakercp/ofxMediaType)
+    -   [ofxSSLManager](https://github.com/bakercp/ofxSSLManager)
+    -   [ofxNetworkUtils](https://github.com/bakercp/ofxNetworkUtils)
 
 ## Versioning
 
