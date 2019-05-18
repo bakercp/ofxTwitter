@@ -231,8 +231,12 @@ void BaseStreamingClient::_run()
                     }
                     catch (const std::exception& exc)
                     {
-                        ofLogError("BaseStreamingClient::_run") << exc.what();
-                        _onException(std::exception(exc));
+                        // Only pass exception if still running.
+                        if (isRunning())
+                        {
+                            ofLogError("BaseStreamingClient::_run") << exc.what();
+                            _onException(std::exception(exc));
+                        }
                     }
                 }
             }

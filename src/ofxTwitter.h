@@ -10,10 +10,10 @@
 
 #include "ofxGeo.h"
 #include "ofxHTTP.h"
+#include "ofx/Twitter/Archiver.h"
 #include "ofx/Twitter/Entities.h"
 #include "ofx/Twitter/MediaUpload.h"
 #include "ofx/Twitter/Place.h"
-#include "ofx/Twitter/Profile.h"
 #include "ofx/Twitter/Notices.h"
 #include "ofx/Twitter/RESTClient.h"
 #include "ofx/Twitter/Search.h"

@@ -27,8 +27,8 @@ BaseSearchClient::BaseSearchClient():
 
 
 BaseSearchClient::BaseSearchClient(const HTTP::OAuth10Credentials& credentials):
-    IO::PollingThread(std::bind(&BaseSearchClient::_run, this)),
-    _credentials(credentials)
+    BaseClient(credentials),
+    IO::PollingThread(std::bind(&BaseSearchClient::_run, this))
 {
 }
 
@@ -38,23 +38,23 @@ BaseSearchClient::~BaseSearchClient()
 }
 
 
-void BaseSearchClient::setCredentialsFromFile(const std::filesystem::path& credentialsPath)
-{
-    setCredentials(HTTP::OAuth10Credentials::fromFile(credentialsPath));
-}
-
-
-void BaseSearchClient::setCredentialsFromJson(const ofJson& credentials)
-{
-    setCredentials(HTTP::OAuth10Credentials::fromJSON(credentials));
-}
-
-
-void BaseSearchClient::setCredentials(const HTTP::OAuth10Credentials& credentials)
-{
-    std::unique_lock<std::mutex> lock(mutex);
-    _credentials = credentials;
-}
+//void BaseSearchClient::setCredentialsFromFile(const std::filesystem::path& credentialsPath)
+//{
+//    setCredentials(HTTP::OAuth10Credentials::fromFile(credentialsPath));
+//}
+//
+//
+//void BaseSearchClient::setCredentialsFromJson(const ofJson& credentials)
+//{
+//    setCredentials(HTTP::OAuth10Credentials::fromJSON(credentials));
+//}
+//
+//
+//void BaseSearchClient::setCredentials(const HTTP::OAuth10Credentials& credentials)
+//{
+//    std::unique_lock<std::mutex> lock(mutex);
+//    _credentials = credentials;
+//}
 
 
 void BaseSearchClient::onStopRequested()
@@ -73,11 +73,11 @@ void BaseSearchClient::onStopRequested()
 }
 
 
-HTTP::OAuth10Credentials BaseSearchClient::getCredentials() const
-{
-    std::unique_lock<std::mutex> lock(mutex);
-    return _credentials;
-}
+//HTTP::OAuth10Credentials BaseSearchClient::getCredentials() const
+//{
+//    std::unique_lock<std::mutex> lock(mutex);
+//    return _credentials;
+//}
 
 
 void BaseSearchClient::search(const std::string& query)
@@ -90,6 +90,7 @@ void BaseSearchClient::search(const SearchQuery& query)
 {
     stopAndJoin();
     _searchQuery = std::make_unique<SearchQuery>(query);
+    _onStart(query);
     start();
 }
 
@@ -98,6 +99,12 @@ RateLimit BaseSearchClient::rateLimit() const
 {
     std::unique_lock<std::mutex> lock(mutex);
     return _rateLimit;
+}
+
+
+const SearchQuery* BaseSearchClient::searchQuery() const
+{
+    return _searchQuery.get();
 }
 
 
@@ -225,15 +232,27 @@ void SearchClient::syncEvents()
 }
 
 
-void SearchClient::_update(ofEventArgs& args)
+void SearchClient::_update(ofEventArgs&)
 {
     syncEvents();
 }
 
 
-void SearchClient::_exit(ofEventArgs& args)
+void SearchClient::_exit(ofEventArgs&)
 {
     syncEvents();
+}
+
+
+void SearchClient::_onStart(const SearchQuery& query)
+{
+    onStart.notify(this, query);
+}
+
+
+void SearchClient::_onStop()
+{
+    onStop.notify(this);
 }
 
 
@@ -260,5 +279,5 @@ void SearchClient::_onMessage(const ofJson& message)
     _messageChannel.send(message);
 }
 
-    
+
 } } // namespace ofx::Twitter

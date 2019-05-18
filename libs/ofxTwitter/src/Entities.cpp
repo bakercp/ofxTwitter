@@ -582,6 +582,7 @@ MediaEntity::MediaEntity(std::size_t startIndex,
                          const std::string& url,
                          const std::string& displayURL,
                          const std::string& expandedURL,
+                         const std::string& description,
                          const std::string& mediaURL,
                          const std::string& secureMediaURL,
                          int64_t mediaID,
@@ -593,6 +594,7 @@ MediaEntity::MediaEntity(std::size_t startIndex,
     URLEntity(startIndex, endIndex, url, displayURL, expandedURL),
     _mediaURL(mediaURL),
     _secureMediaURL(secureMediaURL),
+    _description(description),
     _mediaID(mediaID),
     _type(type),
     _sizes(sizes),
@@ -605,6 +607,12 @@ MediaEntity::MediaEntity(std::size_t startIndex,
 
 MediaEntity::~MediaEntity()
 {
+}
+
+
+std::string MediaEntity::description() const
+{
+    return _description;
 }
 
 
@@ -695,6 +703,7 @@ MediaEntity MediaEntity::fromJson(const ofJson& json)
         const auto& value = iter.value();
 
         if (Utils::endsWith(key, "_str")) { /* skip */ }
+        else if (key == "description") entity._description = value;
         else if (key == "indices")
         {
             if (value.size() == 2)
@@ -727,7 +736,6 @@ MediaEntity MediaEntity::fromJson(const ofJson& json)
 
         ++iter;
     }
-
 
     return entity;
 }

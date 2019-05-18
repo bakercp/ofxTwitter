@@ -11,6 +11,7 @@
 #include "ofx/HTTP/OAuth10HTTPClient.h"
 #include "ofx/IO/PollingThread.h"
 #include "ofx/IO/ThreadChannel.h"
+#include "ofx/Twitter/BaseClient.h"
 #include "ofx/Twitter/Error.h"
 #include "ofx/Twitter/Search.h"
 #include "ofx/Twitter/Status.h"
@@ -21,7 +22,9 @@ namespace Twitter {
 
 
 /// \brief Twitter REST API client.
-class BaseSearchClient: public IO::PollingThread
+class BaseSearchClient:
+    public BaseClient,
+    public IO::PollingThread
 {
 public:
     /// \brief Create a default BaseSearchClient.
@@ -34,22 +37,22 @@ public:
     /// \brief Destroy the BaseSearchClient.
     virtual ~BaseSearchClient();
 
-    /// \brief Create an unconnected BaseSearchClient with given parameters.
-    /// \param credentials The OAuth 1.0 credentials to use.
-    /// \brief Set the credentials from a JSON configuration file.
-    /// \param credentialsPath A path to the credentials JSON file.
-    void setCredentialsFromFile(const std::filesystem::path& credentialsPath);
-
-    /// \brief Set the credentials from a JSON object.
-    /// \param credentials The JSON object representing the credentials.
-    void setCredentialsFromJson(const ofJson& credentials);
-
-    /// \brief Set the credentials from a HTTP::OAuth10Credentials object.
-    /// \param credentials The HTTP::OAuth10Credentials object.
-    void setCredentials(const HTTP::OAuth10Credentials& credentials);
-
-    /// \returns the current credentials.
-    HTTP::OAuth10Credentials getCredentials() const;
+//    /// \brief Create an unconnected BaseSearchClient with given parameters.
+//    /// \param credentials The OAuth 1.0 credentials to use.
+//    /// \brief Set the credentials from a JSON configuration file.
+//    /// \param credentialsPath A path to the credentials JSON file.
+//    void setCredentialsFromFile(const std::filesystem::path& credentialsPath);
+//
+//    /// \brief Set the credentials from a JSON object.
+//    /// \param credentials The JSON object representing the credentials.
+//    void setCredentialsFromJson(const ofJson& credentials);
+//
+//    /// \brief Set the credentials from a HTTP::OAuth10Credentials object.
+//    /// \param credentials The HTTP::OAuth10Credentials object.
+//    void setCredentials(const HTTP::OAuth10Credentials& credentials);
+//
+//    /// \returns the current credentials.
+//    HTTP::OAuth10Credentials getCredentials() const;
 
     /// \brief Execute a basic Twitter Search query.
     ///
@@ -74,6 +77,9 @@ public:
     /// \returns the last rate limit information if available.
     RateLimit rateLimit() const;
 
+    /// \returns the current search query or nullptr if not set.
+    const SearchQuery* searchQuery() const;
+
     /// \brief The BaseSearchClient user agent.
     ///
     /// Both the `User-Agent` and `X-User-Agent` are set to this value.
@@ -84,6 +90,8 @@ public:
 protected:
     virtual void onStopRequested() override;
 
+    virtual void _onStart(const SearchQuery& query) = 0;
+    virtual void _onStop() = 0;
     virtual void _onStatus(const Status& status) = 0;
     virtual void _onError(const Error& error) = 0;
     virtual void _onException(const std::exception& exc) = 0;
@@ -99,8 +107,8 @@ private:
     std::unique_ptr<SearchQuery> _searchQuery;
     SearchResponse _lastSearchResponse;
 
-    HTTP::OAuth10Credentials _credentials;
-    HTTP::OAuth10HTTPClient _client;
+//    HTTP::OAuth10Credentials _credentials;
+//    HTTP::OAuth10HTTPClient _client;
 
 };
 
@@ -151,6 +159,8 @@ public:
     void unregisterSearchEvents(ListenerClass* listener,
                                 int priority = OF_EVENT_ORDER_AFTER_APP);
 
+    ofEvent<const SearchQuery> onStart;
+    ofEvent<void> onStop;
     ofEvent<const Status> onStatus;
     ofEvent<const Error> onError;
     ofEvent<const std::exception> onException;
@@ -160,6 +170,8 @@ private:
     void _update(ofEventArgs& args);
     void _exit(ofEventArgs& args);
 
+    virtual void _onStart(const SearchQuery& query) override;
+    virtual void _onStop() override;
     virtual void _onStatus(const Status& status) override;
     virtual void _onError(const Error& error) override;
     virtual void _onException(const std::exception& exc) override;

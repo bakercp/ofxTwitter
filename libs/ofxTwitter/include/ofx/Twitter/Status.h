@@ -13,6 +13,7 @@
 #include "Poco/DateTime.h"
 #include "ofx/Twitter/Entities.h"
 #include "ofx/Twitter/Place.h"
+#include "ofx/Twitter/User.h"
 
 
 // Undefine Status from Xlib.h.
@@ -29,8 +30,20 @@ class User;
 class BaseNamedUser;
 
 
-/// \brief The Twitter Status object.
-/// \sa https://dev.twitter.com/overview/api/tweets
+/// \brief The Twitter Status object (aka Tweet).
+///
+/// If available, "extended_tweet" data will replace the compatibility tweet data.
+///
+/// e.g.
+///
+///     full_text returns text()
+///     displayTextStart() returns display_text_range::start
+///     displayTextEnd() returns display_text_range::end
+///     entities() returns "entities"
+///     extendedEntities() will return "extended_entities"
+
+///
+/// \sa https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object
 class Status
 {
 public:
@@ -94,8 +107,8 @@ public:
     /// \returns the id.
     int64_t id() const;
 
-    /// \returns the user or nullptr if no user is specified.
-    const User* user() const;
+    /// \returns the user.
+    User user() const;
 
     /// \returns the display text.
     std::string displayText() const;
@@ -143,11 +156,12 @@ public:
     /// \returns Entities which have been parsed out of the text of the Tweet.
     Entities entities() const;
 
-    /// \returns Entities which have been parsed out of the text of the Tweet.
+    /// \returns Extended entities which have been parsed out of the text of the Tweet.
+    /// \sa https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/extended-entities-object
     Entities extendedEntities() const;
 
     /// \returns the extended Tweet or nullptr if none.
-    const Status* extendedTweet() const;
+    // const Status* extendedTweet() const;
 
     /// \returns the approximate number of times this Tweet has been liked, or -1 if unknown.
     int64_t favoriteCount() const;
@@ -172,6 +186,9 @@ public:
     
     /// \brief Indicates if this Tweet has been liked by the authenticating user.
     bool favorited() const;
+
+    /// \returns whether this Tweet has been retweeted by the authenticating user.
+    bool retweeted() const;
 
     /// \brief The filter level of this Tweet.
     ///
@@ -208,11 +225,11 @@ public:
     /// \returns the scopes of this Tweet.
     std::map<std::string, bool> scopes() const;
 
+    /// \returns true if this is a retweet status (i.e. retweetedStatus() != nullptr).
+    bool isRetweet() const;
+
     /// \returns the number of times this Tweet has been retweeted.
     int64_t retweetCount() const;
-
-    /// \returns whether this Tweet has been retweeted by the authenticating user.
-    bool retweeted() const;
 
     /// \brief An optional Tweet.
     ///
@@ -229,15 +246,27 @@ public:
     /// \returns the Tweet source.
     std::string source() const;
 
-    /// \returns the actual UTF-8 text of the status update.
+    /// \brief Get the Tweet's full text.
+    ///
+    /// If this is an extended tweet, the full_text field will be returned,
+    /// otherwise the root level "text" field will be returned.
+    ///
+    /// \returns the UTF-8 encoded status update.
     std::string text() const;
 
-    /// \returns the full text if this is an extended tweet.
-    std::string fullText() const;
-
+    /// \brief Get the display text start position.
+    ///
+    /// This value will always return indices compatible with the text returned
+    /// by the Status::text() function.
+    ///
     /// \returns the start index of the display text.
     std::string::size_type displayTextStart() const;
 
+    /// \brief Get the display text ebd position.
+    ///
+    /// This value will always return indices compatible with the text returned
+    /// by the Status::text() function.
+    ///
     /// \returns the end index of the display text.
     std::string::size_type displayTextEnd() const;
 
@@ -254,7 +283,7 @@ public:
     /// value of the original status (in most cases, false ).
     ///
     /// \returns true if truncated.
-    bool truncated() const;
+    // bool truncated() const;
 
     /// \returns whether the Tweet has been withheld due to a DMCA complaint.
     bool withheldCopyright() const;
@@ -298,7 +327,8 @@ protected:
     ///
     /// We use a std::shared_ptr to keep track to make it nullable and avoid
     /// the hassle of std::unique_ptr and copies.
-    std::shared_ptr<User> _user = nullptr;
+//    std::shared_ptr<User> _user = nullptr;
+    User _user;
 
     /// \brief The Annotations.
     Annotations _annotations;
@@ -335,7 +365,7 @@ protected:
     Entities _extendedEntities;
 
     /// \brief The extended tweet.
-    std::shared_ptr<Status> _extendedTweet = nullptr;
+    /// std::shared_ptr<Status> _extendedTweet = nullptr;
 
     /// \brief Approximately how many times this Tweet has been liked.
     ///
@@ -418,10 +448,8 @@ protected:
     std::string _source;
 
     /// \brief The actual UTF-8 text of the status update.
+    /// This will be set to the full-text if the tweet is extended.
     std::string _text;
-
-    /// \brief The full text if this is an extended tweet.
-    std::string _fullText;
 
     /// \brief The start index of the display text.
     std::string::size_type _displayTextStart = 0;
@@ -440,7 +468,7 @@ protected:
     /// shortened, the original text will be available under the
     /// _retweetedStatus object and the truncated parameter will be set to the
     /// value of the original status (in most cases, false ).
-    bool _truncated = false;
+    // bool _truncated = false;
 
     /// \brief Indicates if Tweet has been withheld due to a DMCA complaint.
     bool _withheldCopyright = false;

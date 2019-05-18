@@ -81,10 +81,14 @@ int64_t Status::id() const
 }
 
 
-const User* Status::user() const
-{
-    return _user.get();
-}
+//    const User* Status::user() const
+//    {
+//        return _user.get();
+//    }
+    User Status::user() const
+    {
+        return _user;
+    }
 
 
 std::string Status::language() const
@@ -141,10 +145,10 @@ Entities Status::extendedEntities() const
 }
 
 
-const Status* Status::extendedTweet() const
-{
-    return _extendedTweet.get();
-}
+//const Status* Status::extendedTweet() const
+//{
+//    return _extendedTweet.get();
+//}
 
 
 int64_t Status::favoriteCount() const
@@ -195,6 +199,12 @@ bool Status::favorited() const
 }
 
 
+bool Status::retweeted() const
+{
+    return _retweeted;
+}
+
+
 Status::FilterLevel Status::filterLevel() const
 {
     return _filterLevel;
@@ -230,16 +240,15 @@ std::map<std::string, bool> Status::scopes() const
     return _scopes;
 }
 
+bool Status::isRetweet() const
+{
+    return retweetedStatus() != nullptr;
+}
+
 
 int64_t Status::retweetCount() const
 {
     return _retweetCount;
-}
-
-
-bool Status::retweeted() const
-{
-    return _retweeted;
 }
 
 
@@ -261,12 +270,6 @@ std::string Status::text() const
 }
 
 
-std::string Status::fullText() const
-{
-    return _fullText;
-}
-
-
 std::string::size_type Status::displayTextStart() const
 {
     return _displayTextStart;
@@ -281,7 +284,9 @@ std::string::size_type Status::displayTextEnd() const
 
 std::string Status::displayText() const
 {
-    if (_displayTextStart < text().length() && _displayTextEnd < text().length())
+    std::cout << _displayTextStart << " " << _displayTextEnd << " => " << text().length() << std::endl;
+
+    if (_displayTextStart != 0 && _displayTextEnd != 0 && _displayTextStart < text().length() && _displayTextEnd < text().length())
     {
         return _text.substr(_displayTextStart, _displayTextEnd);
     }
@@ -291,10 +296,10 @@ std::string Status::displayText() const
     }
 }
 
-bool Status::truncated() const
-{
-    return _truncated;
-}
+//bool Status::truncated() const
+//{
+//    return _truncated;
+//}
 
 
 bool Status::withheldCopyright() const
@@ -350,22 +355,18 @@ Status Status::fromJSON(const ofJson& json)
         const auto& key = iter.key();
         const auto& value = iter.value();
 
-        if (Utils::endsWith(key, "_str")) { /* skip */}
-        else if (key == "delete") { std::cout << "delete" << std::endl; }
-        else if (key == "timestamp_ms") status._timestamp = std::stoull(value.get<std::string>());
-        else if (key == "id") status._id = value;
+        if (key == "created_at")
+        {
+            Poco::DateTime date;
 
-        else if (key == "filter_level")
-        {
-            if (value == "none") status._filterLevel = FilterLevel::NONE;
-            else if (value == "low") status._filterLevel = FilterLevel::LOW;
-            else if (value == "medium") status._filterLevel = FilterLevel::LOW;
-            else ofLogError("Status::fromJSON") << "Unknown filter level: " << value;
+            if (Utils::parse(value, date))
+            {
+                status._createdAt = date;
+            }
         }
-        else if (key == "in_reply_to_screen_name")
-        {
-            if (!value.is_null()) status._inReplyToScreenName = value;
-        }
+        else if (key == "id") status._id = value;
+        else if (key == "text") status._text = value;
+        else if (key == "source") status._source = value;
         else if (key == "in_reply_to_status_id")
         {
             if (!value.is_null()) status._inReplyToStatusId = value;
@@ -374,19 +375,13 @@ Status Status::fromJSON(const ofJson& json)
         {
             if (!value.is_null()) status._inReplyToUserId = value;
         }
-        else if (key == "contributors")
+        else if (key == "in_reply_to_screen_name")
         {
-            if (!value.is_null())
-            {
-                for (auto c: value)
-                {
-                    if (c.is_number())
-                    {
-                        status._contributors.push_back(BaseNamedUser(c.get<int64_t>()));
-                    }
-                    else ofLogWarning("Status::fromJSON") << "Contributor " <<  c.dump(4);
-                }
-            }
+            if (!value.is_null()) status._inReplyToScreenName = value;
+        }
+        else if (key == "user" && !value.is_null())
+        {
+            status._user = User::fromJSON(value);
         }
         else if (key == "coordinates")
         {
@@ -424,11 +419,6 @@ Status Status::fromJSON(const ofJson& json)
                 }
             }
         }
-        else if (key == "geo")
-        {
-            // Deprecated, use coordinate instead.
-            // https://dev.twitter.com/overview/api/tweets
-        }
         else if (key == "place")
         {
             if (!value.is_null())
@@ -436,12 +426,12 @@ Status Status::fromJSON(const ofJson& json)
                 status._place = std::make_shared<Place>(Place::fromJSON(value));
             }
         }
-        else if (key == "user")
+        else if (key == "quoted_status_id") status._quotedStatusId = value;
+        else if (key == "is_quote_status") status._isQuoteStatus = value;
+        else if (key == "quoted_status")
         {
             if (!value.is_null())
-            {
-                status._user = std::make_shared<User>(User::fromJSON(value));
-            }
+                status._quotedStatus = std::make_shared<Status>(Status::fromJSON(value));
         }
         else if (key == "retweeted_status")
         {
@@ -450,30 +440,29 @@ Status Status::fromJSON(const ofJson& json)
                 status._retweetedStatus = std::make_shared<Status>(Status::fromJSON(value));
             }
         }
-        else if (key == "quoted_status_id") status._quotedStatusId = value;
-        else if (key == "quoted_status")
-        {
-            if (!value.is_null())
-            {
-                status._quotedStatus = std::make_shared<Status>(Status::fromJSON(value));
-            }
-        }
-        else if (key == "favorited") status._favorited = value;
+        else if (key == "quote_count") status._quoteCount = value;
+        else if (key == "reply_count") status._replyCount = value;
+        else if (key == "retweet_count") status._retweetCount = value;
+        else if (key == "favorite_count") status._favoriteCount = value;
+
         else if (key == "entities") status._entities = Entities::fromJSON(value);
         else if (key == "extended_entities") status._extendedEntities = Entities::fromJSON(value);
-        else if (key == "text") status._text = value;
-        else if (key == "possibly_sensitive") status._possiblySensitive = value;
-        else if (key == "retweet_count") status._retweetCount = value;
+
+        else if (key == "favorited") status._favorited = value;
         else if (key == "retweeted") status._retweeted = value;
-        else if (key == "source") status._source = value;
-        else if (key == "truncated") status._truncated = value;
-        else if (key == "utc_offset") status._utcOffset = value;
-        else if (key == "favorite_count") status._favoriteCount = value;
-        else if (key == "reply_count") status._replyCount = value;
-        else if (key == "quote_count") status._quoteCount = value;
-        else if (key == "is_quote_status") status._isQuoteStatus = value;
+
+        else if (key == "possibly_sensitive") status._possiblySensitive = value;
+        else if (key == "filter_level")
+        {
+            if (value == "none") status._filterLevel = FilterLevel::NONE;
+            else if (value == "low") status._filterLevel = FilterLevel::LOW;
+            else if (value == "medium") status._filterLevel = FilterLevel::LOW;
+            else ofLogError("Status::fromJSON") << "Unknown filter level: " << value;
+        }
         else if (key == "lang") status._language = value;
-        else if (key == "metadata") status._metadata = Metadata::fromJSON(value);
+
+        // Additional Tweet attributes
+        else if (key == "current_user_retweet") status._currentUserRetweet = value.value("id", int64_t(-1));
         else if (key == "scopes")
         {
             auto _iter = value.cbegin();
@@ -483,6 +472,7 @@ Status Status::fromJSON(const ofJson& json)
                 ++_iter;
             }
         }
+        else if (key == "withheld_copyright") status._withheldCopyright = value;
         else if (key == "withheld_in_countries")
         {
             for (auto v: value)
@@ -490,35 +480,64 @@ Status Status::fromJSON(const ofJson& json)
                 status._withheldInCountries.push_back(v);
             }
         }
-        else if (key == "extended_tweet")
-        {
-            status._extendedTweet = std::make_shared<Status>(Status::fromJSON(value));
-        }
+        else if (key == "witheld_scope") status._withheldScope = value;
+
         else if (key == "full_text")
+            status._text = value;
+
+        // Undocumented keys
+        else if (key == "metadata") status._metadata = Metadata::fromJSON(value);
+        else if (key == "timestamp_ms") status._timestamp = std::stoull(value.get<std::string>());
+        else if (key == "contributors")
         {
-            status._fullText = value;
+            if (!value.is_null())
+            {
+                for (auto c: value)
+                {
+                    if (c.is_number())
+                        status._contributors.push_back(BaseNamedUser(c.get<int64_t>()));
+                    else ofLogWarning("Status::fromJSON") << "Contributor " <<  c.dump(4);
+                }
+            }
         }
         else if (key == "display_text_range")
         {
             status._displayTextStart = value[0];
             status._displayTextEnd = value[1];
         }
-        else if (key == "created_at")
-        {
-            Poco::DateTime date;
-
-            if (Utils::parse(value, date))
-            {
-                status._createdAt = date;
-            }
-        }
         else if (key == "quoted_status_permalink")
         {
             status._quotedStatusPermalink = std::make_shared<QuotedStatusPermalink>(QuotedStatusPermalink::fromJson(value));
         }
+
+        // To Skip
+        else if (key == "truncated") { /* skip */ }
+        else if (key == "extended_tweet") { /* skip - parse below */ }
+        else if (Utils::endsWith(key, "_str")) { /* skip */ }
+
+        // Deprecated
+        else if (key == "geo") { /* deprecated */ }
+
+        // Unknown
+        // else if (key == "delete") { ofLogWarning("Status::fromJSON") << "delete" <<  value; }
+
         else ofLogWarning("Status::fromJSON") << "Unknown key: " << key << std::endl << value.dump(4);
 
         ++iter;
+    }
+
+    ofJson extendedTweetJson = json.value("extended_tweet", ofJson());
+
+    if (!extendedTweetJson.empty())
+    {
+        auto extendedTweet = Status::fromJSON(extendedTweetJson);
+
+        // Replace all compatibility data with extended tweet data.
+        status._text = extendedTweet.text();
+        status._entities = extendedTweet.entities();
+        status._displayTextStart = extendedTweet.displayTextStart();
+        status._displayTextEnd = extendedTweet.displayTextEnd();
+        status._extendedEntities = extendedTweet.extendedEntities();
     }
 
     return status;

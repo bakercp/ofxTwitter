@@ -174,6 +174,27 @@ public:
 };
 
 
+//inline void to_json(nlohmann::json& j, const UserFilterQuery& v)
+//{
+//    j["type"] = "user_filter_query";
+//
+////    j["blacklist_regex"] = v.getBlacklistRegex();
+////    j["whitelist"] = v.getWhitelist();
+////    j["whitelist_regex"] = v.getWhitelistRegex();
+//}
+//
+//
+//inline void from_json(const nlohmann::json& j, UserFilterQuery& v)
+//{
+////    v.setBlacklist(j.value("blacklist", std::vector<std::string>()));
+////    v.setBlacklistRegex(j.value("blacklist_regex", std::vector<std::string>()));
+////    v.setWhitelist(j.value("whitelist", std::vector<std::string>()));
+////    v.setWhitelistRegex(j.value("whitelist_regex", std::vector<std::string>()));
+//}
+//
+
+
+
 // TODO: SiteFilterQuery
 
 

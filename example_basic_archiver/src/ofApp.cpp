@@ -10,6 +10,9 @@
 
 void ofApp::setup()
 {
+//    archiver.attach(client);
+
+
     // First we load credentials from a file. These can also be loaded using
     // the other setCredentials*(...) methods.
     //
@@ -17,33 +20,14 @@ void ofApp::setup()
     // https://apps.twitter.com.
     client.setCredentialsFromFile("credentials.json");
 
-    
     // Register all available streaming events.
     // Alternatively, one can register events individually.
     //
     // In default mode all events are sent during the update() event loop.
     client.registerStreamingEvents(this);
 
-    // Create a bounding box for San Francisco.
-    ofxGeo::CoordinateBounds sanFranciscoBounds(ofxGeo::Coordinate(37.8, -122.75),
-                                                ofxGeo::Coordinate(36.8, -121.75));
-
-
-    // Create a bounding box for New York.
-    ofxGeo::CoordinateBounds newYorkBounds(ofxGeo::Coordinate(41, -74),
-                                           ofxGeo::Coordinate(40, -73));
-
     // Create a filter query.
     ofxTwitter::FilterQuery query;
-
-    // Set the bouning boxes of interest.
-
-    // Note that bounding boxes do not act as filters for other filter
-    // parameters. For example the locations below match any Tweets containing
-    // track terms (even non-geo Tweets) OR coming from the San Francisco /
-    // New York area.
-    //
-    // query.setLocations({ sanFranciscoBounds, newYorkBounds });
 
     // Track two emoji.
     // Read more about query terms here:
@@ -109,7 +93,7 @@ void ofApp::onStatus(const ofxTwitter::Status& status)
 
         std::cout << status.json().dump(4) << std::endl;
 
-      //  assert(status.text() == status.displayText()appl);
+      //  assert(status.text() == status.displayText());
 
         std::cout << "----------------------------------------------------" << std::endl;
     }

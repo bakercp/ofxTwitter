@@ -72,8 +72,11 @@ void ofApp::onStatus(const ofxTwitter::Status& status)
 {
     count++;
     ofLogNotice("ofApp::onStatus") << "Text: " << status.text();
-    ofLogNotice("ofApp::onStatus") << "\tCoordinates: " << (status.coordinates() ? ofToString(status.coordinates()) : "NONE");
-    ofLogNotice("ofApp::onStatus") << "\tPlace: " << (status.place() ? ofToString(status.place()->fullName()) : "NONE");
+
+    if (status.isRetweet())
+    {
+        ofLogNotice("ofApp::onStatus") << "\tOriginal mesage: " << status.retweetedStatus()->text();
+    }
 }
 
 

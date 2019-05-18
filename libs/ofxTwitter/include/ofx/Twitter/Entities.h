@@ -464,6 +464,7 @@ public:
                 const std::string& url,
                 const std::string& displayURL,
                 const std::string& expandedURL,
+                const std::string& description,
                 const std::string& mediaURL,
                 const std::string& secureMediaURL,
                 int64_t mediaID,
@@ -475,6 +476,9 @@ public:
 
     /// \brief Destroy the MediaEntity.
     virtual ~MediaEntity();
+
+    /// \returns a description of the media entity.
+    std::string description() const;
 
     /// \returns the URL of the media file.
     std::string mediaURL() const;
@@ -516,6 +520,9 @@ public:
 
 private:
     static Sizes _sizesFromJson(const ofJson& json);
+
+    /// \brief A description of the media entity.
+    std::string _description;
 
     /// \brief The URL of the media file.
     std::string _mediaURL;
