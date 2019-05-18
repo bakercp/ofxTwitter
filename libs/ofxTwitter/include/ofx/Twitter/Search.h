@@ -21,7 +21,7 @@ namespace Twitter {
 
 /// \brief A Twitter Search Request.
 ///
-/// \sa https://dev.twitter.com/rest/reference/get/search/tweets
+/// \sa https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets
 class SearchQuery: public Poco::Net::NameValueCollection
 {
 public:

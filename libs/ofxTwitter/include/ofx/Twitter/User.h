@@ -29,7 +29,7 @@ class Status;
 
 
 /// \brief A Twitter User.
-/// \sa https://dev.twitter.com/overview/api/users
+/// \sa https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object
 class User: public BaseNamedUser
 {
 public:

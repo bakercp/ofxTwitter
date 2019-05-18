@@ -23,7 +23,7 @@ namespace Twitter {
 /// any storage or archive, even in the rare case where a deletion message
 /// arrives earlier in the stream that the Tweet it references.
 ///
-/// \sa https://dev.twitter.com/streaming/overview/messages-types#status_deletion_notices_delete
+/// \sa https://developer.twitter.com/en/docs/tweets/filter-realtime/guides/streaming-message-types
 class StatusDeletedNotice
 {
 public:
@@ -68,7 +68,7 @@ private:
 /// user. These messages may also arrive before a Tweet which falls into the
 /// specified range, although this is rare.
 ///
-/// \sa https://dev.twitter.com/streaming/overview/messages-types#Location_deletion_notices_scrub_geo
+/// \sa https://developer.twitter.com/en/docs/tweets/filter-realtime/guides/streaming-message-types
 class LocationDeletedNotice
 {
 public:
@@ -107,7 +107,7 @@ private:
 /// that the counts do not specify which filter predicates undelivered messages
 /// matched.
 ///
-// \sa https://dev.twitter.com/streaming/overview/messages-types#limit_notices
+// \sa https://developer.twitter.com/en/docs/tweets/filter-realtime/guides/streaming-message-types
 class LimitNotice
 {
 public:
@@ -137,7 +137,7 @@ private:
 /// indicating the user, and a collection of withheld_in_countries uppercase
 /// two-letter country codes.
 ///
-/// \sa https://dev.twitter.com/streaming/overview/messages-types#withheld_content_notices
+/// \sa https://developer.twitter.com/en/docs/tweets/filter-realtime/guides/streaming-message-types
 class StatusWithheldNotice
 {
 public:
@@ -178,7 +178,7 @@ private:
 /// These events contain an id field indicating the user ID and a collection of
 /// withheld_in_countries uppercase two-letter country codes.
 ///
-/// \sa https://dev.twitter.com/streaming/overview/messages-types#withheld_content_notices
+/// \sa https://developer.twitter.com/en/docs/tweets/filter-realtime/guides/streaming-message-types
 class UserWithheldNotice
 {
 public:
@@ -215,7 +215,7 @@ private:
 /// if the disconnect was due to network issues or a client reading too slowly,
 /// it is possible that this message will not be received.
 ///
-/// \sa https://dev.twitter.com/streaming/overview/messages-types#disconnect_messages
+/// \sa https://developer.twitter.com/en/docs/tweets/filter-realtime/guides/streaming-message-types
 class DisconnectNotice
 {
 public:
@@ -257,7 +257,7 @@ private:
 /// When connected to a stream using the stall_warnings parameter, you may
 /// receive status notices indicating the current health of the connection.
 ///
-/// \sa https://dev.twitter.com/streaming/overview/messages-types#stall_warnings
+/// \sa https://developer.twitter.com/en/docs/tweets/filter-realtime/guides/streaming-message-types
 class StallWarning
 {
 public:
@@ -267,7 +267,7 @@ public:
     /// \returns the message.
     std::string message() const;
 
-    /// \returns the disconnect reason.
+    /// \returns the streaming buffer percent full.
     double percentFull() const;
 
     /// \returns the original json.
@@ -284,7 +284,7 @@ private:
     /// \brief The message.
     std::string _message;
 
-    /// \brief The disconnect reason.
+    /// \brief The streaming buffer percent full.
     double _percentFull = 0;
 
     /// \brief the original json.

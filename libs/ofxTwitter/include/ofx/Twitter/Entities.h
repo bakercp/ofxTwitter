@@ -57,7 +57,7 @@ protected:
 
 
 /// \brief A Symbol indexed entity.
-/// \sa https://dev.twitter.com/overview/api/entities-in-twitter-objects#symbols
+/// \sa https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/entities-object#symbols
 class SymbolEntity: public BaseIndexedEntity
 {
 public:
@@ -93,7 +93,7 @@ private:
 
 
 /// \brief A Hashtag indexed entity.
-/// \sa https://dev.twitter.com/overview/api/entities-in-twitter-objects#hashtags
+/// \sa https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/entities-object#hashtags
 class HashTagEntity: public BaseIndexedEntity
 {
 public:
@@ -126,7 +126,7 @@ private:
 
 
 /// \brief An URL entity.
-/// \sa https://dev.twitter.com/overview/api/entities-in-twitter-objects#urls
+/// \sa https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/entities-object#urls
 class URLEntity: public BaseIndexedEntity
 {
 public:
@@ -177,7 +177,7 @@ protected:
 };
 
 
-/// \brief An URL entity.
+/// \brief An QuotedStatusPermalink entity.
 /// \sa https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/intro-to-tweet-json#quotetweet
 class QuotedStatusPermalink
 {
@@ -237,6 +237,8 @@ protected:
 /// the media in this particular size; h : the height (in pixels) of the media
 /// in this particular size; and resize : how we resized the media to this
 /// particular size (can be crop or fit ).
+///
+/// \sa https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/entities-object#media-size
 class MediaEntitySize
 {
 public:
@@ -304,7 +306,7 @@ private:
 };
 
 
-/// \brief Information present when a
+/// \brief Information present when a video is included.
 class VideoInfo
 {
 public:
@@ -449,6 +451,7 @@ public:
     /// \param url The URL that was extracted.
     /// \param displayURL Not a URL but a string to display instead of the URL.
     /// \param expandedURL The fully resolved URL.
+    /// \param description The media entity description.
     /// \param mediaURL The media URL.
     /// \param secureMediaURL the SSL URL of the media file.
     /// \param mediaID The media ID.
@@ -545,7 +548,7 @@ private:
 
 
 /// \brief A user mention entity.
-/// \sa https://dev.twitter.com/overview/api/entities-in-twitter-objects#user_mentions
+/// \sa https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/entities-object#mentions
 class UserMentionEntity: public BaseNamedUser, public BaseIndexedEntity
 {
 public:

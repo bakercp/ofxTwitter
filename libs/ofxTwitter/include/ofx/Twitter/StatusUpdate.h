@@ -30,7 +30,7 @@ namespace Twitter {
 /// they can create at a time. If the number of updates posted by the user
 /// reaches the current allowed limit this method will return an HTTP 403 error.
 ///
-/// \sa https://dev.twitter.com/rest/reference/post/statuses/update
+/// \sa https://developer.twitter.com/en/docs/api-reference-index
 class StatusUpdateRequest: public HTTP::PostRequest
 {
 public:
@@ -93,7 +93,7 @@ public:
     /// \param longitude The longitude of the location this tweet refers to.
     void setCoordinates(double latitude, double longitude);
 
-    /// \brief Set the Place id fro this tweet.
+    /// \brief Set the Place id from this tweet.
     /// \sa https://dev.twitter.com/overview/api/places
     /// \param placeId The Place id to set.
     void setPlaceId(const std::string& placeId);

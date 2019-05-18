@@ -32,8 +32,8 @@ void ofApp::setup()
     client.search(":)");
 
     // To design more complex searches, see the the API documentation here:
-    // https://dev.twitter.com/rest/public/search and use the
-    // ofxTwitter::SearchQuery object like this:
+    // https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets
+    // and use the ofxTwitter::SearchQuery object like this:
     //
     //    ofxTwitter::SearchQuery query(":)");
     //    query.setGeoCode(41.8781, -87.6298, 10, ofxTwitter::SearchQuery::UNITS_MILES);
