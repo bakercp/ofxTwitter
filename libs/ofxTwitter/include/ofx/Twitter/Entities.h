@@ -371,6 +371,17 @@ private:
 };
 
 
+class CallToAction
+{
+public:
+    std::string visitSiteURL;
+    std::string watchNowURL;
+
+    static CallToAction fromJSON(const ofJson& json);
+
+};
+
+
 class AdditionalMediaInfo
 {
 public:
@@ -389,6 +400,8 @@ public:
     /// \returns a shared pointer to a source user if available.
     std::shared_ptr<User> sourceUser() const;
 
+    std::vector<CallToAction> callToActions() const;
+
     /// \brief Extract the VideoInfo from JSON.
     /// \param json The source JSON.
     /// \returns the extracted VideoInfo.
@@ -400,7 +413,7 @@ private:
     bool _embeddable;
     std::string _title;
     std::shared_ptr<User> _sourceUser;
-
+    std::vector<CallToAction> _callToActions;
 };
 
 

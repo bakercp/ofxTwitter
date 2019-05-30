@@ -501,6 +501,41 @@ VideoInfo VideoInfo::fromJSON(const ofJson& json)
 }
 
 
+CallToAction CallToAction::fromJSON(const ofJson& json)
+{
+    CallToAction call;
+
+    auto iter = json.cbegin();
+    while (iter != json.cend())
+    {
+        const auto& key = iter.key();
+        const auto& value = iter.value();
+
+        if (value.is_null())
+        {
+            ofLogError("CallToAction::fromJSON") << "Value is NULL, key = " << key;
+            ++iter;
+            continue;
+        }
+
+
+        if (key == "visit_site")
+        {
+            call.visitSiteURL = value.value("url", "");
+        }
+        else if (key == "watch_now")
+        {
+            call.watchNowURL = value.value("url", "");
+        }
+        else ofLogWarning("CallToAction::fromJSON") << "Unknown key: " << key;
+
+        ++iter;
+    }
+
+    return call;
+}
+
+
 bool AdditionalMediaInfo::monetizable() const
 {
     return _montetizable;
@@ -528,6 +563,12 @@ std::string AdditionalMediaInfo::title() const
 std::shared_ptr<User> AdditionalMediaInfo::sourceUser() const
 {
     return _sourceUser;
+}
+
+
+std::vector<CallToAction> AdditionalMediaInfo::callToActions() const
+{
+    return _callToActions;
 }
 
 
@@ -561,6 +602,10 @@ AdditionalMediaInfo AdditionalMediaInfo::fromJSON(const ofJson& json)
         else if (key == "title")
         {
             info._title = value;
+        }
+        else if (key == "call_to_actions")
+        {
+            info._callToActions = { CallToAction::fromJSON(value) };
         }
         else ofLogWarning("AdditionalMediaInfo::fromJson") << "Unknown key: " << key << " : " << value.dump(4);
 
