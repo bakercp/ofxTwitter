@@ -71,7 +71,7 @@ Status::~Status()
 
 std::string Status::url() const
 {
-    return "https://twitter.com/openframeworks/status" + std::to_string(id());
+    return "https://twitter.com/openframeworks/status/" + std::to_string(id());
 }
 
 
