@@ -723,6 +723,9 @@ MediaEntity MediaEntity::fromJson(const ofJson& json)
         else if (key == "sizes") entity._sizes = _sizesFromJson(value);
         else if (key == "id") entity._mediaID = value;
         else if (key == "additional_media_info") entity._additionalMediaInfo = AdditionalMediaInfo::fromJSON(value);
+		else if (key == "description"){
+			//Not sure where this should go, but I added this to avoid a constant warning about an unknown key.
+		}
         else ofLogWarning("MediaEntity::fromJson") << "Unknown key: " << key << " : " << value.dump(4);
 
         ++iter;
