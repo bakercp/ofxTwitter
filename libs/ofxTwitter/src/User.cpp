@@ -209,7 +209,7 @@ User User::fromJSON(const ofJson& json)
     {
         const auto& key = iter.key();
         const auto& value = iter.value();
-
+		
 
         if (Utils::endsWith(key, "_str")) { /* skip */}
 
@@ -258,7 +258,7 @@ User User::fromJSON(const ofJson& json)
         else if (key == "id") user._id = value;
         else if (key == "is_translation_enabled") user._isTranslationEnabled = value;
         else if (key == "is_translator") user._geoEnabled = value;
-        else if (key == "lang") user._language = value;
+		else if (key == "lang"){ if(!value.is_null()) user._language = value;} 
         else if (key == "listed_count") user._listedCount = value;
         else if (key == "location")
         {
