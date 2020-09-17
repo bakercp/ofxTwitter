@@ -32,6 +32,12 @@ public:
     /// \returns true if parsing was successful.
     static bool parse(const std::string& dateString, Poco::DateTime& date);
 
+	/// \brief convert a DateTime object into a string.
+    /// \param date The DateTime object to format.
+    /// \param fmt The formating string.
+    /// \returns formated string representing the DataTime object
+	static std::string format(const Poco::DateTime& date, const std::string& fmt);
+	
     /// \brief The default Twitter date format.
     static const std::string TWITTER_DATE_FORMAT;
 
