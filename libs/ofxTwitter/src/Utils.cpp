@@ -7,6 +7,7 @@
 
 #include "ofx/Twitter/Utils.h"
 #include "Poco/DateTimeParser.h"
+#include "Poco/DateTimeFormatter.h"
 #include "Poco/Exception.h"
 #include "ofLog.h"
 
@@ -39,6 +40,21 @@ bool Utils::parse(const std::string& dateString, Poco::DateTime& date)
         return false;
     }
 }
+
+std::string Utils::format(const Poco::DateTime& date, const std::string& fmt )
+{
+    try
+    {
+		return Poco::DateTimeFormatter::format(date, fmt);
+    }
+    catch (const Poco::SyntaxException& exc)
+    {
+        ofLogError("Utils::format") << "Unable to format date time into string: " << exc.displayText();
+        return "";
+    }
+}
+
+
 
 
 } } // namespace ofx::Twitter
